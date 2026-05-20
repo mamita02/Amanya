@@ -39,48 +39,56 @@
 
 :root {
   --radius: 0.875rem;
-  /* Ocean Deep palette */
-  --navy: oklch(0.22 0.06 250);          /* #0c2340 */
-  --ocean: oklch(0.38 0.08 235);         /* #1a4a6e */
-  --teal: oklch(0.62 0.10 210);          /* #2d8a9e */
-  --cyan: oklch(0.78 0.08 200);          /* #5cbdb9 */
+  /* AMANYA luxury palette — Onyx / Ruby / Gold */
+  --onyx: oklch(0.14 0.01 30);
+  --jet: oklch(0.20 0.015 30);
+  --ruby: oklch(0.48 0.20 25);
+  --ruby-bright: oklch(0.58 0.24 25);
+  --gold: oklch(0.78 0.14 80);
+  --gold-soft: oklch(0.88 0.09 85);
 
-  --background: oklch(0.99 0.005 220);
-  --foreground: oklch(0.18 0.04 250);
+  /* Legacy aliases so existing components inherit luxury tones */
+  --navy: var(--onyx);
+  --ocean: var(--ruby);
+  --teal: var(--gold);
+  --cyan: var(--gold-soft);
+
+  --background: oklch(0.99 0.005 60);
+  --foreground: oklch(0.16 0.01 30);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.04 250);
+  --card-foreground: oklch(0.16 0.01 30);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.04 250);
-  --primary: oklch(0.22 0.06 250);
-  --primary-foreground: oklch(0.99 0.005 220);
-  --secondary: oklch(0.95 0.02 220);
-  --secondary-foreground: oklch(0.22 0.06 250);
-  --muted: oklch(0.96 0.01 220);
-  --muted-foreground: oklch(0.48 0.03 240);
-  --accent: oklch(0.62 0.10 210);
-  --accent-foreground: oklch(0.99 0.005 220);
-  --destructive: oklch(0.6 0.22 25);
+  --popover-foreground: oklch(0.16 0.01 30);
+  --primary: var(--ruby);
+  --primary-foreground: oklch(0.99 0.005 60);
+  --secondary: oklch(0.96 0.01 60);
+  --secondary-foreground: var(--onyx);
+  --muted: oklch(0.96 0.008 60);
+  --muted-foreground: oklch(0.46 0.02 40);
+  --accent: var(--gold);
+  --accent-foreground: var(--onyx);
+  --destructive: oklch(0.58 0.24 25);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.01 220);
-  --input: oklch(0.92 0.01 220);
-  --ring: oklch(0.62 0.10 210);
+  --border: oklch(0.92 0.01 60);
+  --input: oklch(0.92 0.01 60);
+  --ring: var(--gold);
 }
 
 .dark {
-  --background: oklch(0.16 0.04 250);
-  --foreground: oklch(0.97 0.01 220);
-  --card: oklch(0.22 0.06 250);
-  --card-foreground: oklch(0.97 0.01 220);
-  --popover: oklch(0.22 0.06 250);
-  --popover-foreground: oklch(0.97 0.01 220);
-  --primary: oklch(0.78 0.08 200);
-  --primary-foreground: oklch(0.16 0.04 250);
-  --secondary: oklch(0.28 0.05 250);
-  --secondary-foreground: oklch(0.97 0.01 220);
-  --muted: oklch(0.26 0.04 250);
-  --muted-foreground: oklch(0.72 0.03 220);
-  --accent: oklch(0.62 0.10 210);
-  --accent-foreground: oklch(0.99 0.005 220);
+  --background: var(--onyx);
+  --foreground: oklch(0.97 0.01 60);
+  --card: var(--jet);
+  --card-foreground: oklch(0.97 0.01 60);
+  --popover: var(--jet);
+  --popover-foreground: oklch(0.97 0.01 60);
+  --primary: var(--gold);
+  --primary-foreground: var(--onyx);
+  --secondary: oklch(0.24 0.015 30);
+  --secondary-foreground: oklch(0.97 0.01 60);
+  --muted: oklch(0.22 0.012 30);
+  --muted-foreground: oklch(0.72 0.02 60);
+  --accent: var(--ruby);
+  --accent-foreground: oklch(0.99 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
 }

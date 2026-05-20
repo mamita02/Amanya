@@ -1,125 +1,262 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Car, Home, Smartphone, Briefcase, Shirt, Sofa, Wrench, Gamepad2, Search, MapPin, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, ShieldCheck, Truck, Gem } from "lucide-react";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { ListingCard } from "../components/ListingCard";
-import { categories, listings } from "../lib/listings";
+import { listings } from "../lib/listings";
+import heroImage from "../assets/amanya-hero.jpg";
 
-const iconMap = { Car, Home, Smartphone, Briefcase, Shirt, Sofa, Wrench, Gamepad2 } as const;
+export const Route = createFileRoute("/")({
+  component: HomePage,
+  head: () => ({
+    meta: [
+      { title: "AMANYA — Distribution de produits authentiques au Sénégal" },
+      {
+        name: "description",
+        content:
+          "AMANYA : parfums, cosmétiques, vêtements et accessoires authentiques pour grossistes, revendeurs et particuliers au Sénégal.",
+      },
+      { property: "og:title", content: "AMANYA — Luxe & authenticité" },
+      {
+        property: "og:description",
+        content:
+          "Une plateforme élégante pour découvrir et commander parfums, cosmétiques et accessoires de marque.",
+      },
+    ],
+  }),
+});
 
-export const Route = createFileRoute("/")({ component: HomePage });
+const categories = [
+  {
+    name: "Cosmétiques",
+    tagline: "Routine éclat",
+    image:
+      "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=900&h=1100&fit=crop&auto=format",
+  },
+  {
+    name: "Vêtements",
+    tagline: "Style affirmé",
+    image:
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&h=1100&fit=crop&auto=format",
+  },
+  {
+    name: "Parfums",
+    tagline: "Sillage signature",
+    image:
+      "https://images.unsplash.com/photo-1541643600914-78b084683601?w=900&h=1100&fit=crop&auto=format",
+  },
+  {
+    name: "Accessoires",
+    tagline: "Détails précieux",
+    image:
+      "https://images.unsplash.com/photo-1591348278863-a8fb3887e2aa?w=900&h=1100&fit=crop&auto=format",
+  },
+];
+
+const partners = ["DIOR", "GIVENCHY", "CHANEL", "ARMANI", "GAULTIER", "YSL", "PRADA"];
 
 function HomePage() {
-  const featured = listings.filter((l) => l.featured);
-  const recent = listings.slice(0, 8);
+  const featured = listings.slice(0, 8);
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[var(--navy)] via-[var(--ocean)] to-[var(--teal)]" />
-        <div className="absolute inset-0 -z-10 opacity-30" style={{
-          backgroundImage: "radial-gradient(circle at 20% 20%, rgba(92,189,185,0.4), transparent 40%), radial-gradient(circle at 80% 60%, rgba(45,138,158,0.4), transparent 40%)",
-        }} />
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-              <TrendingUp className="h-3 w-3" /> +12 000 annonces ce mois-ci
+      {/* HERO */}
+      <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
+        <img
+          src={heroImage}
+          alt="Produits AMANYA"
+          width={1920}
+          height={1080}
+          className="absolute inset-0 -z-10 h-full w-full object-cover opacity-70"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--onyx)]/70 via-[var(--onyx)]/40 to-[var(--onyx)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_40%,rgba(0,0,0,0)_0%,rgba(0,0,0,0.6)_70%)]" />
+
+        <div className="mx-auto flex min-h-[78vh] max-w-7xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 lg:px-8">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--gold)]/40 bg-black/30 px-4 py-1.5 text-xs font-medium tracking-[0.25em] text-[var(--gold-soft)] backdrop-blur">
+            <Sparkles className="h-3 w-3" /> LUXE · AUTHENTICITÉ · SÉNÉGAL
+          </span>
+
+          <h1 className="mt-8 font-display text-6xl font-black tracking-[0.18em] sm:text-8xl lg:text-[10rem]">
+            <span className="bg-gradient-to-b from-[var(--ruby-bright)] via-[var(--ruby)] to-[var(--ruby-bright)] bg-clip-text text-transparent [text-shadow:0_2px_30px_rgba(255,80,80,0.25)]">
+              AMANYA
             </span>
-            <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] text-white sm:text-6xl">
-              Le marché du Sénégal,<br />
-              <span className="bg-gradient-to-r from-[var(--cyan)] to-white bg-clip-text text-transparent">repensé avec élégance.</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-lg text-white/80">
-              Achetez, vendez et louez en toute confiance. Des milliers d'annonces vérifiées partout au Sénégal.
+          </h1>
+
+          <p className="mt-6 max-w-2xl text-lg text-white/80">
+            La maison de distribution qui rassemble les plus belles marques de parfums,
+            cosmétiques, vêtements et accessoires — au cœur du Sénégal.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="#categories"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--ruby)] to-[var(--ruby-bright)] px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-[var(--ruby)]/30 transition hover:shadow-xl hover:shadow-[var(--ruby)]/50"
+            >
+              Découvrir la boutique
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+            </a>
+            <a
+              href="#apropos"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--gold)]/50 px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold-soft)] transition hover:border-[var(--gold)] hover:text-[var(--gold)]"
+            >
+              À propos
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST STRIP */}
+      <section className="border-y border-border/60 bg-[var(--jet)] text-white/80">
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+          {[
+            { Icon: ShieldCheck, title: "100% authentique", text: "Produits certifiés origine" },
+            { Icon: Truck, title: "Livraison Sénégal", text: "Partout, rapide & sûr" },
+            { Icon: Gem, title: "Marques de prestige", text: "Sélection premium" },
+            { Icon: Sparkles, title: "Grossistes & revendeurs", text: "Tarifs préférentiels" },
+          ].map(({ Icon, title, text }) => (
+            <div key={title} className="flex items-center gap-3">
+              <div className="grid h-11 w-11 place-items-center rounded-full bg-[var(--gold)]/10 text-[var(--gold)]">
+                <Icon className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="font-display text-sm font-semibold text-white">{title}</div>
+                <div className="text-xs text-white/60">{text}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CATEGORIES */}
+      <section id="categories" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            Univers AMANYA
+          </span>
+          <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
+            Explorer nos collections
+          </h2>
+          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+        </div>
+
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {categories.map((c) => (
+            <a
+              key={c.name}
+              href="#"
+              className="group relative block aspect-[3/4] overflow-hidden rounded-3xl bg-[var(--onyx)]"
+            >
+              <img
+                src={c.image}
+                alt={c.name}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-700 group-hover:scale-110 group-hover:opacity-95"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                <div className="text-xs font-medium uppercase tracking-[0.25em] text-[var(--gold)]">
+                  {c.tagline}
+                </div>
+                <h3 className="mt-1 font-display text-2xl font-bold">{c.name}</h3>
+                <div className="mt-3 inline-flex items-center gap-2 text-sm text-white/80 transition group-hover:text-[var(--gold-soft)]">
+                  Voir plus
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                </div>
+              </div>
+              <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 transition group-hover:ring-[var(--gold)]/40" />
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section id="apropos" className="bg-[var(--secondary)]">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <div className="relative">
+            <div className="absolute -inset-4 -z-10 rounded-[3rem] bg-gradient-to-br from-[var(--ruby)]/20 via-transparent to-[var(--gold)]/20 blur-2xl" />
+            <img
+              src="https://images.unsplash.com/photo-1581088657384-fa3a48b97b9b?w=1000&h=1200&fit=crop&auto=format"
+              alt="Équipe AMANYA"
+              loading="lazy"
+              className="h-full w-full rounded-[2.5rem] object-cover shadow-2xl"
+              style={{ borderTopLeftRadius: "40% 50%", borderBottomRightRadius: "40% 50%" }}
+            />
+          </div>
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+              À propos de nous
+            </span>
+            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
+              Plus qu'un fournisseur, <span className="text-[var(--ruby)]">une maison.</span>
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+              AMANYA est bien plus qu'un simple fournisseur : c'est une solution complète et
+              accessible pour les grossistes, revendeurs, commerces de proximité et entrepreneurs au
+              Sénégal.
             </p>
-
-            <div className="mt-8 flex flex-col gap-2 rounded-2xl bg-white/95 p-2 shadow-2xl shadow-black/30 backdrop-blur sm:flex-row">
-              <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  placeholder="Que recherchez-vous ?"
-                  className="h-12 w-full rounded-xl bg-transparent pl-11 pr-4 text-sm text-foreground outline-none"
-                />
-              </div>
-              <div className="relative sm:w-48">
-                <MapPin className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  placeholder="Dakar"
-                  className="h-12 w-full rounded-xl bg-transparent pl-11 pr-4 text-sm text-foreground outline-none"
-                />
-              </div>
-              <button className="h-12 rounded-xl bg-gradient-to-r from-[var(--navy)] to-[var(--teal)] px-6 text-sm font-semibold text-white transition hover:shadow-lg hover:shadow-[var(--teal)]/40">
-                Rechercher
-              </button>
-            </div>
-
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/70">
-              <span>Tendances :</span>
-              {["Toyota", "Villa Almadies", "iPhone 15", "Emploi tech"].map((t) => (
-                <a key={t} href="#" className="rounded-full border border-white/20 px-3 py-1 transition hover:border-[var(--cyan)] hover:text-white">{t}</a>
-              ))}
-            </div>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              Née dans la continuité de l'agence MCE — Management Communication Event, AMANYA
+              apporte un maillon essentiel : l'approvisionnement direct en produits authentiques,
+              certifiés et accessibles.
+            </p>
+            <a
+              href="#"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--gold)] px-8 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--onyx)] shadow-md transition hover:bg-[var(--gold-soft)]"
+            >
+              Voir plus
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      {/* FEATURED PRODUCTS */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
-            <h2 className="font-display text-3xl font-bold">Explorer par catégorie</h2>
-            <p className="mt-1 text-muted-foreground">Trouvez exactement ce que vous cherchez</p>
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+              Sélection
+            </span>
+            <h2 className="mt-2 font-display text-4xl font-bold">Produits en vedette</h2>
           </div>
+          <Link
+            to="/"
+            className="hidden text-sm font-medium uppercase tracking-[0.2em] text-[var(--ruby)] hover:text-[var(--ruby-bright)] sm:inline"
+          >
+            Voir tout →
+          </Link>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
-          {categories.map((c) => {
-            const Icon = iconMap[c.icon as keyof typeof iconMap];
-            return (
-              <a
-                key={c.slug}
-                href="#"
-                className="group flex flex-col items-center gap-3 rounded-2xl border border-border/60 bg-card p-5 text-center transition hover:-translate-y-1 hover:border-[var(--teal)]/50 hover:shadow-lg hover:shadow-[var(--teal)]/10"
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {featured.map((l) => (
+            <ListingCard key={l.id} listing={l} />
+          ))}
+        </div>
+      </section>
+
+      {/* PARTNERS */}
+      <section className="bg-[var(--secondary)]">
+        <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            Partenaires
+          </span>
+          <h2 className="mt-3 font-display text-4xl font-bold">Ils nous font confiance</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
+            Nos partenaires innovants qui garantissent la performance, la sécurité et l'évolutivité
+            de notre catalogue.
+          </p>
+
+          <div className="mt-12 grid grid-cols-2 items-center gap-8 sm:grid-cols-3 lg:grid-cols-7">
+            {partners.map((p) => (
+              <div
+                key={p}
+                className="font-display text-xl font-bold tracking-[0.2em] text-foreground/40 transition hover:text-[var(--ruby)]"
               >
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-[var(--navy)]/5 to-[var(--teal)]/10 text-[var(--ocean)] transition group-hover:from-[var(--navy)] group-hover:to-[var(--teal)] group-hover:text-white">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="font-display text-sm font-semibold">{c.name}</div>
-                  <div className="text-xs text-muted-foreground">{c.count.toLocaleString("fr-FR")}</div>
-                </div>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Featured */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--teal)]">À la une</span>
-            <h2 className="mt-1 font-display text-3xl font-bold">Annonces en vedette</h2>
+                {p}
+              </div>
+            ))}
           </div>
-          <Link to="/" className="hidden text-sm font-medium text-[var(--ocean)] hover:text-[var(--teal)] sm:inline">Voir tout →</Link>
-        </div>
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((l) => <ListingCard key={l.id} listing={l} />)}
-        </div>
-      </section>
-
-      {/* Recent */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--teal)]">Nouveautés</span>
-            <h2 className="mt-1 font-display text-3xl font-bold">Annonces récentes</h2>
-          </div>
-        </div>
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {recent.map((l) => <ListingCard key={l.id} listing={l} />)}
         </div>
       </section>
 
