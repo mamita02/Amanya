@@ -1,48 +1,64 @@
 import { Link } from "@tanstack/react-router";
-import { Search, Menu, Plus, Heart, User } from "lucide-react";
+import { Search, Menu, Heart, User, ShoppingBag } from "lucide-react";
+
+const navLinks = [
+  { label: "À propos", to: "/" },
+  { label: "Amanya Store", to: "/" },
+  { label: "Parfums", to: "/" },
+  { label: "Vêtements", to: "/" },
+  { label: "Cosmétiques", to: "/" },
+  { label: "Accessoires", to: "/" },
+  { label: "Partenaires", to: "/" },
+  { label: "Contact", to: "/" },
+];
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[var(--navy)] to-[var(--teal)] text-white font-display font-bold">
-              D
-            </div>
-            <span className="font-display text-xl font-bold tracking-tight">Dakar<span className="text-[var(--teal)]">Marché</span></span>
-          </Link>
-
-          <div className="hidden flex-1 max-w-xl md:block">
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                placeholder="Rechercher une annonce, une marque, un modèle..."
-                className="h-10 w-full rounded-full border border-input bg-secondary/40 pl-10 pr-4 text-sm outline-none transition focus:border-[var(--teal)] focus:bg-background focus:ring-2 focus:ring-[var(--teal)]/20"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button className="hidden h-10 w-10 place-items-center rounded-full hover:bg-secondary sm:grid" aria-label="Favoris">
-              <Heart className="h-4 w-4" />
-            </button>
-            <button className="hidden h-10 w-10 place-items-center rounded-full hover:bg-secondary sm:grid" aria-label="Compte">
-              <User className="h-4 w-4" />
-            </button>
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--navy)] to-[var(--teal)] px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:shadow-lg hover:shadow-[var(--teal)]/30"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Publier</span>
-            </Link>
-            <button className="grid h-10 w-10 place-items-center rounded-full hover:bg-secondary md:hidden" aria-label="Menu">
-              <Menu className="h-5 w-5" />
-            </button>
+    <header className="sticky top-0 z-50 bg-[var(--onyx)] text-white">
+      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="hidden md:block">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+            <input
+              placeholder="Rechercher un produit..."
+              className="h-10 w-full max-w-xs rounded-full bg-white/5 pl-11 pr-4 text-sm text-white outline-none ring-1 ring-white/10 transition placeholder:text-white/40 focus:ring-[var(--gold)]"
+            />
           </div>
         </div>
+
+        <Link to="/" className="flex items-center justify-center">
+          <span className="font-display text-3xl font-black tracking-[0.25em] bg-gradient-to-b from-[var(--ruby-bright)] via-[var(--ruby)] to-[var(--ruby-bright)] bg-clip-text text-transparent drop-shadow-[0_1px_0_rgba(255,215,140,0.35)] sm:text-4xl">
+            AMANYA
+          </span>
+        </Link>
+
+        <div className="flex items-center justify-end gap-2">
+          <button className="hidden h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Compte">
+            <User className="h-4 w-4" />
+          </button>
+          <button className="hidden h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Favoris">
+            <Heart className="h-4 w-4" />
+          </button>
+          <button className="grid h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)]" aria-label="Panier">
+            <ShoppingBag className="h-4 w-4" />
+          </button>
+          <button className="grid h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] md:hidden" aria-label="Menu">
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
       </div>
+
+      <nav className="border-t border-white/5">
+        <ul className="mx-auto hidden max-w-7xl items-center justify-center gap-10 px-4 py-3 text-sm font-medium tracking-wide text-[var(--gold-soft)] sm:px-6 lg:px-8 md:flex">
+          {navLinks.map((l) => (
+            <li key={l.label}>
+              <Link to={l.to} className="transition hover:text-[var(--gold)]">
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 }
