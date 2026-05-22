@@ -71,7 +71,7 @@ function HeroCarousel() {
 
   return (
     <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
-      <div className="relative h-[78vh] w-full">
+      <div className="relative h-screen w-full">
         {heroSlides.map((src, i) => (
           <img
             key={src}
