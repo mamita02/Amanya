@@ -9,9 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VetementsRouteImport } from './routes/vetements'
+import { Route as CosmetiquesRouteImport } from './routes/cosmetiques'
+import { Route as AccessoiresRouteImport } from './routes/accessoires'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
 
+const VetementsRoute = VetementsRouteImport.update({
+  id: '/vetements',
+  path: '/vetements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CosmetiquesRoute = CosmetiquesRouteImport.update({
+  id: '/cosmetiques',
+  path: '/cosmetiques',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessoiresRoute = AccessoiresRouteImport.update({
+  id: '/accessoires',
+  path: '/accessoires',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +43,76 @@ const ListingIdRoute = ListingIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/accessoires': typeof AccessoiresRoute
+  '/cosmetiques': typeof CosmetiquesRoute
+  '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/accessoires': typeof AccessoiresRoute
+  '/cosmetiques': typeof CosmetiquesRoute
+  '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/accessoires': typeof AccessoiresRoute
+  '/cosmetiques': typeof CosmetiquesRoute
+  '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/listing/$id'
+  fullPaths:
+    | '/'
+    | '/accessoires'
+    | '/cosmetiques'
+    | '/vetements'
+    | '/listing/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/listing/$id'
-  id: '__root__' | '/' | '/listing/$id'
+  to: '/' | '/accessoires' | '/cosmetiques' | '/vetements' | '/listing/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/accessoires'
+    | '/cosmetiques'
+    | '/vetements'
+    | '/listing/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccessoiresRoute: typeof AccessoiresRoute
+  CosmetiquesRoute: typeof CosmetiquesRoute
+  VetementsRoute: typeof VetementsRoute
   ListingIdRoute: typeof ListingIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vetements': {
+      id: '/vetements'
+      path: '/vetements'
+      fullPath: '/vetements'
+      preLoaderRoute: typeof VetementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cosmetiques': {
+      id: '/cosmetiques'
+      path: '/cosmetiques'
+      fullPath: '/cosmetiques'
+      preLoaderRoute: typeof CosmetiquesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accessoires': {
+      id: '/accessoires'
+      path: '/accessoires'
+      fullPath: '/accessoires'
+      preLoaderRoute: typeof AccessoiresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,6 +132,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccessoiresRoute: AccessoiresRoute,
+  CosmetiquesRoute: CosmetiquesRoute,
+  VetementsRoute: VetementsRoute,
   ListingIdRoute: ListingIdRoute,
 }
 export const routeTree = rootRouteImport
