@@ -58,6 +58,61 @@ const categories = [
 
 const partners = ["DIOR", "GIVENCHY", "CHANEL", "ARMANI", "GAULTIER", "YSL", "PRADA"];
 
+const heroSlides = [hero1, hero2, hero3];
+
+function HeroCarousel() {
+  const [index, setIndex] = useState(0);
+  const go = (n: number) => setIndex((index + n + heroSlides.length) % heroSlides.length);
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex((i) => (i + 1) % heroSlides.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
+      <div className="relative h-[78vh] w-full">
+        {heroSlides.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            width={1920}
+            height={1080}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === index ? "opacity-100" : "opacity-0"}`}
+          />
+        ))}
+
+        <button
+          onClick={() => go(-1)}
+          aria-label="Précédent"
+          className="absolute left-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:left-8"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => go(1)}
+          aria-label="Suivant"
+          className="absolute right-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:right-8"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+
+        <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+          {heroSlides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              aria-label={`Slide ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all ${i === index ? "w-8 bg-[var(--gold)]" : "w-4 bg-white/40"}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HomePage() {
   const featured = listings.slice(0, 8);
 
