@@ -1,13 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Search, Menu, Heart, User, ShoppingBag } from "lucide-react";
+import { Search, Menu, Heart, User, ShoppingBag, ChevronDown } from "lucide-react";
+
+const categoryItems = ["Parfums", "Vêtements", "Cosmétiques", "Accessoires"];
 
 const navLinks = [
   { label: "À propos", to: "/" },
   { label: "Amanya Store", to: "/" },
-  { label: "Parfums", to: "/" },
-  { label: "Vêtements", to: "/" },
-  { label: "Cosmétiques", to: "/" },
-  { label: "Accessoires", to: "/" },
   { label: "Partenaires", to: "/" },
   { label: "Contact", to: "/" },
 ];
@@ -50,6 +48,36 @@ export function Header() {
 
       <nav className="border-t border-white/5">
         <ul className="mx-auto hidden max-w-7xl items-center justify-center gap-10 px-4 py-3 text-sm font-medium tracking-wide text-[var(--gold-soft)] sm:px-6 lg:px-8 md:flex">
+          <li>
+            <Link to="/" className="transition hover:text-[var(--gold)]">
+              Accueil
+            </Link>
+          </li>
+
+          {/* Dropdown Catégories */}
+          <li className="group relative">
+            <button className="inline-flex items-center gap-1 transition hover:text-[var(--gold)]">
+              Catégories
+              <ChevronDown className="h-3.5 w-3.5 transition group-hover:rotate-180" />
+            </button>
+            <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+              <div className="overflow-hidden rounded-xl border border-[var(--gold)]/20 bg-[var(--onyx)] shadow-2xl shadow-black/50 ring-1 ring-white/5">
+                <ul className="py-2">
+                  {categoryItems.map((item) => (
+                    <li key={item}>
+                      <Link
+                        to="/"
+                        className="block px-5 py-2.5 text-sm text-[var(--gold-soft)] transition hover:bg-white/5 hover:text-[var(--gold)]"
+                      >
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </li>
+
           {navLinks.map((l) => (
             <li key={l.label}>
               <Link to={l.to} className="transition hover:text-[var(--gold)]">

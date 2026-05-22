@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Sparkles, ShieldCheck, Truck, Gem } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, ShieldCheck, Truck, Gem, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { ListingCard } from "../components/ListingCard";
 import { listings } from "../lib/listings";
-import heroImage from "../assets/amanya-hero.jpg";
+import hero1 from "../assets/hero-1.jpg";
+import hero2 from "../assets/hero-2.jpg";
+import hero3 from "../assets/hero-3.jpg";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -55,6 +58,61 @@ const categories = [
 
 const partners = ["DIOR", "GIVENCHY", "CHANEL", "ARMANI", "GAULTIER", "YSL", "PRADA"];
 
+const heroSlides = [hero1, hero2, hero3];
+
+function HeroCarousel() {
+  const [index, setIndex] = useState(0);
+  const go = (n: number) => setIndex((index + n + heroSlides.length) % heroSlides.length);
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex((i) => (i + 1) % heroSlides.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
+      <div className="relative h-[78vh] w-full">
+        {heroSlides.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            width={1920}
+            height={1080}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === index ? "opacity-100" : "opacity-0"}`}
+          />
+        ))}
+
+        <button
+          onClick={() => go(-1)}
+          aria-label="Précédent"
+          className="absolute left-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:left-8"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => go(1)}
+          aria-label="Suivant"
+          className="absolute right-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:right-8"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+
+        <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+          {heroSlides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              aria-label={`Slide ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all ${i === index ? "w-8 bg-[var(--gold)]" : "w-4 bg-white/40"}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HomePage() {
   const featured = listings.slice(0, 8);
 
@@ -62,51 +120,7 @@ function HomePage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      {/* HERO */}
-      <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
-        <img
-          src={heroImage}
-          alt="Produits AMANYA"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 -z-10 h-full w-full object-cover opacity-70"
-        />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--onyx)]/70 via-[var(--onyx)]/40 to-[var(--onyx)]" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_40%,rgba(0,0,0,0)_0%,rgba(0,0,0,0.6)_70%)]" />
-
-        <div className="mx-auto flex min-h-[78vh] max-w-7xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 lg:px-8">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--gold)]/40 bg-black/30 px-4 py-1.5 text-xs font-medium tracking-[0.25em] text-[var(--gold-soft)] backdrop-blur">
-            <Sparkles className="h-3 w-3" /> LUXE · AUTHENTICITÉ · SÉNÉGAL
-          </span>
-
-          <h1 className="mt-8 font-display text-6xl font-black tracking-[0.18em] sm:text-8xl lg:text-[10rem]">
-            <span className="bg-gradient-to-b from-[var(--ruby-bright)] via-[var(--ruby)] to-[var(--ruby-bright)] bg-clip-text text-transparent [text-shadow:0_2px_30px_rgba(255,80,80,0.25)]">
-              AMANYA
-            </span>
-          </h1>
-
-          <p className="mt-6 max-w-2xl text-lg text-white/80">
-            La maison de distribution qui rassemble les plus belles marques de parfums,
-            cosmétiques, vêtements et accessoires — au cœur du Sénégal.
-          </p>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="#categories"
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--ruby)] to-[var(--ruby-bright)] px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-[var(--ruby)]/30 transition hover:shadow-xl hover:shadow-[var(--ruby)]/50"
-            >
-              Découvrir la boutique
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-            </a>
-            <a
-              href="#apropos"
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--gold)]/50 px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--gold-soft)] transition hover:border-[var(--gold)] hover:text-[var(--gold)]"
-            >
-              À propos
-            </a>
-          </div>
-        </div>
-      </section>
+      <HeroCarousel />
 
       {/* TRUST STRIP */}
       <section className="border-y border-border/60 bg-[var(--jet)] text-white/80">
