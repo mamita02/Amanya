@@ -1,13 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Search, Menu, Heart, User, ShoppingBag, ChevronDown } from "lucide-react";
 
-const categoryItems = ["Parfums", "Vêtements", "Cosmétiques", "Accessoires"];
+const storeItems = ["Parfums", "Vêtements", "Cosmétiques", "Accessoires"];
 
 const navLinks = [
-  { label: "À propos", to: "/" },
-  { label: "Amanya Store", to: "/" },
-  { label: "Partenaires", to: "/" },
-  { label: "Contact", to: "/" },
+  { label: "À propos", hash: "apropos" },
+  { label: "Partenaires", hash: "partenaires" },
+  { label: "Contact", hash: "contact" },
 ];
 
 export function Header() {
@@ -54,23 +53,23 @@ export function Header() {
             </Link>
           </li>
 
-          {/* Dropdown Catégories */}
+          {/* Dropdown Amanya Store */}
           <li className="group relative">
             <button className="inline-flex items-center gap-1 transition hover:text-[var(--gold)]">
-              Catégories
+              Amanya Store
               <ChevronDown className="h-3.5 w-3.5 transition group-hover:rotate-180" />
             </button>
             <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
               <div className="overflow-hidden rounded-xl border border-[var(--gold)]/20 bg-[var(--onyx)] shadow-2xl shadow-black/50 ring-1 ring-white/5">
                 <ul className="py-2">
-                  {categoryItems.map((item) => (
+                  {storeItems.map((item) => (
                     <li key={item}>
-                      <Link
-                        to="/"
+                      <a
+                        href="#categories"
                         className="block px-5 py-2.5 text-sm text-[var(--gold-soft)] transition hover:bg-white/5 hover:text-[var(--gold)]"
                       >
                         {item}
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -80,9 +79,9 @@ export function Header() {
 
           {navLinks.map((l) => (
             <li key={l.label}>
-              <Link to={l.to} className="transition hover:text-[var(--gold)]">
+              <a href={`#${l.hash}`} className="transition hover:text-[var(--gold)]">
                 {l.label}
-              </Link>
+              </a>
             </li>
           ))}
         </ul>
