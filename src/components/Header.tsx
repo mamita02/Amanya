@@ -1,7 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Search, Menu, Heart, User, ShoppingBag, ChevronDown } from "lucide-react";
 
-const storeItems = ["Parfums", "Vêtements", "Cosmétiques", "Accessoires"];
+const storeItems: { label: string; to: string }[] = [
+  { label: "Parfums", to: "/#partenaires" },
+  { label: "Vêtements", to: "/vetements" },
+  { label: "Cosmétiques", to: "/cosmetiques" },
+  { label: "Accessoires", to: "/accessoires" },
+];
 
 const navLinks = [
   { label: "À propos", hash: "apropos" },
@@ -63,12 +68,12 @@ export function Header() {
               <div className="overflow-hidden rounded-xl border border-[var(--gold)]/20 bg-[var(--onyx)] shadow-2xl shadow-black/50 ring-1 ring-white/5">
                 <ul className="py-2">
                   {storeItems.map((item) => (
-                    <li key={item}>
+                    <li key={item.label}>
                       <a
-                        href="#categories"
+                        href={item.to}
                         className="block px-5 py-2.5 text-sm text-[var(--gold-soft)] transition hover:bg-white/5 hover:text-[var(--gold)]"
                       >
-                        {item}
+                        {item.label}
                       </a>
                     </li>
                   ))}
