@@ -226,51 +226,90 @@ function HomePage() {
         </div>
       </section>
 
-      {/* FEATURED PRODUCTS */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-              Sélection
-            </span>
-            <h2 className="mt-2 font-display text-4xl font-bold">Produits en vedette</h2>
-          </div>
-          <Link
-            to="/"
-            className="hidden text-sm font-medium uppercase tracking-[0.2em] text-[var(--ruby)] hover:text-[var(--ruby-bright)] sm:inline"
-          >
-            Voir tout →
-          </Link>
+      {/* PARTNERS (featured products grid) */}
+      <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            Partenaires
+          </span>
+          <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Ils nous font confiance</h2>
+          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((l) => (
             <ListingCard key={l.id} listing={l} />
           ))}
         </div>
       </section>
 
-      {/* PARTNERS */}
-      <section className="bg-[var(--secondary)]">
-        <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-            Partenaires
-          </span>
-          <h2 className="mt-3 font-display text-4xl font-bold">Ils nous font confiance</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-            Nos partenaires innovants qui garantissent la performance, la sécurité et l'évolutivité
-            de notre catalogue.
-          </p>
-
-          <div className="mt-12 grid grid-cols-2 items-center gap-8 sm:grid-cols-3 lg:grid-cols-7">
-            {partners.map((p) => (
-              <div
-                key={p}
-                className="font-display text-xl font-bold tracking-[0.2em] text-foreground/40 transition hover:text-[var(--ruby)]"
-              >
-                {p}
-              </div>
-            ))}
+      {/* CONTACT */}
+      <section id="contact" className="bg-[var(--secondary)]">
+        <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+              Contact
+            </span>
+            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Écrivez-nous</h2>
+            <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+              Une question, un projet de partenariat ? Notre équipe vous répond sous 24h.
+            </p>
           </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("Merci ! Votre message a bien été envoyé.");
+            }}
+            className="mt-10 grid gap-5 rounded-3xl border border-border/60 bg-card p-8 shadow-xl shadow-[var(--onyx)]/5 sm:p-10"
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  Nom complet
+                </label>
+                <input
+                  required
+                  type="text"
+                  className="mt-2 h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/30"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  Email
+                </label>
+                <input
+                  required
+                  type="email"
+                  className="mt-2 h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/30"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Sujet
+              </label>
+              <input
+                type="text"
+                className="mt-2 h-12 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/30"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Message
+              </label>
+              <textarea
+                required
+                rows={5}
+                className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/30"
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-2 inline-flex h-12 items-center justify-center gap-2 self-start rounded-full bg-[var(--ruby)] px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-md transition hover:bg-[var(--ruby-bright)]"
+            >
+              Envoyer
+            </button>
+          </form>
         </div>
       </section>
 
