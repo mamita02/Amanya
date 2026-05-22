@@ -1,13 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Search, Menu, Heart, User, ShoppingBag, ChevronDown } from "lucide-react";
 
-const categoryItems = ["Parfums", "Vêtements", "Cosmétiques", "Accessoires"];
+const storeItems = ["Parfums", "Vêtements", "Cosmétiques", "Accessoires"];
 
 const navLinks = [
-  { label: "À propos", to: "/" },
-  { label: "Amanya Store", to: "/" },
-  { label: "Partenaires", to: "/" },
-  { label: "Contact", to: "/" },
+  { label: "À propos", hash: "apropos" },
+  { label: "Partenaires", hash: "partenaires" },
+  { label: "Contact", hash: "contact" },
 ];
 
 export function Header() {
