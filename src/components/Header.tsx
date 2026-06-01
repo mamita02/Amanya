@@ -2,10 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { Search, Menu, Heart, User, ShoppingBag, ChevronDown } from "lucide-react";
 
 const storeItems: { label: string; to: string }[] = [
-  { label: "Parfums", to: "/#partenaires" },
   { label: "Vêtements", to: "/vetements" },
-  { label: "Cosmétiques", to: "/cosmetiques" },
-  { label: "Accessoires", to: "/accessoires" },
+  { label: "Homme", to: "/homme" },
+  { label: "Femme", to: "/femme" },
+  { label: "Diffuseur", to: "/diffuseur" },
 ];
 
 const navLinks = [
