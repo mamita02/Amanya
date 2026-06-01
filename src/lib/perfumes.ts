@@ -20,6 +20,7 @@ export type Perfume = {
   category: "homme" | "femme" | "diffuseur";
 };
 
+type NamePair = [string, string];
 const HOMME_IMAGES = [
   "photo-1594035910387-fea47794261f",
   "photo-1615634260167-c8cdede054de",
