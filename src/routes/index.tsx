@@ -231,10 +231,10 @@ function HomePage() {
       {/* PARTNERS (featured products grid) */}
       <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-            Partenaires
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">Partenaires</h2>
+          <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            Ils nous font confiance
           </span>
-          <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Ils nous font confiance</h2>
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
