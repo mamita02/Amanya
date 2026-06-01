@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="mt-24 border-t border-border/60 bg-[var(--onyx)] text-white/80">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-3">
+        <div className="grid gap-10 md:grid-cols-4">
           {/* Brand */}
           <div>
             <span className="font-display text-3xl font-black tracking-[0.25em] bg-gradient-to-b from-[var(--ruby-bright)] via-[var(--ruby)] to-[var(--ruby-bright)] bg-clip-text text-transparent">
@@ -14,6 +14,27 @@ export function Footer() {
               Parfums, vêtements et diffuseurs authentiques pour grossistes, revendeurs et
               particuliers au Sénégal.
             </p>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <h4 className="font-display text-sm font-semibold uppercase tracking-[0.25em] text-[var(--gold)]">
+              Navigation
+            </h4>
+            <ul className="mt-4 space-y-2 text-sm">
+              {[
+                { label: "Accueil", href: "/" },
+                { label: "Nos partenaires", href: "/#partenaires" },
+                { label: "À propos", href: "/#about" },
+                { label: "Contact", href: "/#contact" },
+              ].map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className="text-white/60 transition hover:text-[var(--gold)]">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Catégories */}
@@ -36,6 +57,7 @@ export function Footer() {
               ))}
             </ul>
           </div>
+
 
           {/* Contact */}
           <div>
