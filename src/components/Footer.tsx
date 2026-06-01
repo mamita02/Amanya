@@ -16,21 +16,17 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Navigation */}
+          {/* Catégories */}
           <div>
             <h4 className="font-display text-sm font-semibold uppercase tracking-[0.25em] text-[var(--gold)]">
-              Navigation
+              Catégories
             </h4>
-            <ul className="mt-4 grid grid-cols-2 gap-2 text-sm">
+            <ul className="mt-4 space-y-2 text-sm">
               {[
-                { label: "Accueil", href: "/" },
                 { label: "Vêtements", href: "/vetements" },
                 { label: "Homme", href: "/homme" },
                 { label: "Femme", href: "/femme" },
                 { label: "Diffuseur", href: "/diffuseur" },
-                { label: "Partenaires", href: "/#partenaires" },
-                { label: "À propos", href: "/#apropos" },
-                { label: "Contact", href: "/#contact" },
               ].map((l) => (
                 <li key={l.label}>
                   <a href={l.href} className="text-white/60 transition hover:text-[var(--gold)]">
@@ -62,6 +58,16 @@ export function Footer() {
               <li className="flex items-center gap-3">
                 <MapPin className="h-4 w-4 text-[var(--gold)]" />
                 Dakar, Sénégal
+              </li>
+              <li className="pt-1">
+                <a href="#" className="text-xs text-white/50 hover:text-[var(--gold)] transition">
+                  Conditions Générales de Vente
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-xs text-white/50 hover:text-[var(--gold)] transition">
+                  Politiques de confidentialité
+                </a>
               </li>
             </ul>
           </div>

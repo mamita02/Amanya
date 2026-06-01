@@ -231,7 +231,7 @@ function HomePage() {
       {/* PARTNERS (featured products grid) */}
       <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">Partenaires</h2>
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">Nos partenaires</h2>
           <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
             Ils nous font confiance
           </span>
