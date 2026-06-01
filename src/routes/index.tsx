@@ -32,28 +32,28 @@ export const Route = createFileRoute("/")({
 
 const categories = [
   {
-    name: "Cosmétiques",
-    tagline: "Routine éclat",
-    image:
-      "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=900&h=1100&fit=crop&auto=format",
-  },
-  {
     name: "Vêtements",
     tagline: "Style affirmé",
     image:
       "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&h=1100&fit=crop&auto=format",
   },
   {
-    name: "Parfums",
-    tagline: "Sillage signature",
+    name: "Homme",
+    tagline: "Sillage masculin",
+    image:
+      "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=900&h=1100&fit=crop&auto=format",
+  },
+  {
+    name: "Femme",
+    tagline: "Sillage féminin",
     image:
       "https://images.unsplash.com/photo-1541643600914-78b084683601?w=900&h=1100&fit=crop&auto=format",
   },
   {
-    name: "Accessoires",
-    tagline: "Détails précieux",
+    name: "Diffuseur",
+    tagline: "Ambiance signature",
     image:
-      "https://images.unsplash.com/photo-1591348278863-a8fb3887e2aa?w=900&h=1100&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=900&h=1100&fit=crop&auto=format",
   },
 ];
 
@@ -148,14 +148,15 @@ function HomePage() {
       {/* CATEGORIES */}
       <section id="categories" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">
             Univers AMANYA
-          </span>
-          <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
-            Explorer nos collections
           </h2>
+          <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            Explorer nos collections
+          </span>
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
+
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((c) => (
@@ -230,10 +231,10 @@ function HomePage() {
       {/* PARTNERS (featured products grid) */}
       <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-            Partenaires
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">Partenaires</h2>
+          <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            Ils nous font confiance
           </span>
-          <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Ils nous font confiance</h2>
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

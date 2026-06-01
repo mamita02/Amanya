@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VetementsRouteImport } from './routes/vetements'
+import { Route as HommeRouteImport } from './routes/homme'
+import { Route as FemmeRouteImport } from './routes/femme'
+import { Route as DiffuseurRouteImport } from './routes/diffuseur'
 import { Route as CosmetiquesRouteImport } from './routes/cosmetiques'
 import { Route as AccessoiresRouteImport } from './routes/accessoires'
 import { Route as IndexRouteImport } from './routes/index'
@@ -18,6 +21,21 @@ import { Route as ListingIdRouteImport } from './routes/listing.$id'
 const VetementsRoute = VetementsRouteImport.update({
   id: '/vetements',
   path: '/vetements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HommeRoute = HommeRouteImport.update({
+  id: '/homme',
+  path: '/homme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FemmeRoute = FemmeRouteImport.update({
+  id: '/femme',
+  path: '/femme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiffuseurRoute = DiffuseurRouteImport.update({
+  id: '/diffuseur',
+  path: '/diffuseur',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CosmetiquesRoute = CosmetiquesRouteImport.update({
@@ -45,6 +63,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
   '/cosmetiques': typeof CosmetiquesRoute
+  '/diffuseur': typeof DiffuseurRoute
+  '/femme': typeof FemmeRoute
+  '/homme': typeof HommeRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
 }
@@ -52,6 +73,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
   '/cosmetiques': typeof CosmetiquesRoute
+  '/diffuseur': typeof DiffuseurRoute
+  '/femme': typeof FemmeRoute
+  '/homme': typeof HommeRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
 }
@@ -60,6 +84,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
   '/cosmetiques': typeof CosmetiquesRoute
+  '/diffuseur': typeof DiffuseurRoute
+  '/femme': typeof FemmeRoute
+  '/homme': typeof HommeRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
 }
@@ -69,15 +96,29 @@ export interface FileRouteTypes {
     | '/'
     | '/accessoires'
     | '/cosmetiques'
+    | '/diffuseur'
+    | '/femme'
+    | '/homme'
     | '/vetements'
     | '/listing/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/accessoires' | '/cosmetiques' | '/vetements' | '/listing/$id'
+  to:
+    | '/'
+    | '/accessoires'
+    | '/cosmetiques'
+    | '/diffuseur'
+    | '/femme'
+    | '/homme'
+    | '/vetements'
+    | '/listing/$id'
   id:
     | '__root__'
     | '/'
     | '/accessoires'
     | '/cosmetiques'
+    | '/diffuseur'
+    | '/femme'
+    | '/homme'
     | '/vetements'
     | '/listing/$id'
   fileRoutesById: FileRoutesById
@@ -86,6 +127,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccessoiresRoute: typeof AccessoiresRoute
   CosmetiquesRoute: typeof CosmetiquesRoute
+  DiffuseurRoute: typeof DiffuseurRoute
+  FemmeRoute: typeof FemmeRoute
+  HommeRoute: typeof HommeRoute
   VetementsRoute: typeof VetementsRoute
   ListingIdRoute: typeof ListingIdRoute
 }
@@ -97,6 +141,27 @@ declare module '@tanstack/react-router' {
       path: '/vetements'
       fullPath: '/vetements'
       preLoaderRoute: typeof VetementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/homme': {
+      id: '/homme'
+      path: '/homme'
+      fullPath: '/homme'
+      preLoaderRoute: typeof HommeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/femme': {
+      id: '/femme'
+      path: '/femme'
+      fullPath: '/femme'
+      preLoaderRoute: typeof FemmeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diffuseur': {
+      id: '/diffuseur'
+      path: '/diffuseur'
+      fullPath: '/diffuseur'
+      preLoaderRoute: typeof DiffuseurRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cosmetiques': {
@@ -134,6 +199,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccessoiresRoute: AccessoiresRoute,
   CosmetiquesRoute: CosmetiquesRoute,
+  DiffuseurRoute: DiffuseurRoute,
+  FemmeRoute: FemmeRoute,
+  HommeRoute: HommeRoute,
   VetementsRoute: VetementsRoute,
   ListingIdRoute: ListingIdRoute,
 }
