@@ -1,13 +1,16 @@
+// src/routes/__root.tsx
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  Outlet,
+  HeadContent,
   Link,
+  Outlet,
+  Scripts,
   createRootRouteWithContext,
   useRouter,
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
+import { Toaster } from "sonner";
 
+import { CartProvider } from "../lib/cart";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -72,14 +75,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "DakarMarché — Petites annonces au Sénégal" },
-      { name: "description", content: "Achetez, vendez et louez au Sénégal. Véhicules, immobilier, électronique, emploi et plus." },
-      { name: "author", content: "DakarMarché" },
-      { property: "og:title", content: "DakarMarché — Petites annonces au Sénégal" },
-      { property: "og:description", content: "La plateforme de petites annonces la plus élégante du Sénégal." },
+      { title: "AMANYA — Distribution de produits authentiques au Sénégal" },
+      { name: "description", content: "Parfums, cosmétiques et accessoires authentiques au Sénégal." },
+      { name: "author", content: "AMANYA" },
+      { property: "og:title", content: "AMANYA — Luxe & authenticité" },
+      { property: "og:description", content: "Plateforme de distribution premium au Sénégal." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -96,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>
@@ -113,7 +115,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <CartProvider>
+        <Outlet />
+        <Toaster position="bottom-right" richColors />
+      </CartProvider>
     </QueryClientProvider>
   );
 }

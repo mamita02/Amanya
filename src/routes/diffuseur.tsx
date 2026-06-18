@@ -1,21 +1,38 @@
+// src/routes/diffuseur.tsx
 import { createFileRoute } from "@tanstack/react-router";
 import { PerfumeCatalog } from "../components/PerfumeCatalog";
-import { getPerfumesByCategory } from "../lib/perfumes";
+import { getPerfumesByCategory } from "../lib/supabase";
 
 export const Route = createFileRoute("/diffuseur")({
-  component: () => (
-    <PerfumeCatalog
-      title="Diffuseur"
-      tagline="Ambiance signature"
-      description="Habillez vos espaces d'une signature olfactive raffinée. Diffuseurs et bougies parfumées de grandes maisons."
-      heroImage="https://images.unsplash.com/photo-1602928321679-560bb453f190?w=1600&h=900&fit=crop&auto=format&q=80"
-      perfumes={getPerfumesByCategory("diffuseur")}
-    />
-  ),
+  component: DiffuseurRoute,
   head: () => ({
     meta: [
       { title: "Diffuseurs — AMANYA" },
-      { name: "description", content: "Diffuseurs et bougies parfumées AMANYA : signatures olfactives pour la maison." },
+      {
+        name: "description",
+        content:
+          "Découvrez nos diffuseurs de parfum de haute qualité.",
+      },
     ],
   }),
+  loader: async () => {
+    const perfumes = await getPerfumesByCategory("diffuseur");
+    return { perfumes };
+  },
+  staleTime: 0,        // ← AJOUTE
+  shouldReload: true,  // ← AJOUTE
 });
+
+function DiffuseurRoute() {
+  const { perfumes } = Route.useLoaderData();
+
+  return (
+    <PerfumeCatalog
+      title="Diffuseurs"
+      tagline="Ambiance olfactive"
+      description="Parfumez votre espace avec nos diffuseurs de qualité."
+      heroImage="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=1600&h=900&fit=crop&auto=format&q=80"
+      perfumes={perfumes}
+    />
+  );
+}

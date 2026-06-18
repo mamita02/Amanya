@@ -1,17 +1,19 @@
+// src/components/PerfumeCatalog.tsx
+import { Package, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Sparkles, SlidersHorizontal, X, Package } from "lucide-react";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
 import {
-  type Perfume,
+  ALL_QUANTITIES,
   type Gender,
+  type Perfume,
   type PerfumeType,
-  type Volume,
   type Quantity,
+  type Volume,
   formatFCFA,
   getBrands,
-  ALL_QUANTITIES,
 } from "../lib/perfumes";
+import { AddToCartModal } from "./AddToCartModal";
+import { Footer } from "./Footer";
+import { Header } from "./Header";
 
 type Props = {
   title: string;
@@ -35,6 +37,9 @@ export function PerfumeCatalog({ title, tagline, description, heroImage, perfume
   const [minQty, setMinQty] = useState<Quantity | "all">("all");
   const [selectedVol, setSelectedVol] = useState<Record<string, Volume>>({});
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  // État pour la modal d'ajout au panier
+  const [cartModalPerfume, setCartModalPerfume] = useState<Perfume | null>(null);
 
   const filtered = useMemo(() => {
     return perfumes.filter((p) => {
@@ -152,6 +157,7 @@ export function PerfumeCatalog({ title, tagline, description, heroImage, perfume
                 onSelectVol={(v) =>
                   setSelectedVol((s) => ({ ...s, [p.id]: v }))
                 }
+                onOrder={() => setCartModalPerfume(p)}
               />
             ))}
           </div>
@@ -159,6 +165,15 @@ export function PerfumeCatalog({ title, tagline, description, heroImage, perfume
       </section>
 
       <Footer />
+
+      {/* MODAL AJOUT AU PANIER */}
+      {cartModalPerfume && (
+        <AddToCartModal
+          perfume={cartModalPerfume}
+          defaultVolume={selectedVol[cartModalPerfume.id] ?? cartModalPerfume.volumes[0]}
+          onClose={() => setCartModalPerfume(null)}
+        />
+      )}
 
       {/* FILTERS MODAL */}
       {filtersOpen && (
@@ -331,29 +346,34 @@ function PerfumeCard({
   perfume,
   selectedVol,
   onSelectVol,
+  onOrder,
 }: {
   perfume: Perfume;
   selectedVol: Volume;
   onSelectVol: (v: Volume) => void;
+  onOrder: () => void;
 }) {
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-[var(--onyx)]/10">
-      <div
-        className="relative aspect-[4/5] overflow-hidden"
-        style={{ backgroundColor: perfume.accent }}
-      >
+      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Touche d'accent couleur en fond subtil */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-15"
+          style={{ backgroundColor: perfume.accent }}
+        />
         {perfume.badge && (
           <span className="absolute left-3 top-3 z-10 rounded-full bg-[var(--onyx)] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--gold)]">
             {perfume.badge}
           </span>
         )}
-        <span className="absolute right-3 top-3 z-10 rounded-full border border-white/40 bg-white/20 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur">
+        <span className="absolute right-3 top-3 z-10 rounded-full border border-black/10 bg-white/70 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[var(--onyx)] backdrop-blur">
           {perfume.family}
         </span>
         <img
           src={perfume.image}
           alt={perfume.name}
-          className="h-full w-full object-cover mix-blend-multiply transition duration-700 group-hover:scale-105"
+          className="relative h-full w-full object-cover transition duration-700 group-hover:scale-105"
           loading="lazy"
         />
       </div>
@@ -390,7 +410,10 @@ function PerfumeCard({
               </option>
             ))}
           </select>
-          <button className="flex-1 rounded-lg bg-[var(--onyx)] px-2 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-[var(--ruby)]">
+          <button
+            onClick={onOrder}
+            className="flex-1 rounded-lg bg-[var(--onyx)] px-2 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-[var(--ruby)]"
+          >
             Commander
           </button>
         </div>

@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "resend": "npm:resend@3.5.0",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-import-prefix"]
+    }
+  }
+}

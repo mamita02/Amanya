@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+// src/components/Footer.tsx
+import { Mail, MapPin, Phone } from "lucide-react";
+import logo from "../assets/logo.png";
 
 export function Footer() {
   return (
@@ -7,9 +9,12 @@ export function Footer() {
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           {/* Brand */}
           <div className="md:max-w-xs">
-            <span className="font-display text-3xl font-black tracking-[0.25em] bg-gradient-to-b from-[var(--ruby-bright)] via-[var(--ruby)] to-[var(--ruby-bright)] bg-clip-text text-transparent">
-              AMANYA
-            </span>
+            {/* LOGO image */}
+            <img
+              src={logo}
+              alt="AMANYA"
+              className="h-14 w-auto md:h-16"
+            />
             <p className="mt-4 text-sm text-white/60">
               Parfums, vêtements et diffuseurs authentiques pour grossistes, revendeurs et
               particuliers au Sénégal.
@@ -68,19 +73,20 @@ export function Footer() {
               <ul className="mt-4 space-y-3 text-sm text-white/70">
                 <li className="flex items-center gap-3">
                   <Mail className="h-4 w-4 text-[var(--gold)]" />
-                  <a href="mailto:contact@amanya.sn" className="hover:text-[var(--gold)]">
-                    contact@amanya.sn
+                  <a href="mailto:contact@amanya-distribution.com" className="hover:text-[var(--gold)]">
+                    contact@amanya-distribution.com
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="h-4 w-4 text-[var(--gold)]" />
                   <a href="tel:+221770000000" className="hover:text-[var(--gold)]">
-                    +221 77 000 00 00
+                    +221 33 820 09 36
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <MapPin className="h-4 w-4 text-[var(--gold)]" />
-                  Dakar, Sénégal
+                  Sénégal Dakar, Ouest Foire 
+                  
                 </li>
                 <li className="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-xs text-white/50">
                   <a href="#" className="hover:text-[var(--gold)] transition">CGV</a>

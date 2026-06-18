@@ -1,14 +1,23 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowRight, ChevronLeft, ChevronRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ArrowRight, ShieldCheck, Truck, Gem, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
-import { ListingCard } from "../components/ListingCard";
-import { listings } from "../lib/listings";
+import contactBg from "../assets/contact-bg.jpg";
 import hero1 from "../assets/hero-1.jpg";
 import hero2 from "../assets/hero-2.jpg";
 import hero3 from "../assets/hero-3.jpg";
-import contactBg from "../assets/contact-bg.jpg";
+import mounia from "../assets/Mounia.jpeg";
+
+// Logos partenaires
+import autoLogo from "../assets/partners/auto.png";
+import bardageLogo from "../assets/partners/bardage.png";
+import marimikaLogo from "../assets/partners/marimika.png";
+import nayaharmonieLogo from "../assets/partners/Nayaharmonie.png";
+import pcnetLogo from "../assets/partners/pcnet.png";
+import voyageLogo from "../assets/partners/Voyage.png";
+
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import { PartnerCard, type Partner } from "../components/PartnerCard";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -57,7 +66,54 @@ const categories = [
   },
 ];
 
-const partners = ["DIOR", "GIVENCHY", "CHANEL", "ARMANI", "GAULTIER", "YSL", "PRADA"];
+// Partenaires AMANYA — remplace les "#" par les vraies URLs des sites partenaires
+const partners: Partner[] = [
+  {
+    name: "La Clinique Auto",
+    logo: autoLogo,
+    domain: "Automobile",
+    location: "France",
+    url: "https://lacliniqueauto.com/",
+    featured: true,
+  },
+  {
+    name: "RPI Bardage",
+    logo: bardageLogo,
+    domain: "Bardage & Façades",
+    location: "France",
+    url: "https://rpi-bardage.com/",
+  },
+  {
+    name: "Marimika",
+    logo: marimikaLogo,
+    domain: "Mode & Streetwear",
+    location: "France",
+    url: "https://marimika.com/",
+  },
+  {
+    name: "Naya Harmonie",
+    logo: nayaharmonieLogo,
+    domain: "Coaching Holistique",
+    location: "France & Sénégal",
+    url: "https://nayaharmonie.com/",
+    featured: true,
+  },
+  {
+    name: "PCNet Univers",
+    logo: pcnetLogo,
+    domain: "Informatique",
+    location: "France",
+    url: "https://pcnet-univers.com/",
+  },
+  {
+    name: "Delwin Voyage",
+    logo: voyageLogo,
+    domain: "Agence de Voyage",
+    location: "Sénégal",
+    url: "https://delwinvoyage.sn/",
+    featured: true,
+  },
+];
 
 const heroSlides = [hero1, hero2, hero3];
 
@@ -115,8 +171,6 @@ function HeroCarousel() {
 }
 
 function HomePage() {
-  const featured = listings.slice(0, 8);
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -157,7 +211,6 @@ function HomePage() {
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
 
-
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((c) => (
             <a
@@ -189,38 +242,44 @@ function HomePage() {
       </section>
 
       {/* ABOUT */}
-      <section id="apropos" className="bg-[var(--secondary)]">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8">
-          <div className="relative">
-            <div className="absolute -inset-4 -z-10 rounded-[3rem] bg-gradient-to-br from-[var(--ruby)]/20 via-transparent to-[var(--gold)]/20 blur-2xl" />
+      <section id="apropos" className="bg-[#F5EDE5]">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:py-32">
+          {/* Photo avec forme blob organique */}
+          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
             <img
-              src="https://images.unsplash.com/photo-1581088657384-fa3a48b97b9b?w=1000&h=1200&fit=crop&auto=format"
-              alt="Équipe AMANYA"
+              src={mounia}
+              alt="Mounia — AMANYA"
               loading="lazy"
-              className="h-full w-full rounded-[2.5rem] object-cover shadow-2xl"
-              style={{ borderTopLeftRadius: "40% 50%", borderBottomRightRadius: "40% 50%" }}
+              className="h-auto w-full object-cover shadow-2xl"
+              style={{
+                borderRadius: "62% 38% 56% 44% / 54% 49% 51% 46%",
+              }}
             />
           </div>
+
+          {/* Texte */}
           <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            <span className="text-xs font-bold uppercase tracking-[0.3em] text-[var(--ruby)]">
               À propos de nous
             </span>
-            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
-              Plus qu'un fournisseur, <span className="text-[var(--ruby)]">une maison.</span>
+            <h2 className="mt-5 font-display text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+              Plus qu'un fournisseur,
+              <br />
+              <span className="text-[var(--ruby)]">une maison.</span>
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+            <p className="mt-8 text-base leading-relaxed text-foreground/80">
               AMANYA est bien plus qu'un simple fournisseur : c'est une solution complète et
               accessible pour les grossistes, revendeurs, commerces de proximité et entrepreneurs au
               Sénégal.
             </p>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+            <p className="mt-5 text-base leading-relaxed text-foreground/80">
               Née dans la continuité de l'agence MCE — Management Communication Event, AMANYA
               apporte un maillon essentiel : l'approvisionnement direct en produits authentiques,
               certifiés et accessibles.
             </p>
             <a
               href="#"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--gold)] px-8 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--onyx)] shadow-md transition hover:bg-[var(--gold-soft)]"
+              className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]"
             >
               Voir plus
             </a>
@@ -228,7 +287,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* PARTNERS (featured products grid) */}
+      {/* PARTNERS */}
       <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="font-display text-4xl font-bold sm:text-5xl">Nos partenaires</h2>
@@ -237,9 +296,10 @@ function HomePage() {
           </span>
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map((l) => (
-            <ListingCard key={l.id} listing={l} />
+
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {partners.map((partner) => (
+            <PartnerCard key={partner.name} partner={partner} />
           ))}
         </div>
       </section>
@@ -275,7 +335,7 @@ function HomePage() {
 
             <div className="mt-10 space-y-4">
               {[
-                { label: "Email", value: "contact@amanya.sn" },
+                { label: "Email", value: "contact@amanya-distribution.com" },
                 { label: "Téléphone", value: "+221 77 000 00 00" },
                 { label: "Adresse", value: "Dakar, Sénégal" },
               ].map((info) => (

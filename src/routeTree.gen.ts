@@ -10,17 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VetementsRouteImport } from './routes/vetements'
+import { Route as PanierRouteImport } from './routes/panier'
 import { Route as HommeRouteImport } from './routes/homme'
 import { Route as FemmeRouteImport } from './routes/femme'
 import { Route as DiffuseurRouteImport } from './routes/diffuseur'
 import { Route as CosmetiquesRouteImport } from './routes/cosmetiques'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccessoiresRouteImport } from './routes/accessoires'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PartenaireIdRouteImport } from './routes/partenaire.$id'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
 
 const VetementsRoute = VetementsRouteImport.update({
   id: '/vetements',
   path: '/vetements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PanierRoute = PanierRouteImport.update({
+  id: '/panier',
+  path: '/panier',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HommeRoute = HommeRouteImport.update({
@@ -43,6 +51,11 @@ const CosmetiquesRoute = CosmetiquesRouteImport.update({
   path: '/cosmetiques',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccessoiresRoute = AccessoiresRouteImport.update({
   id: '/accessoires',
   path: '/accessoires',
@@ -51,6 +64,11 @@ const AccessoiresRoute = AccessoiresRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartenaireIdRoute = PartenaireIdRouteImport.update({
+  id: '/partenaire/$id',
+  path: '/partenaire/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListingIdRoute = ListingIdRouteImport.update({
@@ -62,76 +80,97 @@ const ListingIdRoute = ListingIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
+  '/admin': typeof AdminRoute
   '/cosmetiques': typeof CosmetiquesRoute
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
+  '/panier': typeof PanierRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
+  '/partenaire/$id': typeof PartenaireIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
+  '/admin': typeof AdminRoute
   '/cosmetiques': typeof CosmetiquesRoute
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
+  '/panier': typeof PanierRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
+  '/partenaire/$id': typeof PartenaireIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
+  '/admin': typeof AdminRoute
   '/cosmetiques': typeof CosmetiquesRoute
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
+  '/panier': typeof PanierRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
+  '/partenaire/$id': typeof PartenaireIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/accessoires'
+    | '/admin'
     | '/cosmetiques'
     | '/diffuseur'
     | '/femme'
     | '/homme'
+    | '/panier'
     | '/vetements'
     | '/listing/$id'
+    | '/partenaire/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/accessoires'
+    | '/admin'
     | '/cosmetiques'
     | '/diffuseur'
     | '/femme'
     | '/homme'
+    | '/panier'
     | '/vetements'
     | '/listing/$id'
+    | '/partenaire/$id'
   id:
     | '__root__'
     | '/'
     | '/accessoires'
+    | '/admin'
     | '/cosmetiques'
     | '/diffuseur'
     | '/femme'
     | '/homme'
+    | '/panier'
     | '/vetements'
     | '/listing/$id'
+    | '/partenaire/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccessoiresRoute: typeof AccessoiresRoute
+  AdminRoute: typeof AdminRoute
   CosmetiquesRoute: typeof CosmetiquesRoute
   DiffuseurRoute: typeof DiffuseurRoute
   FemmeRoute: typeof FemmeRoute
   HommeRoute: typeof HommeRoute
+  PanierRoute: typeof PanierRoute
   VetementsRoute: typeof VetementsRoute
   ListingIdRoute: typeof ListingIdRoute
+  PartenaireIdRoute: typeof PartenaireIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/vetements'
       fullPath: '/vetements'
       preLoaderRoute: typeof VetementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/panier': {
+      id: '/panier'
+      path: '/panier'
+      fullPath: '/panier'
+      preLoaderRoute: typeof PanierRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/homme': {
@@ -171,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CosmetiquesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/accessoires': {
       id: '/accessoires'
       path: '/accessoires'
@@ -183,6 +236,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partenaire/$id': {
+      id: '/partenaire/$id'
+      path: '/partenaire/$id'
+      fullPath: '/partenaire/$id'
+      preLoaderRoute: typeof PartenaireIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/listing/$id': {
@@ -198,13 +258,26 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccessoiresRoute: AccessoiresRoute,
+  AdminRoute: AdminRoute,
   CosmetiquesRoute: CosmetiquesRoute,
   DiffuseurRoute: DiffuseurRoute,
   FemmeRoute: FemmeRoute,
   HommeRoute: HommeRoute,
+  PanierRoute: PanierRoute,
   VetementsRoute: VetementsRoute,
   ListingIdRoute: ListingIdRoute,
+  PartenaireIdRoute: PartenaireIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

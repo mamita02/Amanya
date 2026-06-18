@@ -1,5 +1,8 @@
+// src/components/Header.tsx
 import { Link } from "@tanstack/react-router";
-import { Search, Menu, Heart, User, ShoppingBag, ChevronDown } from "lucide-react";
+import { ChevronDown, Heart, Menu, Search, ShoppingBag, User } from "lucide-react";
+import logo from "../assets/logo.png";
+import { useCart } from "../lib/cart";
 
 const storeItems: { label: string; to: string }[] = [
   { label: "Vêtements", to: "/vetements" },
@@ -15,6 +18,8 @@ const navLinks = [
 ];
 
 export function Header() {
+  const { totalItems, isHydrated } = useCart();
+
   return (
     <header className="sticky top-0 z-50 bg-[var(--onyx)] text-white">
       <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -28,10 +33,13 @@ export function Header() {
           </div>
         </div>
 
+        {/* LOGO image */}
         <Link to="/" className="flex items-center justify-center">
-          <span className="font-display text-3xl font-black tracking-[0.25em] bg-gradient-to-b from-[var(--ruby-bright)] via-[var(--ruby)] to-[var(--ruby-bright)] bg-clip-text text-transparent drop-shadow-[0_1px_0_rgba(255,215,140,0.35)] sm:text-4xl">
-            AMANYA
-          </span>
+          <img
+            src={logo}
+            alt="AMANYA"
+            className="h-10 w-auto sm:h-12 md:h-14"
+          />
         </Link>
 
         <div className="flex items-center justify-end gap-2">
@@ -41,9 +49,21 @@ export function Header() {
           <button className="hidden h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Favoris">
             <Heart className="h-4 w-4" />
           </button>
-          <button className="grid h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)]" aria-label="Panier">
+
+          {/* Panier avec badge */}
+          <Link
+            to="/panier"
+            className="relative grid h-10 w-10 place-items-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-[var(--gold)]"
+            aria-label="Panier"
+          >
             <ShoppingBag className="h-4 w-4" />
-          </button>
+            {isHydrated && totalItems > 0 && (
+              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[var(--ruby)] px-1 text-[10px] font-bold text-white shadow-md">
+                {totalItems > 99 ? "99+" : totalItems}
+              </span>
+            )}
+          </Link>
+
           <button className="grid h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] md:hidden" aria-label="Menu">
             <Menu className="h-5 w-5" />
           </button>
@@ -69,12 +89,12 @@ export function Header() {
                 <ul className="py-2">
                   {storeItems.map((item) => (
                     <li key={item.label}>
-                      <a
-                        href={item.to}
+                      <Link
+                        to={item.to}
                         className="block px-5 py-2.5 text-sm text-[var(--gold-soft)] transition hover:bg-white/5 hover:text-[var(--gold)]"
                       >
                         {item.label}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -84,7 +104,7 @@ export function Header() {
 
           {navLinks.map((l) => (
             <li key={l.label}>
-              <a href={`#${l.hash}`} className="transition hover:text-[var(--gold)]">
+              <a href={`/#${l.hash}`} className="transition hover:text-[var(--gold)]">
                 {l.label}
               </a>
             </li>
