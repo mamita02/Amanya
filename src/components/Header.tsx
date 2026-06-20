@@ -1,7 +1,7 @@
 // src/components/Header.tsx
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, Heart, Menu, Search, ShoppingBag, User } from "lucide-react";
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png"; 
 import { useCart } from "../lib/cart";
 
 const storeItems: { label: string; to: string }[] = [
