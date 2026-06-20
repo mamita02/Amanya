@@ -3,7 +3,7 @@
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import logoUrl from "../assets/logo.png";
+import logoUrl from "../assets/Logo.png";
 import { formatFCFA } from "./perfumes";
 
 export type ReceiptCustomer = {
