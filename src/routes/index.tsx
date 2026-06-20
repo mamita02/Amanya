@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronLeft, ChevronRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { useEffect, useState } from "react";
 import contactBg from "../assets/contact-bg.jpg";
@@ -43,24 +43,28 @@ const categories = [
   {
     name: "Vêtements",
     tagline: "Style affirmé",
+    path: "/vetements",
     image:
       "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&h=1100&fit=crop&auto=format",
   },
   {
     name: "Homme",
     tagline: "Sillage masculin",
+    path: "/homme",
     image:
       "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=900&h=1100&fit=crop&auto=format",
   },
   {
     name: "Femme",
     tagline: "Sillage féminin",
+    path: "/femme",
     image:
       "https://images.unsplash.com/photo-1541643600914-78b084683601?w=900&h=1100&fit=crop&auto=format",
   },
   {
     name: "Diffuseur",
     tagline: "Ambiance signature",
+    path: "/diffuseur",
     image:
       "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=900&h=1100&fit=crop&auto=format",
   },
@@ -212,10 +216,11 @@ function HomePage() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((c) => (
-            <a
+         
+            {categories.map((c) => (
+            <Link
               key={c.name}
-              href="#"
+              to={c.path}
               className="group relative block aspect-[3/4] overflow-hidden rounded-3xl bg-[var(--onyx)]"
             >
               <img
@@ -236,8 +241,8 @@ function HomePage() {
                 </div>
               </div>
               <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 transition group-hover:ring-[var(--gold)]/40" />
-            </a>
-          ))}
+           </Link>
+  ))}
         </div>
       </section>
 
@@ -336,8 +341,8 @@ function HomePage() {
             <div className="mt-10 space-y-4">
               {[
                 { label: "Email", value: "contact@amanya-distribution.com" },
-                { label: "Téléphone", value: "+221 77 000 00 00" },
-                { label: "Adresse", value: "Dakar, Sénégal" },
+                { label: "Téléphone", value: "+221 33 820 09 36" },
+                { label: "Adresse", value: "Sénégal Dakar, Ouest Foire" },
               ].map((info) => (
                 <div key={info.label} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 backdrop-blur-md">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--gold)]">
