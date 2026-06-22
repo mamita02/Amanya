@@ -1,5 +1,4 @@
 // src/lib/partners.ts
-// Source de vérité unique pour les données des partenaires AMANYA.
 
 import autoLogo from "../assets/partners/auto.png";
 import bardageLogo from "../assets/partners/bardage.png";
@@ -9,19 +8,18 @@ import pcnetLogo from "../assets/partners/pcnet.png";
 import voyageLogo from "../assets/partners/Voyage.png";
 
 export type Partner = {
-  id: string;             // slug pour l'URL
+  id: string;
   name: string;
-  logo: string;           // import de l'image (screenshot du site)
-  domain: string;         // domaine d'activité court
-  location: string;       // ville/pays
-  url: string;            // site web officiel
-  description: string;    // description longue pour la page détail
+  logo: string;
+  domain: string;
+  location: string;
+  url: string;
+  description: string;
   featured?: boolean;
   bgColor?: string;
   phone?: string;
   email?: string;
-  founded?: string;       // année de fondation (optionnel)
-  services?: string[];    // liste de services proposés
+  services?: string[];
 };
 
 export const partners: Partner[] = [

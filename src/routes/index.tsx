@@ -6,18 +6,11 @@ import hero1 from "../assets/hero-1.jpg";
 import hero2 from "../assets/hero-2.jpg";
 import hero3 from "../assets/hero-3.jpg";
 import mounia from "../assets/Mounia.jpeg";
-
-// Logos partenaires
-import autoLogo from "../assets/partners/auto.png";
-import bardageLogo from "../assets/partners/bardage.png";
-import marimikaLogo from "../assets/partners/marimika.png";
-import nayaharmonieLogo from "../assets/partners/Nayaharmonie.png";
-import pcnetLogo from "../assets/partners/pcnet.png";
-import voyageLogo from "../assets/partners/Voyage.png";
+import { partners } from "../lib/partners";
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-import { PartnerCard, type Partner } from "../components/PartnerCard";
+import { PartnerCard } from "../components/PartnerCard";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -71,53 +64,7 @@ const categories = [
 ];
 
 // Partenaires AMANYA — remplace les "#" par les vraies URLs des sites partenaires
-const partners: Partner[] = [
-  {
-    name: "La Clinique Auto",
-    logo: autoLogo,
-    domain: "Automobile",
-    location: "France",
-    url: "https://lacliniqueauto.com/",
-    featured: true,
-  },
-  {
-    name: "RPI Bardage",
-    logo: bardageLogo,
-    domain: "Bardage & Façades",
-    location: "France",
-    url: "https://rpi-bardage.com/",
-  },
-  {
-    name: "Marimika",
-    logo: marimikaLogo,
-    domain: "Mode & Streetwear",
-    location: "France",
-    url: "https://marimika.com/",
-  },
-  {
-    name: "Naya Harmonie",
-    logo: nayaharmonieLogo,
-    domain: "Coaching Holistique",
-    location: "France & Sénégal",
-    url: "https://nayaharmonie.com/",
-    featured: true,
-  },
-  {
-    name: "PCNet Univers",
-    logo: pcnetLogo,
-    domain: "Informatique",
-    location: "France",
-    url: "https://pcnet-univers.com/",
-  },
-  {
-    name: "Delwin Voyage",
-    logo: voyageLogo,
-    domain: "Agence de Voyage",
-    location: "Sénégal",
-    url: "https://delwinvoyage.sn/",
-    featured: true,
-  },
-];
+
 
 const heroSlides = [hero1, hero2, hero3];
 
