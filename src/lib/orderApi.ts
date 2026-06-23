@@ -1,6 +1,4 @@
 // src/lib/orderApi.ts
-// Wrapper côté client pour appeler l'Edge Function send-order.
-
 import { generateReceiptPDF, type ReceiptOrder } from "./receipt";
 import { supabase } from "./supabase";
 
@@ -13,16 +11,16 @@ export type SendOrderResult = {
 };
 
 export async function sendOrder(order: ReceiptOrder): Promise<SendOrderResult> {
-  // 1) Générer le PDF (await maintenant que le logo se charge en async)
+  // 1) Générer le PDF
   const doc = await generateReceiptPDF(order);
 
-  // 2) Télécharger le PDF côté user (copie locale)
-  doc.save(`AMANYA-${order.orderNumber}.pdf`);
+  // 2) Encoder en base64 AVANT le save (plus léger que datauristring)
+  const pdfBase64 = btoa(
+    new Uint8Array(doc.output("arraybuffer"))
+      .reduce((data, byte) => data + String.fromCharCode(byte), "")
+  );
 
-  // 3) Encoder en base64 pour l'envoyer à l'Edge Function
-  const pdfBase64 = doc.output("datauristring").split(",")[1];
-
-  // 4) Appeler l'Edge Function via le client Supabase
+  // 3) Appeler l'Edge Function AVANT le download
   const { data, error } = await supabase.functions.invoke("send-order", {
     body: {
       orderNumber: order.orderNumber,
@@ -42,6 +40,14 @@ export async function sendOrder(order: ReceiptOrder): Promise<SendOrderResult> {
 
   if (!data?.success) {
     throw new Error(data?.error || "La commande n'a pas pu être envoyée");
+  }
+
+  // 4) Télécharger le PDF APRÈS le succès (pas avant!)
+  try {
+    doc.save(`AMANYA-${order.orderNumber}.pdf`);
+  } catch {
+    // Sur certains mobiles le save échoue silencieusement, c'est OK
+    console.warn("PDF save failed on this device");
   }
 
   return data as SendOrderResult;
