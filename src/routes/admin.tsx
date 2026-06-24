@@ -1,17 +1,17 @@
-// src/routes/admin.tsx (VERSION AVEC STATS RÉELLES)
+// src/routes/admin.tsx
 
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { BarChart3, Edit2, LogOut, Package, Plus, Settings, Trash2, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
-    createPerfume,
-    deletePerfume,
-    getAllPerfumes,
-    updatePerfume,
-    uploadPerfumeImage,
-    type Category,
-    type Perfume,
-    type PerfumeInput,
+  createPerfume,
+  deletePerfume,
+  getAllPerfumes,
+  updatePerfume,
+  uploadPerfumeImage,
+  type Category,
+  type Perfume,
+  type PerfumeInput,
 } from "../lib/supabase";
 
 export const Route = createFileRoute("/admin")({
@@ -40,15 +40,11 @@ function AdminLayout() {
     <div className="flex h-screen bg-gray-50">
       {/* ===== SIDEBAR NOIRE ===== */}
       <div className="w-64 text-white shadow-lg flex flex-col" style={{ backgroundColor: "#1a1a1a" }}>
-        {/* Logo */}
         <div className="p-6 border-b border-white/10">
-          <h1 className="text-2xl font-bold" style={{ color: "#D4AF37" }}>
-            AMANYA
-          </h1>
+          <h1 className="text-2xl font-bold" style={{ color: "#D4AF37" }}>AMANYA</h1>
           <p className="text-xs text-gray-400 mt-1">Dashboard Admin</p>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2">
           {tabs.map((tab) => (
             <button
@@ -61,14 +57,10 @@ function AdminLayout() {
                   : { color: "#ccc" }
               }
               onMouseEnter={(e) => {
-                if (activeTab !== tab.id) {
-                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)";
-                }
+                if (activeTab !== tab.id) e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)";
               }}
               onMouseLeave={(e) => {
-                if (activeTab !== tab.id) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }
+                if (activeTab !== tab.id) e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
               {tab.icon}
@@ -77,7 +69,6 @@ function AdminLayout() {
           ))}
         </nav>
 
-        {/* Logout */}
         <div className="p-4 border-t border-white/10">
           <button
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition"
@@ -115,7 +106,6 @@ function AdminPerfumesView() {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // État du formulaire
   const [form, setForm] = useState({
     name: "",
     brand: "",
@@ -130,6 +120,7 @@ function AdminPerfumesView() {
     accent: "#1a1a1a",
     minQuantity: 25,
     isActive: true,
+    volume: 100,
   });
 
   useEffect(() => {
@@ -182,6 +173,7 @@ function AdminPerfumesView() {
       accent: "#1a1a1a",
       minQuantity: 25,
       isActive: true,
+      volume: 100,
     });
     setImageFile(null);
     setImagePreview("");
@@ -202,8 +194,9 @@ function AdminPerfumesView() {
       family: perfume.family,
       badge: perfume.badge || "",
       accent: perfume.accent,
-      minQuantity: perfume.minQuantity as any,
+      minQuantity: perfume.minQuantity as number,
       isActive: perfume.isActive,
+      volume: perfume.volumes?.[0] || 100,
     });
     setImagePreview(perfume.image);
     setEditingId(perfume.id);
@@ -228,7 +221,7 @@ function AdminPerfumesView() {
       const perfumeData: PerfumeInput = {
         name: form.name,
         brand: form.brand,
-        subtitle: form.subtitle,
+        subtitle: form.subtitle || `${form.volume}ml - Eau de Parfum`,
         description: form.description,
         price: form.price,
         category: form.category,
@@ -238,7 +231,7 @@ function AdminPerfumesView() {
         image: imageUrl,
         badge: form.badge || undefined,
         accent: form.accent,
-        volumes: [50, 100],
+        volumes: [form.volume as 50 | 100],
         minQuantity: form.minQuantity as any,
         isActive: form.isActive,
       };
@@ -249,10 +242,10 @@ function AdminPerfumesView() {
         await createPerfume(perfumeData);
       }
 
-     resetForm();
+      resetForm();
       setShowForm(false);
       await loadPerfumes();
-      await router.invalidate();  // ← AJOUTE CETTE LIGNE
+      await router.invalidate();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erreur inconnue";
       setSubmitError(msg);
@@ -264,10 +257,10 @@ function AdminPerfumesView() {
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Supprimer "${name}"?`)) return;
 
-   try {
+    try {
       await deletePerfume(id);
       setPerfumes(perfumes.filter((p) => p.id !== id));
-      await router.invalidate();  // ← AJOUTE CETTE LIGNE
+      await router.invalidate();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erreur inconnue";
       setError(msg);
@@ -285,10 +278,7 @@ function AdminPerfumesView() {
           </p>
         </div>
         <button
-          onClick={() => {
-            resetForm();
-            setShowForm(true);
-          }}
+          onClick={() => { resetForm(); setShowForm(true); }}
           className="flex items-center gap-2 text-white px-6 py-3 rounded-lg font-semibold transition hover:opacity-90"
           style={{ backgroundColor: "#1a1a1a" }}
         >
@@ -297,14 +287,12 @@ function AdminPerfumesView() {
         </button>
       </div>
 
-      {/* Erreur globale */}
       {error && (
         <div className="mb-6 p-4 rounded-lg text-white" style={{ backgroundColor: "#DC143C" }}>
-          ❌ {error}
+          {error}
         </div>
       )}
 
-      {/* Recherche */}
       <div className="mb-6">
         <input
           type="text"
@@ -315,29 +303,16 @@ function AdminPerfumesView() {
         />
       </div>
 
-      {/* État de chargement */}
       {loading ? (
         <div className="text-center py-12">
-          <div
-            className="inline-block w-8 h-8 border-4 rounded-full animate-spin"
-            style={{ borderColor: "#1a1a1a", borderTopColor: "#D4AF37" }}
-          ></div>
+          <div className="inline-block w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: "#1a1a1a", borderTopColor: "#D4AF37" }}></div>
           <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       ) : filteredPerfumes.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-          <p className="text-gray-600 mb-4">
-            {searchTerm ? "Aucun parfum trouvé" : "Aucun parfum trouvé"}
-          </p>
+          <p className="text-gray-600 mb-4">Aucun parfum trouvé</p>
           {!searchTerm && (
-            <button
-              onClick={() => {
-                resetForm();
-                setShowForm(true);
-              }}
-              className="text-white px-6 py-2 rounded-lg transition hover:opacity-90"
-              style={{ backgroundColor: "#1a1a1a" }}
-            >
+            <button onClick={() => { resetForm(); setShowForm(true); }} className="text-white px-6 py-2 rounded-lg transition hover:opacity-90" style={{ backgroundColor: "#1a1a1a" }}>
               Ajouter le premier parfum
             </button>
           )}
@@ -350,7 +325,7 @@ function AdminPerfumesView() {
                 <th className="px-6 py-4 text-left text-sm font-semibold">Parfum</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Marque</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Catégorie</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold">Genre</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Volume</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Prix</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Actif</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Actions</th>
@@ -365,10 +340,7 @@ function AdminPerfumesView() {
                         src={perfume.image}
                         alt={perfume.name}
                         className="w-10 h-10 rounded object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "https://via.placeholder.com/40?text=?";
-                        }}
+                        onError={(e) => { (e.target as HTMLImageElement).src = "https://via.placeholder.com/40?text=?"; }}
                       />
                       <div>
                         <p className="font-semibold text-sm">{perfume.name}</p>
@@ -378,11 +350,19 @@ function AdminPerfumesView() {
                   </td>
                   <td className="px-6 py-4 text-sm">{perfume.brand}</td>
                   <td className="px-6 py-4 text-sm">
-                    <span className="bg-gray-200 px-3 py-1 rounded text-xs font-semibold">
-                      {perfume.category}
+                    <span className="bg-gray-200 px-3 py-1 rounded text-xs font-semibold">{perfume.category}</span>
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    <span
+                      className="px-2 py-1 rounded text-xs font-bold"
+                      style={{
+                        backgroundColor: perfume.volumes?.[0] === 50 ? "rgba(212,175,55,0.15)" : "rgba(26,26,26,0.1)",
+                        color: perfume.volumes?.[0] === 50 ? "#B8941E" : "#1a1a1a",
+                      }}
+                    >
+                      {perfume.volumes?.[0] || 100} ml
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm">{perfume.gender}</td>
                   <td className="px-6 py-4 text-sm font-semibold">
                     {perfume.price.toLocaleString("fr-FR")} XOF
                   </td>
@@ -430,48 +410,62 @@ function AdminPerfumesView() {
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-3xl w-full max-h-[95vh] overflow-y-auto">
-            {/* Header */}
-            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white">
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
               <h3 className="text-2xl font-bold text-gray-900">
                 {editingId ? "Modifier le Parfum" : "Ajouter un Parfum"}
               </h3>
-              <button
-                onClick={() => {
-                  setShowForm(false);
-                  resetForm();
-                }}
-                className="text-2xl text-gray-500 hover:text-red-500"
-              >
-                ×
-              </button>
+              <button onClick={() => { setShowForm(false); resetForm(); }} className="text-2xl text-gray-500 hover:text-red-500">×</button>
             </div>
 
-            {/* Formulaire */}
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               {submitError && (
-                <div className="p-4 rounded text-white text-sm" style={{ backgroundColor: "#DC143C" }}>
-                  ❌ {submitError}
-                </div>
+                <div className="p-4 rounded text-white text-sm" style={{ backgroundColor: "#DC143C" }}>{submitError}</div>
               )}
+
+              {/* VOLUME — en premier pour que le prix s'ajuste */}
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-900">Volume *</label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, volume: 50, price: 3500, minQuantity: 20 })}
+                    className="flex-1 py-3 rounded-xl text-sm font-bold border-2 transition"
+                    style={
+                      form.volume === 50
+                        ? { borderColor: "#D4AF37", backgroundColor: "rgba(212,175,55,0.1)", color: "#B8941E" }
+                        : { borderColor: "#e5e7eb", color: "#666" }
+                    }
+                  >
+                    50 ml
+                    <span className="block text-xs font-normal mt-1" style={{ color: form.volume === 50 ? "#B8941E" : "#999" }}>
+                      3 500 FCFA · Min. 20 pcs
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, volume: 100, price: 20000, minQuantity: 25 })}
+                    className="flex-1 py-3 rounded-xl text-sm font-bold border-2 transition"
+                    style={
+                      form.volume === 100
+                        ? { borderColor: "#D4AF37", backgroundColor: "rgba(212,175,55,0.1)", color: "#B8941E" }
+                        : { borderColor: "#e5e7eb", color: "#666" }
+                    }
+                  >
+                    100 ml
+                    <span className="block text-xs font-normal mt-1" style={{ color: form.volume === 100 ? "#B8941E" : "#999" }}>
+                      20 000 FCFA · Min. 25 pcs
+                    </span>
+                  </button>
+                </div>
+              </div>
 
               {/* PHOTO */}
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  id="image-upload"
-                  required={!imagePreview}
-                />
+                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" required={!imagePreview} />
                 <label htmlFor="image-upload" className="cursor-pointer block">
                   {imagePreview ? (
                     <div>
-                      <img
-                        src={imagePreview}
-                        alt="Aperçu"
-                        className="w-32 h-32 mx-auto rounded mb-3 object-cover"
-                      />
+                      <img src={imagePreview} alt="Aperçu" className="w-32 h-32 mx-auto rounded mb-3 object-cover" />
                       <p className="text-sm font-semibold text-gray-900">Cliquez pour changer la photo</p>
                     </div>
                   ) : (
@@ -488,85 +482,41 @@ function AdminPerfumesView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Nom *</label>
-                  <input
-                    type="text"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="ex: Oud Royal"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                    required
-                  />
+                  <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="ex: Sauvage 50ml" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Marque *</label>
-                  <input
-                    type="text"
-                    value={form.brand}
-                    onChange={(e) => setForm({ ...form, brand: e.target.value })}
-                    placeholder="ex: Al Farez"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                    required
-                  />
+                  <input type="text" value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} placeholder="ex: Dior" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required />
                 </div>
               </div>
 
-              {/* Sous-titre et Description */}
+              {/* Sous-titre et Badge */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Sous-titre</label>
-                  <input
-                    type="text"
-                    value={form.subtitle}
-                    onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
-                    placeholder="ex: Bois précieux"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                  />
+                  <input type="text" value={form.subtitle} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} placeholder={`Auto: ${form.volume}ml - Eau de Parfum`} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Badge</label>
-                  <input
-                    type="text"
-                    value={form.badge}
-                    onChange={(e) => setForm({ ...form, badge: e.target.value })}
-                    placeholder="ex: NEW, BEST"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                  />
+                  <input type="text" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} placeholder="ex: NEW, BEST" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" />
                 </div>
               </div>
 
-              {/* Description complète */}
+              {/* Description */}
               <div>
                 <label className="block text-sm font-semibold mb-1 text-gray-900">Description</label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Décrivez le parfum..."
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none resize-none"
-                />
+                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Décrivez le parfum..." rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none resize-none" />
               </div>
 
               {/* Prix et Catégorie */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Prix (FCFA) *</label>
-                  <input
-                    type="number"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                    min="1"
-                    required
-                  />
+                  <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: parseInt(e.target.value) })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" min="1" required />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Catégorie *</label>
-                  <select
-                    value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value as Category })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                    required
-                  >
+                  <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as Category })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required>
                     <option value="homme">Homme</option>
                     <option value="femme">Femme</option>
                     <option value="diffuseur">Diffuseur</option>
@@ -578,12 +528,7 @@ function AdminPerfumesView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Genre *</label>
-                  <select
-                    value={form.gender}
-                    onChange={(e) => setForm({ ...form, gender: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                    required
-                  >
+                  <select value={form.gender} onChange={(e) => setForm({ ...form, gender: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required>
                     <option value="Homme">Homme</option>
                     <option value="Femme">Femme</option>
                     <option value="Unisex">Unisex</option>
@@ -591,12 +536,7 @@ function AdminPerfumesView() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Type *</label>
-                  <select
-                    value={form.type}
-                    onChange={(e) => setForm({ ...form, type: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                    required
-                  >
+                  <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required>
                     <option value="Authentique">Authentique</option>
                     <option value="Standard">Standard</option>
                   </select>
@@ -607,29 +547,20 @@ function AdminPerfumesView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Famille *</label>
-                  <select
-                    value={form.family}
-                    onChange={(e) => setForm({ ...form, family: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                    required
-                  >
+                  <select value={form.family} onChange={(e) => setForm({ ...form, family: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required>
                     <option value="Oriental">Oriental</option>
                     <option value="Floral">Floral</option>
                     <option value="Fruité">Fruité</option>
                     <option value="Boisé">Boisé</option>
                     <option value="Épicé">Épicé</option>
                     <option value="Aquatique">Aquatique</option>
+                    <option value="Aromatique">Aromatique</option>
                     <option value="Chypré">Chypré</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Couleur Accent</label>
-                  <input
-                    type="color"
-                    value={form.accent}
-                    onChange={(e) => setForm({ ...form, accent: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                  />
+                  <input type="color" value={form.accent} onChange={(e) => setForm({ ...form, accent: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" />
                 </div>
               </div>
 
@@ -637,20 +568,11 @@ function AdminPerfumesView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Quantité Min.</label>
-                  <input
-                    type="number"
-                    value={form.minQuantity}
-                    onChange={(e) => setForm({ ...form, minQuantity: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                  />
+                  <input type="number" value={form.minQuantity} onChange={(e) => setForm({ ...form, minQuantity: parseInt(e.target.value) })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Actif</label>
-                  <select
-                    value={form.isActive ? "oui" : "non"}
-                    onChange={(e) => setForm({ ...form, isActive: e.target.value === "oui" })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none"
-                  >
+                  <select value={form.isActive ? "oui" : "non"} onChange={(e) => setForm({ ...form, isActive: e.target.value === "oui" })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none">
                     <option value="oui">Oui</option>
                     <option value="non">Non</option>
                   </select>
@@ -659,22 +581,10 @@ function AdminPerfumesView() {
 
               {/* Boutons */}
               <div className="flex gap-4 pt-6 border-t">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-1 text-white py-2 rounded-lg font-semibold transition hover:opacity-90 disabled:opacity-50"
-                  style={{ backgroundColor: "#1a1a1a" }}
-                >
+                <button type="submit" disabled={submitting} className="flex-1 text-white py-2 rounded-lg font-semibold transition hover:opacity-90 disabled:opacity-50" style={{ backgroundColor: "#1a1a1a" }}>
                   {submitting ? "Enregistrement..." : editingId ? "Modifier" : "Ajouter"}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForm(false);
-                    resetForm();
-                  }}
-                  className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
-                >
+                <button type="button" onClick={() => { setShowForm(false); resetForm(); }} className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
                   Annuler
                 </button>
               </div>
@@ -693,6 +603,10 @@ function StatsView() {
     homme: 0,
     femme: 0,
     diffuseur: 0,
+    homme50: 0,
+    homme100: 0,
+    femme50: 0,
+    femme100: 0,
     authentique: 0,
     standard: 0,
   });
@@ -702,12 +616,15 @@ function StatsView() {
     const loadStats = async () => {
       try {
         const perfumes = await getAllPerfumes();
-        
         setStats({
           totalPerfumes: perfumes.length,
           homme: perfumes.filter(p => p.category === 'homme').length,
           femme: perfumes.filter(p => p.category === 'femme').length,
           diffuseur: perfumes.filter(p => p.category === 'diffuseur').length,
+          homme50: perfumes.filter(p => p.category === 'homme' && p.volumes?.[0] === 50).length,
+          homme100: perfumes.filter(p => p.category === 'homme' && p.volumes?.[0] === 100).length,
+          femme50: perfumes.filter(p => p.category === 'femme' && p.volumes?.[0] === 50).length,
+          femme100: perfumes.filter(p => p.category === 'femme' && p.volumes?.[0] === 100).length,
           authentique: perfumes.filter(p => p.type === 'Authentique').length,
           standard: perfumes.filter(p => p.type === 'Standard').length,
         });
@@ -717,17 +634,13 @@ function StatsView() {
         setLoading(false);
       }
     };
-
     loadStats();
   }, []);
 
   if (loading) {
     return (
       <div className="p-8 text-center">
-        <div
-          className="inline-block w-8 h-8 border-4 rounded-full animate-spin"
-          style={{ borderColor: "#1a1a1a", borderTopColor: "#D4AF37" }}
-        ></div>
+        <div className="inline-block w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: "#1a1a1a", borderTopColor: "#D4AF37" }}></div>
         <p className="mt-4 text-gray-600">Chargement des statistiques...</p>
       </div>
     );
@@ -736,9 +649,7 @@ function StatsView() {
   const StatCard = ({ title, value, color }: { title: string; value: number; color: string }) => (
     <div className="bg-white p-6 rounded-lg shadow border-l-4" style={{ borderLeftColor: color }}>
       <p className="text-gray-600 text-sm font-semibold">{title}</p>
-      <p className="text-4xl font-bold mt-3" style={{ color }}>
-        {value}
-      </p>
+      <p className="text-4xl font-bold mt-3" style={{ color }}>{value}</p>
     </div>
   );
 
@@ -746,22 +657,26 @@ function StatsView() {
     <div className="p-8">
       <h2 className="text-3xl font-bold mb-8 text-gray-900">Statistiques</h2>
 
-      {/* Carte principale */}
       <div className="mb-8 bg-white p-8 rounded-lg shadow border-l-4" style={{ borderLeftColor: "#D4AF37" }}>
         <p className="text-gray-600 text-sm font-semibold">TOTAL PARFUMS</p>
-        <p className="text-6xl font-bold mt-4" style={{ color: "#D4AF37" }}>
-          {stats.totalPerfumes}
-        </p>
+        <p className="text-6xl font-bold mt-4" style={{ color: "#D4AF37" }}>{stats.totalPerfumes}</p>
       </div>
 
-      {/* Grille de stats */}
       <div className="grid grid-cols-3 gap-6 mb-8">
         <StatCard title="Parfums Homme" value={stats.homme} color="#1a1a1a" />
         <StatCard title="Parfums Femme" value={stats.femme} color="#DC143C" />
         <StatCard title="Diffuseurs" value={stats.diffuseur} color="#D4AF37" />
       </div>
 
-      {/* Type de parfum */}
+      {/* Détail par volume */}
+      <h3 className="text-xl font-bold mb-4 text-gray-900">Détail par volume</h3>
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        <StatCard title="Homme 50ml" value={stats.homme50} color="#B8941E" />
+        <StatCard title="Homme 100ml" value={stats.homme100} color="#1a1a1a" />
+        <StatCard title="Femme 50ml" value={stats.femme50} color="#E91E63" />
+        <StatCard title="Femme 100ml" value={stats.femme100} color="#DC143C" />
+      </div>
+
       <div className="grid grid-cols-2 gap-6">
         <StatCard title="Authentique" value={stats.authentique} color="#27AE60" />
         <StatCard title="Standard" value={stats.standard} color="#3498DB" />
@@ -779,24 +694,13 @@ function SettingsView() {
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-semibold mb-2 text-gray-900">Nom du site</label>
-            <input
-              type="text"
-              defaultValue="AMANYA"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none"
-            />
+            <input type="text" defaultValue="AMANYA" className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none" />
           </div>
           <div>
             <label className="block text-sm font-semibold mb-2 text-gray-900">Email de contact</label>
-            <input
-              type="email"
-              defaultValue="contact@amanya.sn"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none"
-            />
+            <input type="email" defaultValue="contact@amanya-distribution.com" className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none" />
           </div>
-          <button
-            className="text-white px-6 py-2 rounded-lg transition hover:opacity-90 font-semibold"
-            style={{ backgroundColor: "#1a1a1a" }}
-          >
+          <button className="text-white px-6 py-2 rounded-lg transition hover:opacity-90 font-semibold" style={{ backgroundColor: "#1a1a1a" }}>
             Enregistrer
           </button>
         </div>
