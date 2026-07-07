@@ -1,5 +1,5 @@
 // src/components/AddToCartModal.tsx
-import { AlertCircle, Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useCart } from "../lib/cart";
@@ -12,12 +12,11 @@ type Props = {
 };
 
 export function AddToCartModal({ perfume, defaultVolume, onClose }: Props) {
-  const { addItem } = useCart();
+  const { addItem, totalItems } = useCart();
   const [volume, setVolume] = useState<Volume>(defaultVolume);
-  const [quantity, setQuantity] = useState<number>(perfume.minQuantity);
+  const [quantity, setQuantity] = useState<number>(1); // <-- Défaut = 1
 
   const subtotal = quantity * perfume.price;
-  const isValid = quantity >= perfume.minQuantity;
 
   const handleQuantityChange = (val: number) => {
     if (Number.isNaN(val) || val < 1) val = 1;
@@ -25,10 +24,6 @@ export function AddToCartModal({ perfume, defaultVolume, onClose }: Props) {
   };
 
   const handleAdd = () => {
-    if (!isValid) {
-      toast.error(`Quantité minimum requise : ${perfume.minQuantity} pièces`);
-      return;
-    }
     addItem({
       perfumeId: perfume.id,
       name: perfume.name,
@@ -37,12 +32,16 @@ export function AddToCartModal({ perfume, defaultVolume, onClose }: Props) {
       volume,
       quantity,
       unitPrice: perfume.price,
-      minQuantity: perfume.minQuantity,
+      minQuantity: perfume.minQuantity, // gardé pour compat BD
       category: perfume.category,
     });
     toast.success(`${quantity} × ${perfume.name} ajouté au panier`);
     onClose();
   };
+
+  // Anticipation : ce que sera le panier après ajout
+  const futureTotal = totalItems + quantity;
+  const remainingAfter = Math.max(0, 25 - futureTotal);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
@@ -94,7 +93,7 @@ export function AddToCartModal({ perfume, defaultVolume, onClose }: Props) {
                 {formatFCFA(perfume.price)}
               </p>
               <p className="mt-1 text-[10px] uppercase tracking-wider text-[var(--gold)]">
-                Min. {perfume.minQuantity} pièces
+                Panier min. 25 pièces
               </p>
             </div>
           </div>
@@ -129,9 +128,6 @@ export function AddToCartModal({ perfume, defaultVolume, onClose }: Props) {
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                 Quantité
               </p>
-              <p className="text-[10px] uppercase tracking-wider text-[var(--gold)]">
-                Min. {perfume.minQuantity}
-              </p>
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -158,31 +154,33 @@ export function AddToCartModal({ perfume, defaultVolume, onClose }: Props) {
               </button>
             </div>
 
-            {/* Quick picks */}
+            {/* Quick picks : valeurs douces */}
             <div className="mt-3 flex flex-wrap gap-2">
-              {[perfume.minQuantity, perfume.minQuantity * 2, perfume.minQuantity * 4].map(
-                (q) => (
-                  <button
-                    key={q}
-                    onClick={() => setQuantity(q)}
-                    className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
-                      quantity === q
-                        ? "border-[var(--onyx)] bg-[var(--onyx)] text-white"
-                        : "border-border bg-card hover:border-[var(--onyx)]"
-                    }`}
-                  >
-                    {q} pièces
-                  </button>
-                )
-              )}
+              {[1, 5, 10, 25].map((q) => (
+                <button
+                  key={q}
+                  onClick={() => setQuantity(q)}
+                  className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                    quantity === q
+                      ? "border-[var(--onyx)] bg-[var(--onyx)] text-white"
+                      : "border-border bg-card hover:border-[var(--onyx)]"
+                  }`}
+                >
+                  {q} {q > 1 ? "pièces" : "pièce"}
+                </button>
+              ))}
             </div>
 
-            {!isValid && (
-              <div className="mt-3 flex items-start gap-2 rounded-lg bg-[var(--ruby)]/10 p-3 text-xs text-[var(--ruby)]">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                <span>
-                  Quantité insuffisante. Minimum {perfume.minQuantity} pièces requis.
-                </span>
+            {/* Indicateur panier après ajout */}
+            {remainingAfter > 0 && (
+              <div className="mt-3 rounded-lg bg-[var(--gold)]/10 p-3 text-xs text-foreground">
+                💡 Après ajout : <strong>{futureTotal}/25 pièces</strong> — il manquera{" "}
+                <strong>{remainingAfter}</strong> {remainingAfter > 1 ? "pièces" : "pièce"} pour valider votre commande.
+              </div>
+            )}
+            {remainingAfter === 0 && (
+              <div className="mt-3 rounded-lg bg-green-50 p-3 text-xs text-green-700">
+                ✅ Votre panier atteindra le minimum de 25 pièces après cet ajout.
               </div>
             )}
           </div>
@@ -204,8 +202,7 @@ export function AddToCartModal({ perfume, defaultVolume, onClose }: Props) {
           </button>
           <button
             onClick={handleAdd}
-            disabled={!isValid}
-            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--onyx)] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[var(--ruby)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--onyx)] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[var(--ruby)]"
           >
             <ShoppingBag className="h-4 w-4" />
             Ajouter au panier

@@ -28,7 +28,15 @@ type Props = {
 type Status = "idle" | "submitting" | "success" | "error";
 
 export function CheckoutModal({ onClose }: Props) {
-  const { items, totalItems, totalPrice, clearCart } = useCart();
+  const {
+    items,
+    totalItems,
+    totalPrice,
+    clearCart,
+    isCartValid,
+    remainingToMinimum,
+    progressPercent,
+  } = useCart();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -40,7 +48,9 @@ export function CheckoutModal({ onClose }: Props) {
   const [confirmedOrderNumber, setConfirmedOrderNumber] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
-  const isFormValid = name.trim().length >= 2 && phone.trim().length >= 6;
+  // Validation : coordonnées OK ET panier >= 25 pièces
+  const areContactsValid = name.trim().length >= 2 && phone.trim().length >= 6;
+  const isFormValid = areContactsValid && isCartValid;
   const isSubmitting = status === "submitting";
   const isSuccess = status === "success";
 
@@ -66,7 +76,7 @@ export function CheckoutModal({ onClose }: Props) {
   });
 
   const handlePreview = async () => {
-    if (!isFormValid) {
+    if (!areContactsValid) {
       toast.error("Renseignez d'abord votre nom et téléphone");
       return;
     }
@@ -84,7 +94,13 @@ export function CheckoutModal({ onClose }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!isFormValid) {
+    if (!isCartValid) {
+      toast.error(
+        `Panier incomplet : il manque ${remainingToMinimum} pièce${remainingToMinimum > 1 ? "s" : ""} pour atteindre le minimum de 25.`
+      );
+      return;
+    }
+    if (!areContactsValid) {
       toast.error("Veuillez renseigner votre nom et téléphone");
       return;
     }
@@ -100,7 +116,7 @@ export function CheckoutModal({ onClose }: Props) {
       setStatus("success");
       toast.success("Commande envoyée avec succès !");
 
-      // Vider le panier après 1s pour ne pas surprendre le user
+      // Vider le panier après 1s pour ne pas surprendre l'utilisateur
       setTimeout(() => clearCart(), 1000);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erreur inconnue";
@@ -184,6 +200,7 @@ export function CheckoutModal({ onClose }: Props) {
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-6">
+          {/* RÉCAP PANIER */}
           <div className="rounded-xl bg-secondary px-4 py-3">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
@@ -194,6 +211,55 @@ export function CheckoutModal({ onClose }: Props) {
             </div>
           </div>
 
+          {/* ============== BANDEAU MINIMUM PANIER ============== */}
+          {!isCartValid && (
+            <div className="mt-4 rounded-xl border border-[var(--gold)]/40 bg-[var(--gold)]/10 p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold)]" />
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-foreground">
+                    Commande minimum : 25 pièces
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Il vous manque <strong>{remainingToMinimum}</strong>{" "}
+                    {remainingToMinimum > 1 ? "pièces" : "pièce"} pour valider votre commande.
+                  </p>
+                  {/* Barre de progression */}
+                  <div className="mt-3">
+                    <div className="mb-1 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
+                      <span className="text-muted-foreground">Progression</span>
+                      <span className="text-foreground">{totalItems}/25 pièces</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-white/60">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-[var(--gold)] to-[var(--ruby)] transition-all duration-500"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    disabled={isSubmitting}
+                    className="mt-3 text-xs font-semibold text-[var(--ruby)] underline transition hover:text-[var(--onyx)] disabled:opacity-50"
+                  >
+                    ← Retourner au catalogue pour compléter
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isCartValid && (
+            <div className="mt-4 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-3 text-xs text-green-700">
+              <CheckCircle2 className="h-4 w-4 shrink-0" />
+              <span>
+                Panier validé : <strong>{totalItems} pièces</strong> (minimum 25 atteint)
+              </span>
+            </div>
+          )}
+
+          {/* ============== FORMULAIRE COORDONNÉES ============== */}
           <div className="mt-6">
             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
               Vos coordonnées
@@ -230,7 +296,10 @@ export function CheckoutModal({ onClose }: Props) {
               </div>
               <div>
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Email <span className="text-[var(--gold)]">(recommandé — pour recevoir la confirmation)</span>
+                  Email{" "}
+                  <span className="text-[var(--gold)]">
+                    (recommandé — pour recevoir la confirmation)
+                  </span>
                 </label>
                 <input
                   value={email}
@@ -285,7 +354,7 @@ export function CheckoutModal({ onClose }: Props) {
           <button
             type="button"
             onClick={handlePreview}
-            disabled={!isFormValid || isSubmitting || previewLoading}
+            disabled={!areContactsValid || isSubmitting || previewLoading}
             className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground underline transition hover:text-[var(--ruby)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {previewLoading ? (

@@ -3,16 +3,21 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
+// ============================================
+// RÈGLE MÉTIER : minimum panier global
+// ============================================
+export const MIN_CART_QUANTITY = 25;
+
 export type CartItem = {
-  id: string;          // identifiant unique de ligne = `${perfumeId}_${volume}`
+  id: string;
   perfumeId: string;
   name: string;
   brand: string;
   image: string;
-  volume: number;      // 50 ou 100 (ml)
+  volume: number;
   quantity: number;
-  unitPrice: number;   // prix FCFA / unité
-  minQuantity: number; // seuil minimum imposé pour ce parfum
+  unitPrice: number;
+  minQuantity: number; // gardé pour compat BD mais NON utilisé pour la validation
   category: string;
 };
 
@@ -22,9 +27,12 @@ type CartContextValue = {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, newQty: number) => void;
   clearCart: () => void;
-  totalItems: number;   // somme des quantités
-  totalPrice: number;   // somme du sous-total
-  isHydrated: boolean;  // true une fois le localStorage lu côté client (évite mismatch SSR)
+  totalItems: number;
+  totalPrice: number;
+  isCartValid: boolean;           // true si totalItems >= MIN_CART_QUANTITY
+  remainingToMinimum: number;     // combien il manque pour valider (0 si atteint)
+  progressPercent: number;        // progression 0-100 pour la barre visuelle
+  isHydrated: boolean;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -35,7 +43,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Charge depuis localStorage uniquement côté client
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -50,7 +57,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsHydrated(true);
   }, []);
 
-  // Persiste à chaque changement (uniquement après hydratation)
   useEffect(() => {
     if (!isHydrated || typeof window === "undefined") return;
     try {
@@ -65,7 +71,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === id);
       if (existing) {
-        // Si l'item existe déjà (même parfum + même volume), on cumule les quantités
         return prev.map((i) =>
           i.id === id ? { ...i, quantity: i.quantity + newItem.quantity } : i
         );
@@ -81,7 +86,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const updateQuantity = (id: string, newQty: number) => {
     setItems((prev) =>
       prev.map((i) =>
-        i.id === id ? { ...i, quantity: Math.max(i.minQuantity, newQty) } : i
+        // Plus de min par item : on autorise dès 1 pièce (jamais 0)
+        i.id === id ? { ...i, quantity: Math.max(1, newQty) } : i
       )
     );
   };
@@ -90,6 +96,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
+
+  const isCartValid = totalItems >= MIN_CART_QUANTITY;
+  const remainingToMinimum = Math.max(0, MIN_CART_QUANTITY - totalItems);
+  const progressPercent = Math.min(100, Math.round((totalItems / MIN_CART_QUANTITY) * 100));
 
   return (
     <CartContext.Provider
@@ -101,6 +111,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         totalItems,
         totalPrice,
+        isCartValid,
+        remainingToMinimum,
+        progressPercent,
         isHydrated,
       }}
     >
