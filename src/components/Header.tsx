@@ -9,6 +9,8 @@ const storeItems: { label: string; to: string }[] = [
   { label: "Vêtements", to: "/vetements" },
   { label: "Homme", to: "/homme" },
   { label: "Femme", to: "/femme" },
+  { label: "Prestige Homme", to: "/prestige-homme" as any },
+  { label: "Prestige Femme", to: "/prestige-femme" as any },
   { label: "Diffuseur", to: "/diffuseur" },
 ];
 

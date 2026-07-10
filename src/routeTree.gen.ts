@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VetementsRouteImport } from './routes/vetements'
+import { Route as PrestigeHommeRouteImport } from './routes/prestige-homme'
+import { Route as PrestigeFemmeRouteImport } from './routes/prestige-femme'
 import { Route as PanierRouteImport } from './routes/panier'
 import { Route as HommeRouteImport } from './routes/homme'
 import { Route as FemmeRouteImport } from './routes/femme'
@@ -24,6 +26,16 @@ import { Route as ListingIdRouteImport } from './routes/listing.$id'
 const VetementsRoute = VetementsRouteImport.update({
   id: '/vetements',
   path: '/vetements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrestigeHommeRoute = PrestigeHommeRouteImport.update({
+  id: '/prestige-homme',
+  path: '/prestige-homme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrestigeFemmeRoute = PrestigeFemmeRouteImport.update({
+  id: '/prestige-femme',
+  path: '/prestige-femme',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PanierRoute = PanierRouteImport.update({
@@ -86,6 +98,8 @@ export interface FileRoutesByFullPath {
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
   '/panier': typeof PanierRoute
+  '/prestige-femme': typeof PrestigeFemmeRoute
+  '/prestige-homme': typeof PrestigeHommeRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
   '/partenaire/$id': typeof PartenaireIdRoute
@@ -99,6 +113,8 @@ export interface FileRoutesByTo {
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
   '/panier': typeof PanierRoute
+  '/prestige-femme': typeof PrestigeFemmeRoute
+  '/prestige-homme': typeof PrestigeHommeRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
   '/partenaire/$id': typeof PartenaireIdRoute
@@ -113,6 +129,8 @@ export interface FileRoutesById {
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
   '/panier': typeof PanierRoute
+  '/prestige-femme': typeof PrestigeFemmeRoute
+  '/prestige-homme': typeof PrestigeHommeRoute
   '/vetements': typeof VetementsRoute
   '/listing/$id': typeof ListingIdRoute
   '/partenaire/$id': typeof PartenaireIdRoute
@@ -128,6 +146,8 @@ export interface FileRouteTypes {
     | '/femme'
     | '/homme'
     | '/panier'
+    | '/prestige-femme'
+    | '/prestige-homme'
     | '/vetements'
     | '/listing/$id'
     | '/partenaire/$id'
@@ -141,6 +161,8 @@ export interface FileRouteTypes {
     | '/femme'
     | '/homme'
     | '/panier'
+    | '/prestige-femme'
+    | '/prestige-homme'
     | '/vetements'
     | '/listing/$id'
     | '/partenaire/$id'
@@ -154,6 +176,8 @@ export interface FileRouteTypes {
     | '/femme'
     | '/homme'
     | '/panier'
+    | '/prestige-femme'
+    | '/prestige-homme'
     | '/vetements'
     | '/listing/$id'
     | '/partenaire/$id'
@@ -168,6 +192,8 @@ export interface RootRouteChildren {
   FemmeRoute: typeof FemmeRoute
   HommeRoute: typeof HommeRoute
   PanierRoute: typeof PanierRoute
+  PrestigeFemmeRoute: typeof PrestigeFemmeRoute
+  PrestigeHommeRoute: typeof PrestigeHommeRoute
   VetementsRoute: typeof VetementsRoute
   ListingIdRoute: typeof ListingIdRoute
   PartenaireIdRoute: typeof PartenaireIdRoute
@@ -180,6 +206,20 @@ declare module '@tanstack/react-router' {
       path: '/vetements'
       fullPath: '/vetements'
       preLoaderRoute: typeof VetementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prestige-homme': {
+      id: '/prestige-homme'
+      path: '/prestige-homme'
+      fullPath: '/prestige-homme'
+      preLoaderRoute: typeof PrestigeHommeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prestige-femme': {
+      id: '/prestige-femme'
+      path: '/prestige-femme'
+      fullPath: '/prestige-femme'
+      preLoaderRoute: typeof PrestigeFemmeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/panier': {
@@ -264,6 +304,8 @@ const rootRouteChildren: RootRouteChildren = {
   FemmeRoute: FemmeRoute,
   HommeRoute: HommeRoute,
   PanierRoute: PanierRoute,
+  PrestigeFemmeRoute: PrestigeFemmeRoute,
+  PrestigeHommeRoute: PrestigeHommeRoute,
   VetementsRoute: VetementsRoute,
   ListingIdRoute: ListingIdRoute,
   PartenaireIdRoute: PartenaireIdRoute,
