@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { Toaster } from "sonner";
 
-import { CartProvider } from "../lib/cart";
+
 
 function NotFoundComponent() {
   return (
@@ -78,10 +78,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
+      
         <Outlet />
         <Toaster position="bottom-right" richColors />
-      </CartProvider>
+      
     </QueryClientProvider>
   );
 }

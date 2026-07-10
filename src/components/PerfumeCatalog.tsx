@@ -368,9 +368,7 @@ function PerfumeCard({
           {formatFCFA(perfume.price)}{" "}
           <span className="text-[9px] sm:text-[10px] font-normal text-muted-foreground">/ unité</span>
         </p>
-        <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-[var(--gold)]">
-          dès {perfume.minQuantity} pièces
-        </p>
+        
 
         {/* Volume + Commander */}
         <div className="mt-2 sm:mt-3 flex flex-col min-[400px]:flex-row items-stretch gap-1.5 sm:gap-2">

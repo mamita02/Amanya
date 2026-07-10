@@ -1,7 +1,7 @@
 // src/routes/homme.tsx
 import { createFileRoute } from "@tanstack/react-router";
 import { PerfumeCatalog } from "../components/PerfumeCatalog";
-import { getPerfumesByGender } from "../lib/supabase";
+import { getPerfumesByCategory } from "../lib/supabase";
 
 export const Route = createFileRoute("/homme")({
   component: HommeRoute,
@@ -16,9 +16,9 @@ export const Route = createFileRoute("/homme")({
     ],
   }),
   loader: async () => {
-    const perfumes = await getPerfumesByGender("Homme", "homme");
-    return { perfumes };
-  },
+  const perfumes = await getPerfumesByCategory("homme");
+  return { perfumes };
+},
   staleTime: 0,        // ← AJOUTE
   shouldReload: true,  // ← AJOUTE
 });

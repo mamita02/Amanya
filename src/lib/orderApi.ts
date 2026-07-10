@@ -1,5 +1,8 @@
 // src/lib/orderApi.ts
-import { generateReceiptPDF, type ReceiptOrder } from "./receipt";
+// Wrapper côté client pour appeler l'Edge Function send-order.
+
+import type { Pack } from "./cart";
+import { generateReceiptPDF, type ReceiptItem, type ReceiptOrder } from "./receipt";
 import { supabase } from "./supabase";
 
 export type SendOrderResult = {
@@ -9,6 +12,29 @@ export type SendOrderResult = {
   customerEmailId?: string | null;
   savedToDb?: boolean;
 };
+
+/**
+ * Transforme les packs en items plats pour l'envoi
+ * (chaque parfum d'un pack devient un ReceiptItem)
+ */
+export function packsToFlatItems(packs: Pack[]): ReceiptItem[] {
+  const items: ReceiptItem[] = [];
+
+  for (const pack of packs) {
+    for (const item of pack.items) {
+      items.push({
+        perfumeName: item.name,
+        perfumeBrand: item.brand,
+        volume: item.volume,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        subtotal: item.unitPrice * item.quantity,
+      });
+    }
+  }
+
+  return items;
+}
 
 export async function sendOrder(order: ReceiptOrder): Promise<SendOrderResult> {
   // 1) Générer le PDF
@@ -42,11 +68,10 @@ export async function sendOrder(order: ReceiptOrder): Promise<SendOrderResult> {
     throw new Error(data?.error || "La commande n'a pas pu être envoyée");
   }
 
-  // 4) Télécharger le PDF APRÈS le succès (pas avant!)
+  // 4) Télécharger le PDF APRÈS le succès (pas avant, sinon bug iOS)
   try {
     doc.save(`AMANYA-${order.orderNumber}.pdf`);
   } catch {
-    // Sur certains mobiles le save échoue silencieusement, c'est OK
     console.warn("PDF save failed on this device");
   }
 

@@ -1,170 +1,106 @@
 // src/components/CheckoutModal.tsx
-// Modal de finalisation de commande.
-// Tout passe par email automatique via Resend (logo image + PDF en PJ).
-
-import {
-  AlertCircle,
-  CheckCircle2,
-  Download,
-  Loader2,
-  Send,
-  X,
-} from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, Send, X } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
-import { useCart } from "../lib/cart";
-import { sendOrder } from "../lib/orderApi";
+import { clearCart, useCart } from "../lib/cart";
+import { packsToFlatItems, sendOrder } from "../lib/orderApi";
 import { formatFCFA } from "../lib/perfumes";
-import {
-  downloadReceipt,
-  generateOrderNumber,
-  type ReceiptOrder,
-} from "../lib/receipt";
+import type { ReceiptOrder } from "../lib/receipt";
 
 type Props = {
   onClose: () => void;
 };
 
-type Status = "idle" | "submitting" | "success" | "error";
+type CheckoutState = "form" | "sending" | "success" | "error";
 
 export function CheckoutModal({ onClose }: Props) {
-  const {
-    items,
-    totalItems,
-    totalPrice,
-    clearCart,
-    isCartValid,
-    remainingToMinimum,
-    progressPercent,
-  } = useCart();
+  const { packs, totalItems, totalPrice } = useCart();
 
+  const [state, setState] = useState<CheckoutState>("form");
+  const [error, setError] = useState<string>("");
+  const [orderNumber, setOrderNumber] = useState<string>("");
+
+  // Champs du formulaire
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [confirmedOrderNumber, setConfirmedOrderNumber] = useState<string | null>(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
 
-  // Validation : coordonnées OK ET panier >= 25 pièces
-  const areContactsValid = name.trim().length >= 2 && phone.trim().length >= 6;
-  const isFormValid = areContactsValid && isCartValid;
-  const isSubmitting = status === "submitting";
-  const isSuccess = status === "success";
-
-  const buildOrder = (): ReceiptOrder => ({
-    orderNumber: generateOrderNumber(),
-    date: new Date(),
-    customer: {
-      name: name.trim(),
-      phone: phone.trim(),
-      email: email.trim() || undefined,
-      address: address.trim() || undefined,
-      notes: notes.trim() || undefined,
-    },
-    items: items.map((i) => ({
-      brand: i.brand,
-      name: i.name,
-      volume: i.volume,
-      quantity: i.quantity,
-      unitPrice: i.unitPrice,
-    })),
-    totalItems,
-    totalPrice,
-  });
-
-  const handlePreview = async () => {
-    if (!areContactsValid) {
-      toast.error("Renseignez d'abord votre nom et téléphone");
-      return;
-    }
-    setPreviewLoading(true);
-    try {
-      const order = buildOrder();
-      await downloadReceipt(order);
-      toast.success("Aperçu PDF téléchargé");
-    } catch (err) {
-      toast.error("Erreur lors de la génération de l'aperçu");
-      console.error(err);
-    } finally {
-      setPreviewLoading(false);
-    }
+  const generateOrderNumber = () => {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    return `${y}${m}${d}-${rand}`;
   };
 
-  const handleSubmit = async () => {
-    if (!isCartValid) {
-      toast.error(
-        `Panier incomplet : il manque ${remainingToMinimum} pièce${remainingToMinimum > 1 ? "s" : ""} pour atteindre le minimum de 25.`
-      );
-      return;
-    }
-    if (!areContactsValid) {
-      toast.error("Veuillez renseigner votre nom et téléphone");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (state === "sending") return;
+
+    if (!name.trim() || !phone.trim()) {
+      setError("Le nom et le téléphone sont obligatoires");
       return;
     }
 
-    setStatus("submitting");
-    setErrorMsg("");
+    setState("sending");
+    setError("");
+
+    const num = generateOrderNumber();
+    setOrderNumber(num);
 
     try {
-      const order = buildOrder();
-      const result = await sendOrder(order);
+      const order: ReceiptOrder = {
+        orderNumber: num,
+        date: new Date(),
+        customer: {
+          name: name.trim(),
+          phone: phone.trim(),
+          email: email.trim() || undefined,
+          address: address.trim() || undefined,
+          notes: notes.trim() || undefined,
+        },
+        items: packsToFlatItems(packs),
+        totalItems,
+        totalPrice,
+      };
 
-      setConfirmedOrderNumber(result.orderNumber);
-      setStatus("success");
-      toast.success("Commande envoyée avec succès !");
+      await sendOrder(order);
 
-      // Vider le panier après 1s pour ne pas surprendre l'utilisateur
-      setTimeout(() => clearCart(), 1000);
+      // Vide le panier après succès
+      clearCart();
+      setState("success");
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erreur inconnue";
-      setErrorMsg(msg);
-      setStatus("error");
-      toast.error("Erreur lors de l'envoi");
+      setError(msg);
+      setState("error");
     }
   };
 
-  // ============== ÉCRAN DE SUCCÈS ==============
-  if (isSuccess && confirmedOrderNumber) {
+  // ═══ ÉTAT : SUCCÈS ═══
+  if (state === "success") {
     return (
-      <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-        <div className="relative z-10 w-full max-w-md rounded-t-3xl bg-background p-8 text-center shadow-2xl sm:rounded-3xl">
-          <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-green-100">
-            <CheckCircle2 className="h-10 w-10 text-green-600" />
+        <div className="relative z-10 w-full max-w-md rounded-3xl bg-background p-8 text-center shadow-2xl">
+          <div
+            className="mx-auto grid h-16 w-16 place-items-center rounded-full"
+            style={{ backgroundColor: "rgba(39,174,96,0.1)" }}
+          >
+            <CheckCircle2 className="h-8 w-8" style={{ color: "#27AE60" }} />
           </div>
-          <h2 className="mt-6 font-display text-3xl font-bold">Commande envoyée !</h2>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Votre commande a bien été reçue par notre équipe. Vous serez contacté très
-            prochainement pour la confirmation.
+          <h2 className="mt-6 font-display text-2xl font-black">Commande envoyée !</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Votre commande <span className="font-bold text-foreground">#{orderNumber}</span> a été envoyée avec succès.
           </p>
-
-          <div className="mt-6 rounded-xl bg-secondary p-4">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Numéro de commande
-            </p>
-            <p className="mt-1 font-display text-xl font-bold text-[var(--ruby)]">
-              {confirmedOrderNumber}
-            </p>
-          </div>
-
-          {email && (
-            <p className="mt-4 text-xs text-muted-foreground">
-              📧 Une confirmation a été envoyée à <strong>{email}</strong> avec le reçu en
-              pièce jointe.
-            </p>
-          )}
-          {!email && (
-            <p className="mt-4 text-xs text-muted-foreground">
-              💡 Pour la prochaine fois, renseignez votre email pour recevoir une confirmation.
-            </p>
-          )}
-
+          <p className="mt-3 text-xs text-muted-foreground">
+            Vous recevrez une confirmation par email et notre équipe vous contactera très prochainement pour finaliser le paiement et la livraison.
+          </p>
           <button
             onClick={onClose}
-            className="mt-8 w-full rounded-full bg-[var(--onyx)] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[var(--ruby)]"
+            className="mt-6 w-full rounded-full py-3 text-sm font-bold uppercase tracking-wider text-white transition hover:opacity-90"
+            style={{ backgroundColor: "#1a1a1a" }}
           >
             Fermer
           </button>
@@ -173,224 +109,189 @@ export function CheckoutModal({ onClose }: Props) {
     );
   }
 
-  // ============== ÉCRAN PRINCIPAL ==============
+  // ═══ ÉTAT : FORMULAIRE / ENVOI / ERREUR ═══
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={isSubmitting ? undefined : onClose}
-        aria-hidden
+        onClick={state === "form" ? onClose : undefined}
       />
+
       <div className="relative z-10 flex max-h-[95vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl bg-background shadow-2xl sm:rounded-3xl">
-        <div className="flex items-center justify-between border-b border-border bg-[var(--onyx)] px-6 py-5 text-white">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-border bg-card px-4 py-4 sm:px-6 sm:py-5">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--gold)]">
               Finalisation
             </p>
-            <h2 className="mt-1 font-display text-2xl font-bold">Votre commande</h2>
+            <h2 className="mt-1 font-display text-xl font-black sm:text-2xl">
+              Valider ma commande
+            </h2>
           </div>
-          <button
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="rounded-full p-2 transition hover:bg-white/10 disabled:opacity-50"
-            aria-label="Fermer"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          {state === "form" && (
+            <button
+              onClick={onClose}
+              className="rounded-full p-2 transition hover:bg-muted"
+              aria-label="Fermer"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
         </div>
 
-        <div className="flex-1 overflow-y-auto px-6 py-6">
-          {/* RÉCAP PANIER */}
-          <div className="rounded-xl bg-secondary px-4 py-3">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
-                {totalItems} article{totalItems > 1 ? "s" : ""} · {items.length} référence
-                {items.length > 1 ? "s" : ""}
-              </span>
-              <span className="font-display text-xl font-bold">{formatFCFA(totalPrice)}</span>
-            </div>
-          </div>
-
-          {/* ============== BANDEAU MINIMUM PANIER ============== */}
-          {!isCartValid && (
-            <div className="mt-4 rounded-xl border border-[var(--gold)]/40 bg-[var(--gold)]/10 p-4">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-[var(--gold)]" />
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-foreground">
-                    Commande minimum : 25 pièces
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Il vous manque <strong>{remainingToMinimum}</strong>{" "}
-                    {remainingToMinimum > 1 ? "pièces" : "pièce"} pour valider votre commande.
-                  </p>
-                  {/* Barre de progression */}
-                  <div className="mt-3">
-                    <div className="mb-1 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
-                      <span className="text-muted-foreground">Progression</span>
-                      <span className="text-foreground">{totalItems}/25 pièces</span>
-                    </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-white/60">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-[var(--gold)] to-[var(--ruby)] transition-all duration-500"
-                        style={{ width: `${progressPercent}%` }}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    disabled={isSubmitting}
-                    className="mt-3 text-xs font-semibold text-[var(--ruby)] underline transition hover:text-[var(--onyx)] disabled:opacity-50"
-                  >
-                    ← Retourner au catalogue pour compléter
-                  </button>
-                </div>
+        {/* Contenu */}
+        <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
+          {/* Récap panier */}
+          <section
+            className="mb-6 rounded-xl border border-border bg-card p-4"
+          >
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              Récapitulatif
+            </h3>
+            <div className="mt-3 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Packs</span>
+                <span className="font-semibold">{packs.length}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Pièces totales</span>
+                <span className="font-semibold">{totalItems}</span>
               </div>
             </div>
-          )}
-
-          {isCartValid && (
-            <div className="mt-4 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-3 text-xs text-green-700">
-              <CheckCircle2 className="h-4 w-4 shrink-0" />
-              <span>
-                Panier validé : <strong>{totalItems} pièces</strong> (minimum 25 atteint)
+            <div className="mt-3 flex items-baseline justify-between border-t border-border pt-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Total
               </span>
+              <span className="font-display text-2xl font-black">{formatFCFA(totalPrice)}</span>
             </div>
-          )}
+          </section>
 
-          {/* ============== FORMULAIRE COORDONNÉES ============== */}
-          <div className="mt-6">
+          {/* Formulaire */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
               Vos coordonnées
             </h3>
-            <div className="mt-4 space-y-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                    Nom complet *
-                  </label>
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Awa Diop"
-                    disabled={isSubmitting}
-                    className="mt-1 h-11 w-full rounded-lg border border-border bg-card px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--gold)]"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                    Téléphone *
-                  </label>
-                  <input
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+221 77 ..."
-                    type="tel"
-                    disabled={isSubmitting}
-                    className="mt-1 h-11 w-full rounded-lg border border-border bg-card px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--gold)]"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Email{" "}
-                  <span className="text-[var(--gold)]">
-                    (recommandé — pour recevoir la confirmation)
-                  </span>
-                </label>
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="awa@example.com"
-                  type="email"
-                  disabled={isSubmitting}
-                  className="mt-1 h-11 w-full rounded-lg border border-border bg-card px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--gold)]"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Adresse de livraison
-                </label>
-                <input
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Mermoz Pyrotechnie, Dakar"
-                  disabled={isSubmitting}
-                  className="mt-1 h-11 w-full rounded-lg border border-border bg-card px-3 text-sm outline-none focus:ring-2 focus:ring-[var(--gold)]"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Notes (optionnel)
-                </label>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={2}
-                  placeholder="Préférences de livraison, créneau horaire..."
-                  disabled={isSubmitting}
-                  className="mt-1 w-full resize-none rounded-lg border border-border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--gold)]"
-                />
-              </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Nom complet *
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                disabled={state === "sending"}
+                placeholder="Votre nom"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20 disabled:opacity-50"
+              />
             </div>
-          </div>
 
-          {status === "error" && errorMsg && (
-            <div className="mt-4 flex items-start gap-2 rounded-lg bg-[var(--ruby)]/10 p-3 text-xs text-[var(--ruby)]">
-              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-              <div>
-                <strong>Échec de l'envoi.</strong> {errorMsg}
-                <br />
-                <span className="text-[var(--ruby)]/80">
-                  Réessayez ou contactez-nous au +221 77 000 00 00.
-                </span>
-              </div>
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Téléphone *
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                disabled={state === "sending"}
+                placeholder="ex: 77 123 45 67"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20 disabled:opacity-50"
+              />
             </div>
-          )}
 
-          <button
-            type="button"
-            onClick={handlePreview}
-            disabled={!areContactsValid || isSubmitting || previewLoading}
-            className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground underline transition hover:text-[var(--ruby)] disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {previewLoading ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
-            ) : (
-              <Download className="h-3 w-3" />
-            )}
-            {previewLoading ? "Génération..." : "Télécharger l'aperçu du reçu (sans envoyer)"}
-          </button>
-        </div>
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Email <span style={{ color: "#B8941E" }}>(recommandé — pour recevoir la confirmation)</span>
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={state === "sending"}
+                placeholder="votre@email.com"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20 disabled:opacity-50"
+              />
+            </div>
 
-        <div className="flex flex-col-reverse gap-3 border-t border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <button
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="rounded-full border border-border bg-card px-5 py-3 text-sm font-semibold uppercase tracking-wider transition hover:bg-muted disabled:opacity-50"
-          >
-            Retour
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={!isFormValid || isSubmitting}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--onyx)] px-8 py-3 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[var(--ruby)] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Envoi en cours...
-              </>
-            ) : (
-              <>
-                <Send className="h-4 w-4" />
-                Envoyer la commande
-              </>
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Adresse de livraison
+              </label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                disabled={state === "sending"}
+                placeholder="Adresse complète"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20 disabled:opacity-50"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Notes (optionnel)
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                disabled={state === "sending"}
+                placeholder="Instructions particulières..."
+                rows={3}
+                className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20 disabled:opacity-50"
+              />
+            </div>
+
+            {/* Erreur */}
+            {state === "error" && error && (
+              <div
+                className="flex items-start gap-2 rounded-xl px-4 py-3 text-sm"
+                style={{
+                  backgroundColor: "rgba(220,20,60,0.08)",
+                  color: "#DC143C",
+                }}
+              >
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <div>
+                  <p className="font-bold">Erreur lors de l'envoi</p>
+                  <p className="mt-0.5 text-xs">{error}</p>
+                </div>
+              </div>
             )}
-          </button>
+
+            {/* Boutons */}
+            <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={state === "sending"}
+                className="flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-bold uppercase tracking-wider transition hover:bg-muted disabled:opacity-50"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Retour
+              </button>
+              <button
+                type="submit"
+                disabled={state === "sending"}
+                className="flex flex-1 items-center justify-center gap-2 rounded-full py-3 text-sm font-bold uppercase tracking-wider text-white transition hover:opacity-90 disabled:opacity-50"
+                style={{ backgroundColor: "#1a1a1a" }}
+              >
+                {state === "sending" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Envoi en cours...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    Envoyer la commande
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
