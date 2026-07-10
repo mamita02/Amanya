@@ -40,7 +40,9 @@ export type ReceiptOrder = {
 // ═══════════════════════════════════════════
 
 function formatFCFA(amount: number): string {
-  return amount.toLocaleString("fr-FR") + " F CFA";
+  // Utilise un point comme séparateur de milliers pour éviter les espaces qui cassent le tableau
+  const formatted = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return formatted + " FCFA";
 }
 
 function formatDate(date: Date): string {
@@ -124,12 +126,14 @@ export async function generateReceiptPDF(order: ReceiptOrder): Promise<jsPDF> {
   doc.text(`Date : ${formatDate(order.date)}`, 15, 58);
 
   // Numéro à droite
-  doc.setFontSize(10);
+  // Numéro à droite (sur 2 lignes pour éviter chevauchement)
+  doc.setFontSize(9);
   doc.setTextColor(...ONYX);
   doc.setFont("helvetica", "bold");
-  doc.text("N° COMMANDE :", pageWidth - 55, 52);
+  doc.text("N° COMMANDE", pageWidth - 15, 48, { align: "right" });
+  doc.setFontSize(12);
   doc.setTextColor(...RUBY);
-  doc.text(order.orderNumber, pageWidth - 15, 52, { align: "right" });
+  doc.text(order.orderNumber, pageWidth - 15, 55, { align: "right" });
 
   // ═══ INFOS CLIENT ═══
   const clientY = 68;

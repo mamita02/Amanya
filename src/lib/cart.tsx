@@ -7,7 +7,7 @@ import type { Perfume, Volume } from "./perfumes";
 // Un pack = groupe de parfums de la même catégorie + volume
 // ═══════════════════════════════════════════
 
-export type PackCategory = "homme" | "femme" | "diffuseur";
+export type PackCategory = "homme" | "femme" | "diffuseur" | "prestige-homme" | "prestige-femme";
 
 export type PackKey = string; // "homme-100", "femme-50", "diffuseur-100"
 
@@ -54,20 +54,24 @@ export type Pack = {
 /** Retourne le minimum de pièces pour une catégorie+volume */
 export function getMinPieces(category: PackCategory, volume: Volume): number {
   if (category === "diffuseur") return 20;
+  if (category === "prestige-homme" || category === "prestige-femme") return 20;
   if (volume === 50) return 20;
-  return 25; // 100ml homme/femme
+  return 25;
 }
 
 /** Retourne le prix unitaire pour une catégorie+volume */
 export function getUnitPrice(category: PackCategory, volume: Volume): number {
   if (category === "diffuseur") return 3000;
+  if (category === "prestige-homme" || category === "prestige-femme") return 6000;
   if (volume === 50) return 3500;
-  return 20000; // 100ml homme/femme
+  return 20000;
 }
 
 /** Retourne le libellé d'un pack (ex: "Parfums Homme 100ml") */
 export function getPackLabel(category: PackCategory, volume: Volume): string {
   if (category === "diffuseur") return "Diffuseurs";
+  if (category === "prestige-homme") return "Prestige Homme 50ml";
+  if (category === "prestige-femme") return "Prestige Femme 50ml";
   const cat = category === "homme" ? "Homme" : "Femme";
   return `Parfums ${cat} ${volume}ml`;
 }

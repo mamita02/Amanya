@@ -21,9 +21,15 @@ export function packsToFlatItems(packs: Pack[]): ReceiptItem[] {
   const items: ReceiptItem[] = [];
 
   for (const pack of packs) {
+    // Libellé du pack (utilisé pour préfixer)
+    let packPrefix = "";
+    if (pack.category === "prestige-homme") packPrefix = "[PRESTIGE H] ";
+    else if (pack.category === "prestige-femme") packPrefix = "[PRESTIGE F] ";
+    else if (pack.category === "diffuseur") packPrefix = "[DIFFUSEUR] ";
+
     for (const item of pack.items) {
       items.push({
-        perfumeName: item.name,
+        perfumeName: packPrefix + item.name,
         perfumeBrand: item.brand,
         volume: item.volume,
         quantity: item.quantity,
