@@ -127,7 +127,7 @@ export async function generateReceiptPDF(order: ReceiptOrder): Promise<jsPDF> {
   doc.setFontSize(10);
   doc.setTextColor(...ONYX);
   doc.setFont("helvetica", "bold");
-  doc.text("N° DE COMMANDE :", pageWidth - 65, 52);
+  doc.text("N° COMMANDE :", pageWidth - 55, 52);
   doc.setTextColor(...RUBY);
   doc.text(order.orderNumber, pageWidth - 15, 52, { align: "right" });
 
@@ -181,21 +181,21 @@ export async function generateReceiptPDF(order: ReceiptOrder): Promise<jsPDF> {
       cellPadding: 3,
     },
     bodyStyles: {
-      fontSize: 9,
+      fontSize: 8,           // ← passe de 9 à 8
       textColor: ONYX,
-      cellPadding: 3,
+      cellPadding: 2.5,      // ← passe de 3 à 2.5
       lineColor: [230, 230, 230],
       lineWidth: 0.1,
     },
     alternateRowStyles: {
       fillColor: [252, 250, 246],
     },
-    columnStyles: {
-      0: { cellWidth: availableWidth * 0.42, halign: "left" },    // Produit — 42%
-      1: { cellWidth: availableWidth * 0.10, halign: "center" },  // Vol — 10%
-      2: { cellWidth: availableWidth * 0.10, halign: "center", fontStyle: "bold" }, // Qte — 10%
-      3: { cellWidth: availableWidth * 0.18, halign: "right" },   // Prix unit — 18%
-      4: { cellWidth: availableWidth * 0.20, halign: "right", fontStyle: "bold" }, // Sous-total — 20%
+     columnStyles: {
+      0: { cellWidth: availableWidth * 0.38, halign: "left" },    // Produit — 38%
+      1: { cellWidth: availableWidth * 0.09, halign: "center" },  // Vol — 9%
+      2: { cellWidth: availableWidth * 0.08, halign: "center", fontStyle: "bold" }, // Qte — 8%
+      3: { cellWidth: availableWidth * 0.22, halign: "right" },   // Prix unit — 22%
+      4: { cellWidth: availableWidth * 0.23, halign: "right", fontStyle: "bold" }, // Sous-total — 23%
     },
     margin: { left: 15, right: 15 },
   });
