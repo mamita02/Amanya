@@ -1,10 +1,13 @@
 // src/lib/receipt.ts
-// Génération d'un reçu PDF AMANYA avec logo image, numéro de commande, date, items et total.
+// Génère un PDF de reçu de commande avec jsPDF + autoTable
 
-import jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import logoUrl from "../assets/Logo.png";
-import { formatFCFA } from "./perfumes";
+
+// ═══════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════
 
 export type ReceiptCustomer = {
   name: string;
@@ -15,11 +18,12 @@ export type ReceiptCustomer = {
 };
 
 export type ReceiptItem = {
-  brand: string;
-  name: string;
-  volume: number;
+  perfumeName: string;
+  perfumeBrand: string;
+  volume: 50 | 100;
   quantity: number;
   unitPrice: number;
+  subtotal: number;
 };
 
 export type ReceiptOrder = {
@@ -31,266 +35,219 @@ export type ReceiptOrder = {
   totalPrice: number;
 };
 
-export function generateOrderNumber(): string {
-  const now = new Date();
-  const ymd = now.toISOString().slice(0, 10).replace(/-/g, "");
-  const random = Math.floor(Math.random() * 100000).toString().padStart(5, "0");
-  return `AMA-${ymd}-${random}`;
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+
+function formatFCFA(amount: number): string {
+  return amount.toLocaleString("fr-FR") + " F CFA";
 }
 
-export function formatOrderDate(date: Date): string {
-  const formatter = new Intl.DateTimeFormat("fr-FR", {
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("fr-FR", {
     day: "2-digit",
-    month: "2-digit",
+    month: "long",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });
-  return formatter.format(date).replace(",", " à");
 }
 
-// Palette AMANYA
-const COLORS = {
-  onyx: [26, 26, 26] as [number, number, number],
-  gold: [212, 175, 55] as [number, number, number],
-  ruby: [220, 20, 60] as [number, number, number],
-  beige: [245, 237, 229] as [number, number, number],
-  white: [255, 255, 255] as [number, number, number],
-  gray: [102, 102, 102] as [number, number, number],
-};
-
-// ============== CHARGEMENT DU LOGO ==============
-// Cache pour ne charger le logo qu'une fois par session
-
-let logoBase64Cache: string | null = null;
-let logoLoadPromise: Promise<string> | null = null;
-
-async function getLogoBase64(): Promise<string> {
-  if (logoBase64Cache) return logoBase64Cache;
-  if (logoLoadPromise) return logoLoadPromise;
-
-  logoLoadPromise = (async () => {
-    try {
-      const response = await fetch(logoUrl);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const blob = await response.blob();
-      return await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result as string;
-          logoBase64Cache = result;
-          resolve(result);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-    } catch (err) {
-      console.warn("⚠️ Logo non chargé, fallback texte:", err);
-      return "";
-    }
-  })();
-
-  return logoLoadPromise;
+/**
+ * Charge le logo en base64 pour l'inclure dans le PDF
+ */
+async function loadLogoBase64(): Promise<string | null> {
+  try {
+    const response = await fetch(logoUrl);
+    const blob = await response.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (err) {
+    console.warn("Failed to load logo:", err);
+    return null;
+  }
 }
 
-// ============== GÉNÉRATION DU PDF ==============
+// ═══════════════════════════════════════════
+// GÉNÉRATION DU PDF
+// ═══════════════════════════════════════════
 
 export async function generateReceiptPDF(order: ReceiptOrder): Promise<jsPDF> {
-  const doc = new jsPDF({ format: "a4", unit: "mm" });
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
   const pageWidth = doc.internal.pageSize.getWidth();
-  const margin = 15;
 
-  // ===================== HEADER ONYX =====================
-  doc.setFillColor(...COLORS.onyx);
-  doc.rect(0, 0, pageWidth, 42, "F");
+  // Couleurs
+  const GOLD: [number, number, number] = [212, 175, 55];
+  const ONYX: [number, number, number] = [26, 26, 26];
+  const RUBY: [number, number, number] = [220, 20, 60];
+  const GRAY: [number, number, number] = [100, 100, 100];
+  const LIGHT_BG: [number, number, number] = [250, 246, 240];
 
-  // Logo (image ou fallback texte)
-  const logoBase64 = await getLogoBase64();
+  // ═══ HEADER : LOGO + INFOS AMANYA ═══
+  const logoBase64 = await loadLogoBase64();
+
   if (logoBase64) {
     try {
-      // Logo image — ajuste les dimensions selon le ratio de ton fichier
-      // 38mm de large × 18mm de haut, positionné à gauche
-      doc.addImage(logoBase64, "PNG", margin, 11, 38, 18);
+      doc.addImage(logoBase64, "PNG", 15, 12, 35, 20);
     } catch (err) {
-      console.warn("Erreur addImage:", err);
-      // Fallback texte
-      doc.setTextColor(...COLORS.gold);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(34);
-      doc.text("AMANYA", margin, 23);
+      console.warn("Failed to add logo:", err);
     }
-  } else {
-    // Fallback texte si pas de logo
-    doc.setTextColor(...COLORS.gold);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(34);
-    doc.text("AMANYA", margin, 23);
   }
 
-  // Tagline sous le logo
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(...COLORS.white);
-  doc.text("Distribution authentique · Dakar, Sénégal", margin, 33);
-
-  // Titre droit
-  doc.setTextColor(...COLORS.gold);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(13);
-  doc.text("REÇU DE COMMANDE", pageWidth - margin, 22, { align: "right" });
-
-  doc.setTextColor(...COLORS.white);
-  doc.setFont("helvetica", "normal");
+  // Texte AMANYA à droite du logo
   doc.setFontSize(9);
-  doc.text(formatOrderDate(order.date), pageWidth - margin, 30, { align: "right" });
-
-  // Trait or sous le header
-  doc.setFillColor(...COLORS.gold);
-  doc.rect(0, 42, pageWidth, 1, "F");
-
-  let y = 53;
-
-  // ===================== NUMÉRO DE COMMANDE =====================
-  doc.setTextColor(...COLORS.onyx);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
-  doc.text("N° DE COMMANDE :", margin, y);
-  doc.setFont("courier", "bold");
-  doc.setTextColor(...COLORS.ruby);
-  doc.text(order.orderNumber, margin + 42, y);
-
-  y += 10;
-
-  // ===================== CLIENT =====================
-  doc.setFillColor(...COLORS.beige);
-  doc.rect(margin, y, pageWidth - margin * 2, 30, "F");
-
-  doc.setTextColor(...COLORS.gold);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(8);
-  doc.text("CLIENT", margin + 4, y + 6);
-
-  doc.setTextColor(...COLORS.onyx);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
-  doc.text(order.customer.name, margin + 4, y + 13);
-
+  doc.setTextColor(...GRAY);
   doc.setFont("helvetica", "normal");
+  doc.text("Distribution de parfums en gros", pageWidth - 15, 18, { align: "right" });
+  doc.text("Dakar, Sénégal", pageWidth - 15, 23, { align: "right" });
+  doc.text("contact@amanya-distribution.com", pageWidth - 15, 28, { align: "right" });
+  doc.text("amanya-distribution.com", pageWidth - 15, 33, { align: "right" });
+
+  // Ligne dorée sous le header
+  doc.setDrawColor(...GOLD);
+  doc.setLineWidth(0.6);
+  doc.line(15, 40, pageWidth - 15, 40);
+
+  // ═══ TITRE RECU + NUMERO ═══
+  doc.setFontSize(20);
+  doc.setTextColor(...ONYX);
+  doc.setFont("helvetica", "bold");
+  doc.text("REÇU DE COMMANDE", 15, 52);
+
   doc.setFontSize(9);
-  let line2 = `Tel: ${order.customer.phone}`;
-  if (order.customer.email) line2 += `   ·   Email: ${order.customer.email}`;
-  doc.text(line2, margin + 4, y + 20);
+  doc.setTextColor(...GRAY);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Date : ${formatDate(order.date)}`, 15, 58);
+
+  // Numéro à droite
+  doc.setFontSize(10);
+  doc.setTextColor(...ONYX);
+  doc.setFont("helvetica", "bold");
+  doc.text("N° DE COMMANDE :", pageWidth - 65, 52);
+  doc.setTextColor(...RUBY);
+  doc.text(order.orderNumber, pageWidth - 15, 52, { align: "right" });
+
+  // ═══ INFOS CLIENT ═══
+  const clientY = 68;
+  doc.setFillColor(...LIGHT_BG);
+  doc.rect(15, clientY, pageWidth - 30, 30, "F");
+
+  doc.setFontSize(8);
+  doc.setTextColor(...GOLD);
+  doc.setFont("helvetica", "bold");
+  doc.text("CLIENT", 20, clientY + 6);
+
+  doc.setFontSize(11);
+  doc.setTextColor(...ONYX);
+  doc.setFont("helvetica", "bold");
+  doc.text(order.customer.name, 20, clientY + 13);
+
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  doc.setFont("helvetica", "normal");
+  let contactLine = `Tel: ${order.customer.phone}`;
+  if (order.customer.email) contactLine += `   ·   Email: ${order.customer.email}`;
+  doc.text(contactLine, 20, clientY + 19);
 
   if (order.customer.address) {
-    doc.text(`Adresse: ${order.customer.address}`, margin + 4, y + 26);
+    doc.text(`Adresse: ${order.customer.address}`, 20, clientY + 25);
   }
 
-  y += 38;
+  // ═══ TABLEAU DES ITEMS ═══
+  const tableStartY = 105;
+  const availableWidth = pageWidth - 30; // 15mm marge de chaque côté
 
-  // ===================== TABLEAU DES ARTICLES =====================
   autoTable(doc, {
-    startY: y,
+    startY: tableStartY,
     head: [["Produit", "Vol.", "Qte", "Prix unit.", "Sous-total"]],
     body: order.items.map((item) => [
-      `${item.brand}\n${item.name}`,
+      `${item.perfumeName}\n${item.perfumeBrand}`,
       `${item.volume} ml`,
-      `${item.quantity}`,
+      String(item.quantity),
       formatFCFA(item.unitPrice),
-      formatFCFA(item.quantity * item.unitPrice),
+      formatFCFA(item.subtotal),
     ]),
     theme: "grid",
     headStyles: {
-      fillColor: COLORS.onyx,
-      textColor: COLORS.gold,
+      fillColor: ONYX,
+      textColor: [255, 255, 255],
       fontStyle: "bold",
       fontSize: 9,
       halign: "center",
+      cellPadding: 3,
     },
     bodyStyles: {
       fontSize: 9,
-      textColor: COLORS.onyx,
+      textColor: ONYX,
       cellPadding: 3,
+      lineColor: [230, 230, 230],
+      lineWidth: 0.1,
     },
     alternateRowStyles: {
-      fillColor: [250, 250, 250],
+      fillColor: [252, 250, 246],
     },
     columnStyles: {
-      0: { cellWidth: 70 },
-      1: { cellWidth: 20, halign: "center" },
-      2: { cellWidth: 20, halign: "center", fontStyle: "bold" },
-      3: { cellWidth: 35, halign: "right" },
-      4: { cellWidth: 35, halign: "right", fontStyle: "bold" },
+      0: { cellWidth: availableWidth * 0.42, halign: "left" },    // Produit — 42%
+      1: { cellWidth: availableWidth * 0.10, halign: "center" },  // Vol — 10%
+      2: { cellWidth: availableWidth * 0.10, halign: "center", fontStyle: "bold" }, // Qte — 10%
+      3: { cellWidth: availableWidth * 0.18, halign: "right" },   // Prix unit — 18%
+      4: { cellWidth: availableWidth * 0.20, halign: "right", fontStyle: "bold" }, // Sous-total — 20%
     },
-    margin: { left: margin, right: margin },
+    margin: { left: 15, right: 15 },
   });
 
-  const finalY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 8;
+  // ═══ TOTAL ═══
+  const finalY = (doc as any).lastAutoTable.finalY + 6;
 
-  // ===================== TOTAL =====================
-  doc.setFillColor(...COLORS.onyx);
-  doc.rect(margin, finalY, pageWidth - margin * 2, 20, "F");
+  doc.setFillColor(...ONYX);
+  doc.rect(15, finalY, pageWidth - 30, 18, "F");
 
-  doc.setTextColor(...COLORS.gold);
+  doc.setFontSize(9);
+  doc.setTextColor(...GOLD);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text(
-    `${order.totalItems} article${order.totalItems > 1 ? "s" : ""}`,
-    margin + 4,
-    finalY + 13
-  );
+  doc.text(`${order.totalItems} articles`, 20, finalY + 11);
 
-  doc.setTextColor(...COLORS.white);
-  doc.setFontSize(16);
-  doc.text(
-    `TOTAL : ${formatFCFA(order.totalPrice)}`,
-    pageWidth - margin - 4,
-    finalY + 13,
-    { align: "right" }
-  );
+  doc.setFontSize(14);
+  doc.setTextColor(...GOLD);
+  doc.text(`TOTAL : ${formatFCFA(order.totalPrice)}`, pageWidth - 20, finalY + 11, { align: "right" });
 
-  // ===================== NOTES =====================
+  // ═══ NOTES ═══
+  let notesY = finalY + 28;
   if (order.customer.notes) {
-    const notesY = finalY + 30;
-    doc.setTextColor(...COLORS.gray);
+    doc.setFontSize(8);
+    doc.setTextColor(...GOLD);
     doc.setFont("helvetica", "bold");
+    doc.text("Notes du client :", 15, notesY);
+
     doc.setFontSize(9);
-    doc.text("Notes du client :", margin, notesY);
+    doc.setTextColor(...GRAY);
     doc.setFont("helvetica", "normal");
-    const wrapped = doc.splitTextToSize(order.customer.notes, pageWidth - margin * 2);
-    doc.text(wrapped, margin, notesY + 5);
+    const splitNotes = doc.splitTextToSize(order.customer.notes, pageWidth - 30);
+    doc.text(splitNotes, 15, notesY + 5);
+    notesY += 5 + splitNotes.length * 4;
   }
 
-  // ===================== FOOTER =====================
-  const footerY = doc.internal.pageSize.getHeight() - 28;
-  doc.setDrawColor(...COLORS.gold);
-  doc.setLineWidth(0.5);
-  doc.line(margin, footerY, pageWidth - margin, footerY);
+  // ═══ FOOTER ═══
+  const footerY = Math.max(notesY + 15, doc.internal.pageSize.getHeight() - 30);
 
-  doc.setTextColor(...COLORS.onyx);
-  doc.setFont("helvetica", "bold");
+  doc.setDrawColor(...GOLD);
+  doc.setLineWidth(0.4);
+  doc.line(15, footerY, pageWidth - 15, footerY);
+
   doc.setFontSize(9);
-  doc.text("Merci de votre confiance.", margin, footerY + 7);
+  doc.setTextColor(...ONYX);
+  doc.setFont("helvetica", "bold");
+  doc.text("Merci de votre confiance.", 15, footerY + 6);
 
-  doc.setTextColor(...COLORS.gray);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.text(
-    "AMANYA · Dakar, Senegal · contact@amanya-distribution.com",
-    margin,
-    footerY + 13
-  );
-  doc.setFont("helvetica", "italic");
   doc.setFontSize(7);
-  doc.text(
-    "Ce document est un recapitulatif de commande. La commande sera confirmee apres contact avec notre equipe.",
-    margin,
-    footerY + 19
-  );
+  doc.setTextColor(...GRAY);
+  doc.setFont("helvetica", "normal");
+  doc.text("AMANYA  ·  Dakar, Senegal  ·  contact@amanya-distribution.com", 15, footerY + 11);
+  doc.text("Ce document est un recapitulatif de commande. La commande sera confirmee apres contact avec notre equipe.", 15, footerY + 15);
 
   return doc;
-}
-
-export async function downloadReceipt(order: ReceiptOrder): Promise<void> {
-  const doc = await generateReceiptPDF(order);
-  doc.save(`AMANYA-${order.orderNumber}.pdf`);
 }
