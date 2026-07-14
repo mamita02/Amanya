@@ -6,7 +6,7 @@ import logo from "../assets/Logo.png";
 import { useCart } from "../lib/cart";
 
 const storeItems: { label: string; to: string }[] = [
-  { label: "Vêtements", to: "/vetements" },
+  // { label: "Vêtements", to: "/vetements" },
   { label: "Homme", to: "/homme" },
   { label: "Femme", to: "/femme" },
   { label: "Prestige Homme", to: "/prestige-homme" as any },
@@ -16,7 +16,8 @@ const storeItems: { label: string; to: string }[] = [
 
 const navLinks = [
   { label: "À propos", hash: "apropos" },
-  { label: "Partenaires", hash: "partenaires" },
+  {label: "Market Place", hash: "marketplace"},
+  // { label: "Partenaires", hash: "partenaires" },
   { label: "Contact", hash: "contact" },
 ];
 

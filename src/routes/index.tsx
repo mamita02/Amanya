@@ -6,11 +6,11 @@ import hero1 from "../assets/hero-1.jpg";
 import hero2 from "../assets/hero-2.jpg";
 import hero3 from "../assets/hero-3.jpg";
 import mounia from "../assets/Mounia.jpeg";
-import { partners } from "../lib/partners";
+import { marketplace } from "../lib/marketplace";
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-import { PartnerCard } from "../components/PartnerCard";
+import { MarketplaceCard } from "../components/MarketplaceCard";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -33,13 +33,13 @@ export const Route = createFileRoute("/")({
 });
 
 const categories = [
-  {
-    name: "Vêtements",
-    tagline: "Style affirmé",
-    path: "/vetements",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&h=1100&fit=crop&auto=format",
-  },
+  // {
+  //   name: "Vêtements",
+  //   tagline: "Style affirmé",
+  //   path: "/vetements",
+  //   image:
+  //     "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&h=1100&fit=crop&auto=format",
+  // },
   {
     name: "Homme",
     tagline: "Sillage masculin",
@@ -162,9 +162,9 @@ function HomePage() {
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-         
-            {categories.map((c) => (
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-center">
+
+          {categories.map((c) => (
             <Link
               key={c.name}
               to={c.path}
@@ -188,8 +188,8 @@ function HomePage() {
                 </div>
               </div>
               <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 transition group-hover:ring-[var(--gold)]/40" />
-           </Link>
-  ))}
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -239,10 +239,35 @@ function HomePage() {
         </div>
       </section>
 
-      {/* PARTNERS */}
-      <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      {/* MARKET PLACE */}
+      <section id="marketplace" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">Nos partenaires</h2>
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">Market Place</h2>
+          <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
+            Ils nous font confiance
+          </span>
+          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+        </div>
+
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {marketplace.slice(0, 3).map((marketplace) => (
+            <MarketplaceCard key={marketplace.name} marketplace={marketplace} />
+          ))}
+        </div>
+        <div className="text-center">
+          <a
+            href="/marketplace"
+            className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]"
+          >
+            Voir Plus
+          </a>
+        </div>
+      </section>
+
+      {/* PARTNERS */}
+      {/* <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">Market Place</h2>
           <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
             Ils nous font confiance
           </span>
@@ -253,8 +278,8 @@ function HomePage() {
           {partners.map((partner) => (
             <PartnerCard key={partner.name} partner={partner} />
           ))}
-        </div>
-      </section>
+        </div>   
+      </section> */}
 
       {/* CONTACT */}
       <section id="contact" className="relative isolate overflow-hidden">

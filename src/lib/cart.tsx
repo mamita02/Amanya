@@ -1,5 +1,6 @@
 // src/lib/cart.ts
 import { useSyncExternalStore } from "react";
+import type { MarketPlace } from "./marketplace";
 import type { Perfume, Volume } from "./perfumes";
 
 // ═══════════════════════════════════════════
@@ -7,7 +8,13 @@ import type { Perfume, Volume } from "./perfumes";
 // Un pack = groupe de parfums de la même catégorie + volume
 // ═══════════════════════════════════════════
 
-export type PackCategory = "homme" | "femme" | "diffuseur" | "prestige-homme" | "prestige-femme";
+export type PackCategory =
+  | "homme"
+  | "femme"
+  | "diffuseur"
+  | "prestige-homme"
+  | "prestige-femme"
+  | "marketplace";
 
 export type PackKey = string; // "homme-100", "femme-50", "diffuseur-100"
 
@@ -53,6 +60,7 @@ export type Pack = {
 
 /** Retourne le minimum de pièces pour une catégorie+volume */
 export function getMinPieces(category: PackCategory, volume: Volume): number {
+  if (category === "marketplace") return 1;
   if (category === "diffuseur") return 20;
   if (category === "prestige-homme" || category === "prestige-femme") return 20;
   if (volume === 50) return 20;
@@ -69,6 +77,7 @@ export function getUnitPrice(category: PackCategory, volume: Volume): number {
 
 /** Retourne le libellé d'un pack (ex: "Parfums Homme 100ml") */
 export function getPackLabel(category: PackCategory, volume: Volume): string {
+  if (category === "marketplace") return "Marketplace";
   if (category === "diffuseur") return "Diffuseurs";
   if (category === "prestige-homme") return "Prestige Homme 50ml";
   if (category === "prestige-femme") return "Prestige Femme 50ml";
@@ -117,7 +126,9 @@ function loadFromStorage() {
   // Cleanup ancien panier (migration v1 → v2)
   try {
     localStorage.removeItem(OLD_STORAGE_KEY);
-  } catch {}
+  } catch {
+    // Le stockage local peut être indisponible selon le navigateur.
+  }
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -192,26 +203,53 @@ export function addPackToCart(newPack: Pack): void {
   });
 }
 
+export function addMarketplaceToCart(partner: MarketPlace, price: number, quantity = 1): void {
+  const volume = 0 as Volume;
+
+  addPackToCart({
+    key: `marketplace-${partner.id}`,
+    category: "marketplace",
+    volume,
+    minPieces: 1,
+    unitPrice: price,
+    items: [
+      {
+        perfumeId: partner.id,
+        name: partner.name,
+        brand: partner.domain,
+        image: partner.logo,
+        volume,
+        unitPrice: price,
+        quantity,
+      },
+    ],
+  });
+}
+
 /** Met à jour la quantité d'un item dans un pack */
 export function updateItemQuantity(packKey: PackKey, perfumeId: string, quantity: number): void {
   setState((s) => ({
-    packs: s.packs.map((p) => {
-      if (p.key !== packKey) return p;
-      const items = p.items
-        .map((i) => (i.perfumeId === perfumeId ? { ...i, quantity } : i))
-        .filter((i) => i.quantity > 0);
-      return { ...p, items };
-    }).filter((p) => p.items.length > 0), // supprime le pack si vide
+    packs: s.packs
+      .map((p) => {
+        if (p.key !== packKey) return p;
+        const items = p.items
+          .map((i) => (i.perfumeId === perfumeId ? { ...i, quantity } : i))
+          .filter((i) => i.quantity > 0);
+        return { ...p, items };
+      })
+      .filter((p) => p.items.length > 0), // supprime le pack si vide
   }));
 }
 
 /** Retire un item d'un pack */
 export function removeItemFromPack(packKey: PackKey, perfumeId: string): void {
   setState((s) => ({
-    packs: s.packs.map((p) => {
-      if (p.key !== packKey) return p;
-      return { ...p, items: p.items.filter((i) => i.perfumeId !== perfumeId) };
-    }).filter((p) => p.items.length > 0),
+    packs: s.packs
+      .map((p) => {
+        if (p.key !== packKey) return p;
+        return { ...p, items: p.items.filter((i) => i.perfumeId !== perfumeId) };
+      })
+      .filter((p) => p.items.length > 0),
   }));
 }
 
@@ -289,15 +327,9 @@ export function useCart() {
     loadFromStorage();
   }
 
-  const totalItems = s.packs.reduce(
-    (sum, pack) => sum + getPackTotalPieces(pack),
-    0
-  );
+  const totalItems = s.packs.reduce((sum, pack) => sum + getPackTotalPieces(pack), 0);
 
-  const totalPrice = s.packs.reduce(
-    (sum, pack) => sum + getPackTotalPrice(pack),
-    0
-  );
+  const totalPrice = s.packs.reduce((sum, pack) => sum + getPackTotalPrice(pack), 0);
 
   const allPacksValid = s.packs.every(isPackValid);
 
