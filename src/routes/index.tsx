@@ -1,11 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronLeft, ChevronRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import contactBg from "../assets/contact-bg.jpg";
-import hero1 from "../assets/hero-1.jpg";
-import hero2 from "../assets/hero-2.jpg";
-import hero3 from "../assets/hero-3.jpg";
 import mounia from "../assets/Mounia.jpeg";
+import heroVideo from "../assets/video_home_amanya.mp4";
 import { partners } from "../lib/partners";
 
 import { Footer } from "../components/Footer";
@@ -66,56 +63,15 @@ const categories = [
 // Partenaires AMANYA — remplace les "#" par les vraies URLs des sites partenaires
 
 
-const heroSlides = [hero1, hero2, hero3];
-
-function HeroCarousel() {
-  const [index, setIndex] = useState(0);
-  const go = (n: number) => setIndex((index + n + heroSlides.length) % heroSlides.length);
-
-  useEffect(() => {
-    const id = setInterval(() => setIndex((i) => (i + 1) % heroSlides.length), 5000);
-    return () => clearInterval(id);
-  }, []);
-
+function HeroVideo() {
   return (
     <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
       <div className="relative h-screen w-full">
-        {heroSlides.map((src, i) => (
-          <img
-            key={src}
-            src={src}
-            alt=""
-            width={1920}
-            height={1080}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === index ? "opacity-100" : "opacity-0"}`}
-          />
-        ))}
-
-        <button
-          onClick={() => go(-1)}
-          aria-label="Précédent"
-          className="absolute left-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:left-8"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        <button
-          onClick={() => go(1)}
-          aria-label="Suivant"
-          className="absolute right-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:right-8"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-
-        <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              aria-label={`Slide ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all ${i === index ? "w-8 bg-[var(--gold)]" : "w-4 bg-white/40"}`}
-            />
-          ))}
-        </div>
+        <video
+          src={heroVideo} autoPlay muted 
+          loop playsInline aria-hidden
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       </div>
     </section>
   );
@@ -126,7 +82,7 @@ function HomePage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <HeroCarousel />
+      <HeroVideo />
 
       {/* TRUST STRIP */}
       <section className="border-y border-border/60 bg-[var(--jet)] text-white/80">
@@ -231,8 +187,7 @@ function HomePage() {
             </p>
             <a
               href="#"
-              className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]"
-            >
+              className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]">
               Voir plus
             </a>
           </div>
