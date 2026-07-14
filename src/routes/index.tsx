@@ -203,13 +203,13 @@ function HomePage() {
       </section>
 
       {/* PARTNERS */}
-      <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section id="partenaires" className="bg-[var(--gold-soft)] w-full px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="font-display text-4xl font-bold sm:text-5xl">Nos partenaires</h2>
           <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
             Ils nous font confiance
           </span>
-          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--onyx)] to-transparent" />
         </div>
 
         <PartnerLogoMarquee />
@@ -273,8 +273,8 @@ function HomePage() {
             <div className="relative grid gap-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 {[
-                  { label: "Nom complet", type: "text", required: true },
-                  { label: "Email", type: "email", required: true },
+                  { label: "Nom complet", type: "text", required: true, placeholder: "Nom complet" },
+                  { label: "Email", type: "email", required: true, placeholder: "Adresse email" },
                 ].map((f) => (
                   <div key={f.label}>
                     <label className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[var(--gold-soft)]">
@@ -282,7 +282,8 @@ function HomePage() {
                     </label>
                     <input
                       required={f.required}
-                      type={f.type}
+                      type={f.type} 
+                      placeholder={f.placeholder}
                       className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/10 px-4 text-sm text-white outline-none backdrop-blur transition placeholder:text-white/30 focus:border-[var(--gold)] focus:bg-white/15 focus:ring-2 focus:ring-[var(--gold)]/40"
                     />
                   </div>
@@ -294,7 +295,8 @@ function HomePage() {
                   Sujet
                 </label>
                 <input
-                  type="text"
+                  type="text" 
+                  placeholder="Sujet"
                   className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/10 px-4 text-sm text-white outline-none backdrop-blur transition placeholder:text-white/30 focus:border-[var(--gold)] focus:bg-white/15 focus:ring-2 focus:ring-[var(--gold)]/40"
                 />
               </div>
@@ -305,6 +307,7 @@ function HomePage() {
                 </label>
                 <textarea
                   required
+                  placeholder="Votre message"
                   rows={5}
                   className="mt-2 w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-sm text-white outline-none backdrop-blur transition placeholder:text-white/30 focus:border-[var(--gold)] focus:bg-white/15 focus:ring-2 focus:ring-[var(--gold)]/40"
                 />
@@ -312,8 +315,7 @@ function HomePage() {
 
               <button
                 type="submit"
-                className="group relative mt-2 inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[var(--ruby)] via-[var(--ruby-bright)] to-[var(--ruby)] px-10 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-[0_10px_40px_-10px_rgba(220,40,60,0.6)] transition hover:shadow-[0_15px_50px_-10px_rgba(220,40,60,0.8)]"
-              >
+                className="group relative mt-2 inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[var(--ruby)] via-[var(--ruby-bright)] to-[var(--ruby)] px-10 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-[0_10px_40px_-10px_rgba(220,40,60,0.6)] transition hover:shadow-[0_15px_50px_-10px_rgba(220,40,60,0.8)]">
                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                 <span className="relative">Envoyer le message</span>
                 <ArrowRight className="relative h-4 w-4 transition group-hover:translate-x-1" />

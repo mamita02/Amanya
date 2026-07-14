@@ -101,7 +101,7 @@
 .partner-marquee-track {
   display: flex;
   width: max-content;
-  animation: partner-marquee 28s linear infinite;
+  animation: partner-marquee 20s linear infinite;
 }
 
 .partner-marquee-track:hover {
