@@ -13,7 +13,7 @@ import {
 } from "../lib/perfumes";
 import { AddToCartModal } from "./AddToCartModal";
 import { Footer } from "./Footer";
-import { Header } from "./Header";
+import { Header } from "../components/Header";
 
 type Props = {
   title: string;

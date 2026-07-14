@@ -6,9 +6,8 @@ import logo from "../assets/Logo.png";
 import { useCart } from "../lib/cart";
 
 const storeItems: { label: string; to: string }[] = [
-  { label: "Vêtements", to: "/vetements" },
-  { label: "Homme", to: "/homme" },
-  { label: "Femme", to: "/femme" },
+  { label: "Parfums authentiques homme", to: "/homme" },
+  { label: "Femme authentiques femme", to: "/femme" },
   { label: "Prestige Homme", to: "/prestige-homme" as any },
   { label: "Prestige Femme", to: "/prestige-femme" as any },
   { label: "Diffuseur", to: "/diffuseur" },

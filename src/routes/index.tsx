@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { useEffect } from "react";
 import contactBg from "../assets/contact-bg.jpg";
 import mounia from "../assets/Mounia.jpeg";
 import heroVideo from "../assets/video_home_amanya.mov";
-import { partners } from "../lib/partners";
+import { scrollToSection } from "../lib/scrollToSection";
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-import { PartnerCard } from "../components/PartnerCard";
+import { PartnerLogoMarquee } from "../components/PartnerLogoMarquee";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -78,6 +79,13 @@ function HeroVideo() {
 }
 
 function HomePage() {
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      requestAnimationFrame(() => scrollToSection(hash));
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -204,11 +212,7 @@ function HomePage() {
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {partners.map((partner) => (
-            <PartnerCard key={partner.name} partner={partner} />
-          ))}
-        </div>
+        <PartnerLogoMarquee />
       </section>
 
       {/* CONTACT */}

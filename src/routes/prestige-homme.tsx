@@ -31,7 +31,7 @@ function PrestigeHommeRoute() {
       title="Prestige Homme"
       tagline="Collection d'exception"
       description="Une sélection premium de parfums de luxe en format 50ml. Marques prestigieuses, fragrances rares, quantité minimum 20 pièces."
-      heroImage="https://images.unsplash.com/photo-1615375100199-c2ee2e3f6c62?w=1600&h=900&fit=crop&auto=format&q=80"
+      heroImage="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=1600&h=900&fit=crop&auto=format&q=80"
       perfumes={perfumes}
     />
   );
