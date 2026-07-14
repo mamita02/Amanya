@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import contactBg from "../assets/contact-bg.jpg";
 import mounia from "../assets/Mounia.jpeg";
-import heroVideo from "../assets/video_home_amanya.mp4";
+import heroVideo from "../assets/video_home_amanya.mov";
 import { partners } from "../lib/partners";
 
 import { Footer } from "../components/Footer";
