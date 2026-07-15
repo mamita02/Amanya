@@ -28,7 +28,7 @@ function HommeRoute() {
 
   return (
     <PerfumeCatalog
-      title="Homme"
+      title="Parfums authentiques homme"
       tagline="Sillage masculin"
       description="Une sélection de parfums authentiques et standards, pensée pour l'homme moderne. Marques de prestige, fragrances longue tenue."
       heroImage="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=1600&h=900&fit=crop&auto=format&q=80"

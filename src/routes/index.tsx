@@ -1,15 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronLeft, ChevronRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { useEffect } from "react";
 import contactBg from "../assets/contact-bg.jpg";
-import hero1 from "../assets/hero-1.jpg";
-import hero2 from "../assets/hero-2.jpg";
-import hero3 from "../assets/hero-3.jpg";
 import mounia from "../assets/Mounia.jpeg";
+import heroVideo from "../assets/video_home_amanya.mov";
+import { scrollToSection } from "../lib/scrollToSection";
 import { marketplace } from "../lib/marketplace";
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
+import { PartnerLogoMarquee } from "../components/PartnerLogoMarquee";
 import { MarketplaceCard } from "../components/MarketplaceCard";
 
 export const Route = createFileRoute("/")({
@@ -66,67 +66,33 @@ const categories = [
 // Partenaires AMANYA — remplace les "#" par les vraies URLs des sites partenaires
 
 
-const heroSlides = [hero1, hero2, hero3];
-
-function HeroCarousel() {
-  const [index, setIndex] = useState(0);
-  const go = (n: number) => setIndex((index + n + heroSlides.length) % heroSlides.length);
-
-  useEffect(() => {
-    const id = setInterval(() => setIndex((i) => (i + 1) % heroSlides.length), 5000);
-    return () => clearInterval(id);
-  }, []);
-
+function HeroVideo() {
   return (
     <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
       <div className="relative h-screen w-full">
-        {heroSlides.map((src, i) => (
-          <img
-            key={src}
-            src={src}
-            alt=""
-            width={1920}
-            height={1080}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === index ? "opacity-100" : "opacity-0"}`}
-          />
-        ))}
-
-        <button
-          onClick={() => go(-1)}
-          aria-label="Précédent"
-          className="absolute left-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:left-8"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        <button
-          onClick={() => go(1)}
-          aria-label="Suivant"
-          className="absolute right-4 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-[var(--gold)]/40 bg-black/40 text-[var(--gold-soft)] backdrop-blur transition hover:border-[var(--gold)] hover:text-[var(--gold)] sm:right-8"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-
-        <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              aria-label={`Slide ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all ${i === index ? "w-8 bg-[var(--gold)]" : "w-4 bg-white/40"}`}
-            />
-          ))}
-        </div>
+        <video
+          src={heroVideo} autoPlay muted 
+          loop playsInline aria-hidden
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       </div>
     </section>
   );
 }
 
 function HomePage() {
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      requestAnimationFrame(() => scrollToSection(hash));
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
-      <HeroCarousel />
+      <HeroVideo />
 
       {/* TRUST STRIP */}
       <section className="border-y border-border/60 bg-[var(--jet)] text-white/80">
@@ -231,8 +197,7 @@ function HomePage() {
             </p>
             <a
               href="#"
-              className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]"
-            >
+              className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]">
               Voir plus
             </a>
           </div>
@@ -265,21 +230,17 @@ function HomePage() {
       </section>
 
       {/* PARTNERS */}
-      {/* <section id="partenaires" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section id="partenaires" className="bg-gradient-to-b from-[#fefbe8] to-[#ce9a65] w-full px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="font-display text-4xl font-bold sm:text-5xl">Market Place</h2>
           <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
             Ils nous font confiance
           </span>
-          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--onyx)] to-transparent" />
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {partners.map((partner) => (
-            <PartnerCard key={partner.name} partner={partner} />
-          ))}
-        </div>   
-      </section> */}
+        <PartnerLogoMarquee />
+      </section>
 
       {/* CONTACT */}
       <section id="contact" className="relative isolate overflow-hidden">
@@ -339,8 +300,8 @@ function HomePage() {
             <div className="relative grid gap-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 {[
-                  { label: "Nom complet", type: "text", required: true },
-                  { label: "Email", type: "email", required: true },
+                  { label: "Nom complet", type: "text", required: true, placeholder: "Nom complet" },
+                  { label: "Email", type: "email", required: true, placeholder: "Adresse email" },
                 ].map((f) => (
                   <div key={f.label}>
                     <label className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[var(--gold-soft)]">
@@ -348,7 +309,8 @@ function HomePage() {
                     </label>
                     <input
                       required={f.required}
-                      type={f.type}
+                      type={f.type} 
+                      placeholder={f.placeholder}
                       className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/10 px-4 text-sm text-white outline-none backdrop-blur transition placeholder:text-white/30 focus:border-[var(--gold)] focus:bg-white/15 focus:ring-2 focus:ring-[var(--gold)]/40"
                     />
                   </div>
@@ -360,7 +322,8 @@ function HomePage() {
                   Sujet
                 </label>
                 <input
-                  type="text"
+                  type="text" 
+                  placeholder="Sujet"
                   className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/10 px-4 text-sm text-white outline-none backdrop-blur transition placeholder:text-white/30 focus:border-[var(--gold)] focus:bg-white/15 focus:ring-2 focus:ring-[var(--gold)]/40"
                 />
               </div>
@@ -371,6 +334,7 @@ function HomePage() {
                 </label>
                 <textarea
                   required
+                  placeholder="Votre message"
                   rows={5}
                   className="mt-2 w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-sm text-white outline-none backdrop-blur transition placeholder:text-white/30 focus:border-[var(--gold)] focus:bg-white/15 focus:ring-2 focus:ring-[var(--gold)]/40"
                 />
@@ -378,8 +342,7 @@ function HomePage() {
 
               <button
                 type="submit"
-                className="group relative mt-2 inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[var(--ruby)] via-[var(--ruby-bright)] to-[var(--ruby)] px-10 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-[0_10px_40px_-10px_rgba(220,40,60,0.6)] transition hover:shadow-[0_15px_50px_-10px_rgba(220,40,60,0.8)]"
-              >
+                className="group relative mt-2 inline-flex h-14 items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[var(--ruby)] via-[var(--ruby-bright)] to-[var(--ruby)] px-10 text-sm font-semibold uppercase tracking-[0.3em] text-white shadow-[0_10px_40px_-10px_rgba(220,40,60,0.6)] transition hover:shadow-[0_15px_50px_-10px_rgba(220,40,60,0.8)]">
                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                 <span className="relative">Envoyer le message</span>
                 <ArrowRight className="relative h-4 w-4 transition group-hover:translate-x-1" />
