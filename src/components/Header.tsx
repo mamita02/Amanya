@@ -16,7 +16,7 @@ const storeItems: { label: string; to: string }[] = [
 const navLinks = [
   { label: "À propos", hash: "apropos" },
   {label: "Market Place", hash: "marketplace"},
-  // { label: "Partenaires", hash: "partenaires" },
+  { label: "Partenaires", hash: "partenaires" },
   { label: "Contact", hash: "contact" },
 ];
 
