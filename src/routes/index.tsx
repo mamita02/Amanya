@@ -3,7 +3,7 @@ import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { useEffect } from "react";
 import contactBg from "../assets/contact-bg.jpg";
 import mounia from "../assets/Mounia.jpeg";
-import heroVideo from "../assets/video_home_amanya.mov";
+import heroVideo from "../assets/Slide Amanya.mov";
 import { scrollToSection } from "../lib/scrollToSection";
 import { marketplace } from "../lib/marketplace";
 
@@ -209,7 +209,7 @@ function HomePage() {
         <div className="text-center">
           <h2 className="font-display text-4xl font-bold sm:text-5xl">Market Place</h2>
           <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-            Ils nous font confiance
+              LES ACTEURS DE NOTRE ÉCOSYSTÈME
           </span>
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
@@ -232,7 +232,7 @@ function HomePage() {
       {/* PARTNERS */}
       <section id="partenaires" className="bg-gradient-to-b from-[#fefbe8] to-[#ce9a65] w-full px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">Market Place</h2>
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">Nos partenaires</h2>
           <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
             Ils nous font confiance
           </span>
