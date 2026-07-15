@@ -16,11 +16,20 @@ export const Route = createFileRoute("/homme")({
     ],
   }),
   loader: async () => {
-  const perfumes = await getPerfumesByCategory("homme");
-  return { perfumes };
-},
-  staleTime: 0,        // ← AJOUTE
-  shouldReload: true,  // ← AJOUTE
+    const perfumes = await getPerfumesByCategory("homme");
+
+    // Tri : ceux qui ont 100ml en premier, puis ceux qui n'ont que 50ml
+    const sorted = [...perfumes].sort((a, b) => {
+      const aHas100 = a.volumes.includes(100);
+      const bHas100 = b.volumes.includes(100);
+      if (aHas100 && !bHas100) return -1;
+      if (!aHas100 && bHas100) return 1;
+      return 0;
+    });
+
+    return { perfumes: sorted };
+  },
+  staleTime: 0,
 });
 
 function HommeRoute() {

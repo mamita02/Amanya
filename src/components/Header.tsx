@@ -7,7 +7,7 @@ import { useCart } from "../lib/cart";
 
 const storeItems: { label: string; to: string }[] = [
   { label: "Parfums authentiques homme", to: "/homme" },
-  { label: "Femme authentiques femme", to: "/femme" },
+  { label: "Parfums authentiques femme", to: "/femme" },
   { label: "Prestige Homme", to: "/prestige-homme" as any },
   { label: "Prestige Femme", to: "/prestige-femme" as any },
   { label: "Diffuseur", to: "/diffuseur" },
