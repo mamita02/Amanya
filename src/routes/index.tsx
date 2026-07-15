@@ -203,7 +203,7 @@ function HomePage() {
       </section>
 
       {/* PARTNERS */}
-      <section id="partenaires" className="bg-[var(--gold-soft)] w-full px-4 py-20 sm:px-6 lg:px-8">
+      <section id="partenaires" className="bg-gradient-to-b from-[#fefbe8] to-[#ce9a65] w-full px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="font-display text-4xl font-bold sm:text-5xl">Nos partenaires</h2>
           <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">

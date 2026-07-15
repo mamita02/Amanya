@@ -94,14 +94,21 @@
 }
 
 @keyframes partner-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .partner-marquee-track {
   display: flex;
   width: max-content;
+  flex-wrap: nowrap;
+  gap: 2.5rem;
   animation: partner-marquee 20s linear infinite;
+  will-change: transform;
 }
 
 .partner-marquee-track:hover {

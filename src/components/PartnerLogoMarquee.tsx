@@ -1,15 +1,13 @@
-import burpSuiteLogo from "../assets/partners/logo/Burp Suite.png";
-import hashcatLogo from "../assets/partners/logo/Hashcat.png";
-import metasploitLogo from "../assets/partners/logo/metasploit.png";
-import nmapLogo from "../assets/partners/logo/nmap.png";
-import nessusLogo from "../assets/partners/logo/Nessus.png";
+import forceNLogo from "../assets/partners/logo/FORCE-N.jpeg";
+import GOFARLogo from "../assets/partners/logo/GOFAR HOLDING.jpeg";
+import KebaLogo from "../assets/partners/logo/Keba Consulting.jpeg";
+import SparckLogo from "../assets/partners/logo/Sparck Project.jpeg";
 
 const partnerLogos = [
-  { name: "Nmap", src: nmapLogo },
-  { name: "Nessus", src: nessusLogo },
-  { name: "Metasploit", src: metasploitLogo },
-  { name: "Burp Suite", src: burpSuiteLogo },
-  { name: "Hashcat", src: hashcatLogo },
+  { name: "FORCE-N", src: forceNLogo },
+  { name: "GOFAR HOLDING", src: GOFARLogo },
+  { name: "Keba Consulting", src: KebaLogo },
+  { name: "Sparck Project", src: SparckLogo },
 ];
 
 function LogoItem({ name, src }: { name: string; src: string }) {
@@ -24,14 +22,14 @@ function LogoItem({ name, src }: { name: string; src: string }) {
 }
 
 export function PartnerLogoMarquee() {
-  const track = [...partnerLogos, ...partnerLogos];
+  const track = [...partnerLogos, ...partnerLogos, ...partnerLogos, ...partnerLogos];
 
   return (
     <div className="relative mt-12 overflow-hidden py-8">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[var(--gold-soft)] to-transparent sm:w-24" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[var(--gold-soft)] to-transparent sm:w-24" />
+      {/* <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#fefbe8] via-[#e6c08d] to-transparent sm:w-24" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#fefbe8] via-[#e6c08d] to-transparent sm:w-24" /> */}
 
-      <div className="partner-marquee-track gap-10 px-4 sm:gap-14 sm:px-6">
+      <div className="partner-marquee-track px-4 sm:gap-14 sm:px-6">
         {track.map((logo, i) => (
           <LogoItem key={`${logo.name}-${i}`} name={logo.name} src={logo.src} />
         ))}
