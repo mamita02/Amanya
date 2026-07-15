@@ -3,7 +3,7 @@ import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { useEffect } from "react";
 import contactBg from "../assets/contact-bg.jpg";
 import mounia from "../assets/Mounia.jpeg";
-import heroVideo from "../assets/slide-amanya.mov";
+import heroVideo from "../assets/slide-amanya.mp4";
 import { scrollToSection } from "../lib/scrollToSection";
 import { marketplace } from "../lib/marketplace";
 
