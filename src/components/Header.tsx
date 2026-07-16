@@ -15,10 +15,11 @@ const storeItems: { label: string; to: string }[] = [
 
 const navLinks = [
   { label: "À propos", hash: "apropos" },
-  {label: "Market Place", hash: "marketplace"},
+  { label: "Market Place", hash: "marketplace" },
   { label: "Partenaires", hash: "partenaires" },
-  { label: "Contact", hash: "contact" },
 ];
+
+const contactLink = { label: "Contact", to: "/contact" as const };
 
 export function Header() {
   const { totalItems, isHydrated } = useCart();
@@ -110,6 +111,11 @@ export function Header() {
               <a href={`/#${l.hash}`} className="transition hover:text-[var(--gold)]">{l.label}</a>
             </li>
           ))}
+          <li>
+            <Link to={contactLink.to} className="transition hover:text-[var(--gold)]">
+              {contactLink.label}
+            </Link>
+          </li>
         </ul>
       </nav>
 
@@ -177,6 +183,15 @@ export function Header() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  to={contactLink.to}
+                  onClick={() => setMobileOpen(false)}
+                  className="block rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
+                >
+                  {contactLink.label}
+                </Link>
+              </li>
 
               {/* Divider */}
               <li className="py-2">
