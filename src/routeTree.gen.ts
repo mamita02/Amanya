@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as VetementsRouteImport } from './routes/vetements'
+import { Route as StoreRouteImport } from './routes/store'
 import { Route as PrestigeHommeRouteImport } from './routes/prestige-homme'
 import { Route as PrestigeFemmeRouteImport } from './routes/prestige-femme'
 import { Route as PanierRouteImport } from './routes/panier'
@@ -25,9 +27,19 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as MarketplaceIdRouteImport } from './routes/marketplace.$id'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
 
+const WishlistRoute = WishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VetementsRoute = VetementsRouteImport.update({
   id: '/vetements',
   path: '/vetements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoreRoute = StoreRouteImport.update({
+  id: '/store',
+  path: '/store',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrestigeHommeRoute = PrestigeHommeRouteImport.update({
@@ -114,7 +126,9 @@ export interface FileRoutesByFullPath {
   '/panier': typeof PanierRoute
   '/prestige-femme': typeof PrestigeFemmeRoute
   '/prestige-homme': typeof PrestigeHommeRoute
+  '/store': typeof StoreRoute
   '/vetements': typeof VetementsRoute
+  '/wishlist': typeof WishlistRoute
   '/listing/$id': typeof ListingIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
 }
@@ -131,7 +145,9 @@ export interface FileRoutesByTo {
   '/panier': typeof PanierRoute
   '/prestige-femme': typeof PrestigeFemmeRoute
   '/prestige-homme': typeof PrestigeHommeRoute
+  '/store': typeof StoreRoute
   '/vetements': typeof VetementsRoute
+  '/wishlist': typeof WishlistRoute
   '/listing/$id': typeof ListingIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
 }
@@ -149,7 +165,9 @@ export interface FileRoutesById {
   '/panier': typeof PanierRoute
   '/prestige-femme': typeof PrestigeFemmeRoute
   '/prestige-homme': typeof PrestigeHommeRoute
+  '/store': typeof StoreRoute
   '/vetements': typeof VetementsRoute
+  '/wishlist': typeof WishlistRoute
   '/listing/$id': typeof ListingIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
 }
@@ -168,7 +186,9 @@ export interface FileRouteTypes {
     | '/panier'
     | '/prestige-femme'
     | '/prestige-homme'
+    | '/store'
     | '/vetements'
+    | '/wishlist'
     | '/listing/$id'
     | '/marketplace/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -185,7 +205,9 @@ export interface FileRouteTypes {
     | '/panier'
     | '/prestige-femme'
     | '/prestige-homme'
+    | '/store'
     | '/vetements'
+    | '/wishlist'
     | '/listing/$id'
     | '/marketplace/$id'
   id:
@@ -202,7 +224,9 @@ export interface FileRouteTypes {
     | '/panier'
     | '/prestige-femme'
     | '/prestige-homme'
+    | '/store'
     | '/vetements'
+    | '/wishlist'
     | '/listing/$id'
     | '/marketplace/$id'
   fileRoutesById: FileRoutesById
@@ -220,17 +244,33 @@ export interface RootRouteChildren {
   PanierRoute: typeof PanierRoute
   PrestigeFemmeRoute: typeof PrestigeFemmeRoute
   PrestigeHommeRoute: typeof PrestigeHommeRoute
+  StoreRoute: typeof StoreRoute
   VetementsRoute: typeof VetementsRoute
+  WishlistRoute: typeof WishlistRoute
   ListingIdRoute: typeof ListingIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wishlist': {
+      id: '/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof WishlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vetements': {
       id: '/vetements'
       path: '/vetements'
       fullPath: '/vetements'
       preLoaderRoute: typeof VetementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/store': {
+      id: '/store'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prestige-homme': {
@@ -359,7 +399,9 @@ const rootRouteChildren: RootRouteChildren = {
   PanierRoute: PanierRoute,
   PrestigeFemmeRoute: PrestigeFemmeRoute,
   PrestigeHommeRoute: PrestigeHommeRoute,
+  StoreRoute: StoreRoute,
   VetementsRoute: VetementsRoute,
+  WishlistRoute: WishlistRoute,
   ListingIdRoute: ListingIdRoute,
 }
 export const routeTree = rootRouteImport

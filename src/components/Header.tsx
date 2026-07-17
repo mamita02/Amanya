@@ -15,7 +15,6 @@ const storeItems: { label: string; to: string }[] = [
 
 const navLinks = [
   { label: "À propos", hash: "apropos" },
-  { label: "Market Place", hash: "marketplace" },
   { label: "Partenaires", hash: "partenaires" },
 ];
 
@@ -52,9 +51,9 @@ export function Header() {
           <button className="hidden h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Compte">
             <User className="h-4 w-4" />
           </button>
-          <button className="hidden h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Favoris">
+          <Link to="/wishlist" className="hidden h-10 w-10 cursor-pointer place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Wishlist">
             <Heart className="h-4 w-4" />
-          </button>
+          </Link>
 
           {/* Panier */}
           <Link
@@ -88,10 +87,10 @@ export function Header() {
             <Link to="/" className="transition hover:text-[var(--gold)]">Accueil</Link>
           </li>
           <li className="group relative">
-            <button className="inline-flex items-center gap-1 transition hover:text-[var(--gold)]">
+            <Link to="/store" className="inline-flex items-center gap-1 transition hover:text-[var(--gold)]">
               Amanya Store
               <ChevronDown className="h-3.5 w-3.5 transition group-hover:rotate-180" />
-            </button>
+            </Link>
             <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
               <div className="overflow-hidden rounded-xl border border-[var(--gold)]/20 bg-[var(--onyx)] shadow-2xl shadow-black/50 ring-1 ring-white/5">
                 <ul className="py-2">
@@ -111,6 +110,9 @@ export function Header() {
               <a href={`/#${l.hash}`} className="transition hover:text-[var(--gold)]">{l.label}</a>
             </li>
           ))}
+          <li>
+            <Link to="/marketplace" className="transition hover:text-[var(--gold)]">Market Place</Link>
+          </li>
           <li>
             <Link to={contactLink.to} className="transition hover:text-[var(--gold)]">
               {contactLink.label}
@@ -148,9 +150,9 @@ export function Header() {
 
               {/* Amanya Store — sous-menu */}
               <li>
-                <p className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--gold)]">
+                <Link to="/store" onClick={() => setMobileOpen(false)} className="block rounded-lg px-4 pt-3 pb-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--gold)] hover:bg-white/5">
                   Amanya Store
-                </p>
+                </Link>
                 <ul className="space-y-1 pl-2">
                   {storeItems.map((item) => (
                     <li key={item.label}>
@@ -185,6 +187,15 @@ export function Header() {
               ))}
               <li>
                 <Link
+                  to="/marketplace"
+                  onClick={() => setMobileOpen(false)}
+                  className="block rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
+                >
+                  Market Place
+                </Link>
+              </li>
+              <li>
+                <Link
                   to={contactLink.to}
                   onClick={() => setMobileOpen(false)}
                   className="block rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
@@ -199,6 +210,16 @@ export function Header() {
               </li>
 
               {/* Panier mobile */}
+              <li>
+                <Link
+                  to="/wishlist"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
+                >
+                  <Heart className="h-4 w-4" />
+                  Ma wishlist
+                </Link>
+              </li>
               <li>
                 <Link
                   to="/panier"

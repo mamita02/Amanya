@@ -3,7 +3,6 @@ import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { useEffect } from "react";
 import contactBg from "../assets/contact-bg.jpg";
 import mounia from "../assets/Mounia.jpeg";
-import heroVideo from "../assets/slide-amanya.mp4";
 import { scrollToSection } from "../lib/scrollToSection";
 import { marketplace } from "../lib/marketplace";
 
@@ -66,20 +65,6 @@ const categories = [
 // Partenaires AMANYA — remplace les "#" par les vraies URLs des sites partenaires
 
 
-function HeroVideo() {
-  return (
-    <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
-      <div className="relative h-screen w-full">
-        <video
-          src={heroVideo} autoPlay muted 
-          loop playsInline aria-hidden
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      </div>
-    </section>
-  );
-}
-
 function HomePage() {
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -91,8 +76,6 @@ function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-
-      <HeroVideo />
 
       {/* TRUST STRIP */}
       <section className="border-y border-border/60 bg-[var(--jet)] text-white/80">

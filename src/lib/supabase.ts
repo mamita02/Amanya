@@ -10,11 +10,11 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Types
 // ============================================
 
-export type Gender = 'Homme' | 'Femme' | 'Unisex';
+export type Gender = 'Homme' | 'Femme' | 'Unisexe';
 export type PerfumeType = 'Authentique' | 'Standard';
 export type Volume = 50 | 100;
 export type Quantity = 25 | 50 | 100 | 250 | 500;
-export type Category = 'homme' | 'femme' | 'diffuseur';
+export type Category = 'homme' | 'femme' | 'diffuseur' | 'prestige-homme' | 'prestige-femme';
 
 export type PerfumeFamily = 
   | 'Oriental' 
@@ -23,6 +23,7 @@ export type PerfumeFamily =
   | 'Boisé' 
   | 'Épicé' 
   | 'Aquatique' 
+  | 'Aromatique'
   | 'Chypré';
 
 export type Perfume = {
@@ -33,11 +34,13 @@ export type Perfume = {
   description?: string;
   price: number; // en FCFA
   image: string;
+  hoverImage?: string;
   accent: string;
   gender: Gender;
   category: Category;
   type: PerfumeType;
   family: PerfumeFamily;
+  families: PerfumeFamily[];
   volumes: Volume[];
   minQuantity: Quantity;
   badge?: string;
@@ -47,9 +50,55 @@ export type Perfume = {
   updatedAt: string;
 };
 
-export type PerfumeInput = Omit<Perfume, 'id' | 'slug' | 'createdAt' | 'updatedAt'>;
+export type PerfumeInput = Omit<Perfume, 'id' | 'slug' | 'createdAt' | 'updatedAt' | 'families'> & {
+  families?: PerfumeFamily[];
+};
 
 export const ALL_QUANTITIES: Quantity[] = [25, 50, 100, 250, 500];
+
+const LEGACY_META_MARKER = '[[AMANYA_META]]';
+
+function splitLegacyDescription(value?: string | null): {
+  description?: string;
+  imageHover?: string;
+  families?: PerfumeFamily[];
+} {
+  if (!value) return {};
+  const markerIndex = value.indexOf(LEGACY_META_MARKER);
+  if (markerIndex === -1) return { description: value.trim() || undefined };
+
+  const description = value.slice(0, markerIndex).trim() || undefined;
+  const serializedMeta = value.slice(markerIndex + LEGACY_META_MARKER.length).trim();
+
+  try {
+    const meta = JSON.parse(serializedMeta) as {
+      imageHover?: string | null;
+      families?: PerfumeFamily[];
+    };
+    return {
+      description,
+      imageHover: meta.imageHover || undefined,
+      families: Array.isArray(meta.families) ? meta.families : undefined,
+    };
+  } catch {
+    // Même si les anciennes métadonnées sont mal formées, elles ne doivent
+    // jamais être exposées comme description du produit.
+    return { description };
+  }
+}
+
+function composeStoredDescription(
+  description: string | undefined,
+  imageHover: string | undefined,
+  families: PerfumeFamily[] | undefined,
+): string {
+  const cleanDescription = splitLegacyDescription(description).description || '';
+  const meta = JSON.stringify({
+    imageHover: imageHover || null,
+    families: families?.length ? families : [],
+  });
+  return `${cleanDescription}${cleanDescription ? '\n\n' : ''}${LEGACY_META_MARKER}${meta}`;
+}
 
 // ============================================
 // Database Functions
@@ -163,6 +212,7 @@ export async function getFamiliesByCategory(category: Category): Promise<Perfume
  */
 export async function createPerfume(input: PerfumeInput): Promise<Perfume> {
   const slug = generateSlug(input.name);
+  const storedDescription = composeStoredDescription(input.description, input.hoverImage, input.families || [input.family]);
   
   const { data, error } = await supabase
     .from('parfums')
@@ -171,10 +221,10 @@ export async function createPerfume(input: PerfumeInput): Promise<Perfume> {
         name: input.name,
         brand: input.brand,
         subtitle: input.subtitle,
-        description: input.description,
+        description: storedDescription,
         price: input.price,
         category: input.category,
-        gender: input.gender,
+        gender: input.gender === 'Unisexe' ? 'Unisex' : input.gender,
         type: input.type,
         family: input.family,
         image: input.image,
@@ -202,6 +252,14 @@ export async function createPerfume(input: PerfumeInput): Promise<Perfume> {
  */
 export async function updatePerfume(id: string, input: Partial<PerfumeInput>): Promise<Perfume> {
   const updateData: any = { ...input };
+  if (input.gender === 'Unisexe') updateData.gender = 'Unisex';
+  updateData.description = composeStoredDescription(
+    input.description,
+    input.hoverImage,
+    input.families || (input.family ? [input.family] : undefined),
+  );
+  delete updateData.hoverImage;
+  delete updateData.families;
   
   if (input.name) {
     updateData.slug = generateSlug(input.name);
@@ -288,19 +346,22 @@ export async function uploadPerfumeImage(
  * Mappe les données de la BD vers le type Perfume
  */
 function mapDbToPerfume(data: any): Perfume {
+  const legacy = splitLegacyDescription(data.description);
   return {
     id: data.id,
     name: data.name,
     brand: data.brand,
     subtitle: data.subtitle,
-    description: data.description,
+    description: legacy.description,
     price: data.price,
     image: data.image,
+    hoverImage: data.hover_image || legacy.imageHover || undefined,
     accent: data.accent,
-    gender: data.gender,
+    gender: data.gender === 'Unisex' ? 'Unisexe' : data.gender,
     category: data.category,
     type: data.type,
     family: data.family,
+    families: data.families?.length ? data.families : legacy.families?.length ? legacy.families : [data.family],
     volumes: data.volumes || [50, 100],
     minQuantity: data.min_quantity || 25,
     badge: data.badge,
@@ -355,4 +416,19 @@ export function fromDbPrice(amount: number): number {
  */
 export function getBrands(perfumes: Perfume[]): string[] {
   return [...new Set(perfumes.map(p => p.brand))].sort();
+}
+
+/** Récupère tous les produits pour l'administration, indisponibles inclus. */
+export async function getAllPerfumesForAdmin(): Promise<Perfume[]> {
+  const { data, error } = await supabase
+    .from('parfums')
+    .select('*')
+    .order('brand');
+
+  if (error) {
+    console.error('Error fetching admin perfumes:', error);
+    throw new Error('Impossible de charger les produits');
+  }
+
+  return (data || []).map(mapDbToPerfume);
 }

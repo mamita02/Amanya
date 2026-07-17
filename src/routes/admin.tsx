@@ -7,10 +7,12 @@ import {
   createPerfume,
   deletePerfume,
   getAllPerfumes,
+  getAllPerfumesForAdmin,
   updatePerfume,
   uploadPerfumeImage,
   type Category,
   type Perfume,
+  type PerfumeFamily,
   type PerfumeInput,
 } from "../lib/supabase";
 
@@ -22,6 +24,10 @@ export const Route = createFileRoute("/admin")({
 });
 
 type AdminTab = "perfumes" | "stats" | "settings";
+
+const PERFUME_FAMILIES: PerfumeFamily[] = [
+  "Aquatique", "Aromatique", "Boisé", "Chypré", "Épicé", "Floral", "Fruité", "Oriental",
+];
 
 function AdminLayout() {
   const [activeTab, setActiveTab] = useState<AdminTab>("perfumes");
@@ -104,6 +110,8 @@ function AdminPerfumesView() {
   const [submitError, setSubmitError] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [hoverImageFile, setHoverImageFile] = useState<File | null>(null);
+  const [hoverImagePreview, setHoverImagePreview] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const [form, setForm] = useState({
@@ -116,6 +124,7 @@ function AdminPerfumesView() {
     gender: "Homme",
     type: "Authentique",
     family: "Oriental",
+    families: ["Oriental"] as PerfumeFamily[],
     badge: "",
     accent: "#1a1a1a",
     minQuantity: 25,
@@ -131,7 +140,7 @@ function AdminPerfumesView() {
     try {
       setLoading(true);
       setError("");
-      const data = await getAllPerfumes();
+      const data = await getAllPerfumesForAdmin();
       setPerfumes(data);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erreur inconnue";
@@ -146,6 +155,9 @@ function AdminPerfumesView() {
     p.brand.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const existingBrands = [...new Set(perfumes.map((perfume) => perfume.brand).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, "fr"));
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -156,6 +168,15 @@ function AdminPerfumesView() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleHoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setHoverImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (event) => setHoverImagePreview(event.target?.result as string);
+    reader.readAsDataURL(file);
   };
 
   const resetForm = () => {
@@ -169,6 +190,7 @@ function AdminPerfumesView() {
       gender: "Homme",
       type: "Authentique",
       family: "Oriental",
+      families: ["Oriental"],
       badge: "",
       accent: "#1a1a1a",
       minQuantity: 25,
@@ -177,6 +199,8 @@ function AdminPerfumesView() {
     });
     setImageFile(null);
     setImagePreview("");
+    setHoverImageFile(null);
+    setHoverImagePreview("");
     setEditingId(null);
     setSubmitError("");
   };
@@ -192,6 +216,7 @@ function AdminPerfumesView() {
       gender: perfume.gender,
       type: perfume.type,
       family: perfume.family,
+      families: perfume.families?.length ? perfume.families : [perfume.family],
       badge: perfume.badge || "",
       accent: perfume.accent,
       minQuantity: perfume.minQuantity as number,
@@ -199,6 +224,7 @@ function AdminPerfumesView() {
       volume: perfume.volumes?.[0] || 100,
     });
     setImagePreview(perfume.image);
+    setHoverImagePreview(perfume.hoverImage || "");
     setEditingId(perfume.id);
     setShowForm(true);
   };
@@ -211,11 +237,17 @@ function AdminPerfumesView() {
     try {
       if (!form.name.trim()) throw new Error("Le nom est requis");
       if (!form.brand.trim()) throw new Error("La marque est requise");
+      if (!form.families.length) throw new Error("Sélectionnez au moins une famille");
       if (!imagePreview && !imageFile) throw new Error("Veuillez sélectionner une image");
 
       let imageUrl = imagePreview;
       if (imageFile) {
         imageUrl = await uploadPerfumeImage(imageFile, form.category, form.name);
+      }
+
+      let hoverImageUrl = hoverImagePreview;
+      if (hoverImageFile) {
+        hoverImageUrl = await uploadPerfumeImage(hoverImageFile, form.category, `${form.name}-survol`);
       }
 
       const perfumeData: PerfumeInput = {
@@ -228,7 +260,9 @@ function AdminPerfumesView() {
         gender: form.gender as any,
         type: form.type as any,
         family: form.family as any,
+        families: form.families,
         image: imageUrl,
+        hoverImage: hoverImageUrl || undefined,
         badge: form.badge || undefined,
         accent: form.accent,
         volumes: [form.volume as 50 | 100],
@@ -327,7 +361,7 @@ function AdminPerfumesView() {
                 <th className="px-6 py-4 text-left text-sm font-semibold">Catégorie</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Volume</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Prix</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold">Actif</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Disponibilité</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">Actions</th>
               </tr>
             </thead>
@@ -350,7 +384,9 @@ function AdminPerfumesView() {
                   </td>
                   <td className="px-6 py-4 text-sm">{perfume.brand}</td>
                   <td className="px-6 py-4 text-sm">
-                    <span className="bg-gray-200 px-3 py-1 rounded text-xs font-semibold">{perfume.category}</span>
+                    <span className="bg-gray-200 px-3 py-1 rounded text-xs font-semibold">
+                      {perfume.category === "homme" ? "Parfum Authentique Homme" : perfume.category === "femme" ? "Parfum Authentique Femme" : perfume.category === "diffuseur" ? "Diffuseur" : perfume.category === "prestige-homme" ? "Prestige Homme" : "Prestige Femme"}
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span
@@ -459,23 +495,24 @@ function AdminPerfumesView() {
                 </div>
               </div>
 
-              {/* PHOTO */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
-                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" required={!imagePreview} />
-                <label htmlFor="image-upload" className="cursor-pointer block">
-                  {imagePreview ? (
-                    <div>
-                      <img src={imagePreview} alt="Aperçu" className="w-32 h-32 mx-auto rounded mb-3 object-cover" />
-                      <p className="text-sm font-semibold text-gray-900">Cliquez pour changer la photo</p>
-                    </div>
-                  ) : (
-                    <div>
-                      <Upload className="w-10 h-10 mx-auto mb-2" style={{ color: "#D4AF37" }} />
-                      <p className="text-sm font-semibold text-gray-900">Sélectionnez une photo</p>
-                      <p className="text-xs text-gray-600 mt-1">JPG, PNG (max 5MB)</p>
-                    </div>
-                  )}
-                </label>
+              {/* PHOTOS */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center bg-gray-50">
+                  <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" required={!imagePreview} />
+                  <label htmlFor="image-upload" className="cursor-pointer block">
+                    {imagePreview ? <img src={imagePreview} alt="Aperçu principal" className="w-32 h-32 mx-auto rounded mb-3 object-cover" /> : <Upload className="w-10 h-10 mx-auto mb-2" style={{ color: "#D4AF37" }} />}
+                    <p className="text-sm font-semibold text-gray-900">Photo principale *</p>
+                    <p className="text-xs text-gray-600 mt-1">Visible directement · JPG, PNG (max 5MB)</p>
+                  </label>
+                </div>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center bg-gray-50">
+                  <input type="file" accept="image/*" onChange={handleHoverImageChange} className="hidden" id="hover-image-upload" />
+                  <label htmlFor="hover-image-upload" className="cursor-pointer block">
+                    {hoverImagePreview ? <img src={hoverImagePreview} alt="Aperçu au survol" className="w-32 h-32 mx-auto rounded mb-3 object-cover" /> : <Upload className="w-10 h-10 mx-auto mb-2" style={{ color: "#D4AF37" }} />}
+                    <p className="text-sm font-semibold text-gray-900">Photo au survol</p>
+                    <p className="text-xs text-gray-600 mt-1">Optionnelle · affichage temporaire</p>
+                  </label>
+                </div>
               </div>
 
               {/* Nom et Marque */}
@@ -486,7 +523,8 @@ function AdminPerfumesView() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Marque *</label>
-                  <input type="text" value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} placeholder="ex: Dior" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required />
+                  <input type="text" list="existing-brands" value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} placeholder="Saisir ou choisir une marque" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required />
+                  <datalist id="existing-brands">{existingBrands.map((brand) => <option key={brand} value={brand} />)}</datalist>
                 </div>
               </div>
 
@@ -517,9 +555,11 @@ function AdminPerfumesView() {
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Catégorie *</label>
                   <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as Category })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required>
-                    <option value="homme">Homme</option>
-                    <option value="femme">Femme</option>
                     <option value="diffuseur">Diffuseur</option>
+                    <option value="femme">Parfum Authentique Femme</option>
+                    <option value="homme">Parfum Authentique Homme</option>
+                    <option value="prestige-homme">Prestige Homme</option>
+                    <option value="prestige-femme">Prestige Femme</option>
                   </select>
                 </div>
               </div>
@@ -531,7 +571,7 @@ function AdminPerfumesView() {
                   <select value={form.gender} onChange={(e) => setForm({ ...form, gender: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required>
                     <option value="Homme">Homme</option>
                     <option value="Femme">Femme</option>
-                    <option value="Unisex">Unisex</option>
+                    <option value="Unisexe">Unisexe</option>
                   </select>
                 </div>
                 <div>
@@ -547,16 +587,23 @@ function AdminPerfumesView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Famille *</label>
-                  <select value={form.family} onChange={(e) => setForm({ ...form, family: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" required>
-                    <option value="Oriental">Oriental</option>
-                    <option value="Floral">Floral</option>
-                    <option value="Fruité">Fruité</option>
-                    <option value="Boisé">Boisé</option>
-                    <option value="Épicé">Épicé</option>
-                    <option value="Aquatique">Aquatique</option>
-                    <option value="Aromatique">Aromatique</option>
-                    <option value="Chypré">Chypré</option>
-                  </select>
+                  <div className="grid grid-cols-2 gap-2 border border-gray-300 p-3">
+                    {PERFUME_FAMILIES.map((family) => (
+                      <label key={family} className="flex items-center gap-2 text-sm font-normal">
+                        <input
+                          type="checkbox"
+                          checked={form.families.includes(family)}
+                          onChange={() => {
+                            const selected = form.families.includes(family)
+                              ? form.families.filter((item) => item !== family)
+                              : [...form.families, family];
+                            setForm({ ...form, families: selected, family: selected[0] || "Oriental" });
+                          }}
+                        />
+                        {family}
+                      </label>
+                    ))}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Couleur Accent</label>
@@ -564,14 +611,14 @@ function AdminPerfumesView() {
                 </div>
               </div>
 
-              {/* Min Quantity et Actif */}
+              {/* Min Quantity et disponibilité */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1 text-gray-900">Quantité Min.</label>
                   <input type="number" value={form.minQuantity} onChange={(e) => setForm({ ...form, minQuantity: parseInt(e.target.value) })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-gray-900">Actif</label>
+                  <label className="block text-sm font-semibold mb-1 text-gray-900">Disponibilité</label>
                   <select value={form.isActive ? "oui" : "non"} onChange={(e) => setForm({ ...form, isActive: e.target.value === "oui" })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none">
                     <option value="oui">Oui</option>
                     <option value="non">Non</option>

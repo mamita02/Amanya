@@ -1,6 +1,6 @@
 // src/components/PerfumeCatalog.tsx
 import { Package, SlidersHorizontal, Sparkles, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   ALL_QUANTITIES,
   type Gender,
@@ -23,7 +23,7 @@ type Props = {
   perfumes: Perfume[];
 };
 
-const ALL_GENDERS: Gender[] = ["Homme", "Femme", "Unisex"];
+const ALL_GENDERS: Gender[] = ["Homme", "Femme", "Unisexe"];
 const ALL_TYPES: PerfumeType[] = ["Authentique", "Standard"];
 const ALL_VOLUMES: Volume[] = [50, 100];
 
@@ -327,8 +327,23 @@ function PerfumeCard({
   onSelectVol: (v: Volume) => void;
   onOrder: () => void;
 }) {
+  const [showHoverImage, setShowHoverImage] = useState(false);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showTemporaryHoverImage = () => {
+    if (!perfume.hoverImage) return;
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    setShowHoverImage(true);
+    hoverTimer.current = setTimeout(() => setShowHoverImage(false), 2500);
+  };
+
+  const hideHoverImage = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    setShowHoverImage(false);
+  };
+
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-[var(--onyx)]/10">
+    <article onMouseEnter={showTemporaryHoverImage} onMouseLeave={hideHoverImage} className="group relative flex flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-[var(--onyx)]/10">
       {/* Image */}
       <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
         <div
@@ -350,6 +365,14 @@ function PerfumeCard({
           className="relative h-full w-full object-cover transition duration-700 group-hover:scale-105"
           loading="lazy"
         />
+        {perfume.hoverImage && (
+          <img
+            src={perfume.hoverImage}
+            alt={`${perfume.name} — seconde vue`}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${showHoverImage ? "opacity-100" : "pointer-events-none opacity-0"}`}
+            loading="lazy"
+          />
+        )}
       </div>
 
       {/* Infos */}
