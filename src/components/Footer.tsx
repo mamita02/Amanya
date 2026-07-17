@@ -4,7 +4,7 @@ import logo from "../assets/Logo.png";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-border/60 bg-[var(--onyx)] text-white/80">
+    <footer className="border-t border-border/60 bg-[var(--onyx)] text-white/80">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           {/* Brand */}
@@ -33,7 +33,7 @@ export function Footer() {
                   { label: "Accueil", href: "/" },
                   { label: "Nos partenaires", href: "/#partenaires" },
                   { label: "À propos", href: "/#about" },
-                  { label: "Contact", href: "/#contact" },
+                  { label: "Contact", href: "/contact" },
                 ].map((l) => (
                   <li key={l.label}>
                     <a href={l.href} className="text-white/60 transition hover:text-[var(--gold)]">

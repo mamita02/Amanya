@@ -18,6 +18,7 @@ import { Route as HommeRouteImport } from './routes/homme'
 import { Route as FemmeRouteImport } from './routes/femme'
 import { Route as DiffuseurRouteImport } from './routes/diffuseur'
 import { Route as CosmetiquesRouteImport } from './routes/cosmetiques'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccessoiresRouteImport } from './routes/accessoires'
 import { Route as IndexRouteImport } from './routes/index'
@@ -69,6 +70,11 @@ const CosmetiquesRoute = CosmetiquesRouteImport.update({
   path: '/cosmetiques',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
   '/cosmetiques': typeof CosmetiquesRoute
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
   '/cosmetiques': typeof CosmetiquesRoute
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/accessoires': typeof AccessoiresRoute
   '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
   '/cosmetiques': typeof CosmetiquesRoute
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/'
     | '/accessoires'
     | '/admin'
+    | '/contact'
     | '/cosmetiques'
     | '/diffuseur'
     | '/femme'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/'
     | '/accessoires'
     | '/admin'
+    | '/contact'
     | '/cosmetiques'
     | '/diffuseur'
     | '/femme'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/accessoires'
     | '/admin'
+    | '/contact'
     | '/cosmetiques'
     | '/diffuseur'
     | '/femme'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccessoiresRoute: typeof AccessoiresRoute
   AdminRoute: typeof AdminRoute
+  ContactRoute: typeof ContactRoute
   CosmetiquesRoute: typeof CosmetiquesRoute
   DiffuseurRoute: typeof DiffuseurRoute
   FemmeRoute: typeof FemmeRoute
@@ -276,6 +289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CosmetiquesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccessoiresRoute: AccessoiresRoute,
   AdminRoute: AdminRoute,
+  ContactRoute: ContactRoute,
   CosmetiquesRoute: CosmetiquesRoute,
   DiffuseurRoute: DiffuseurRoute,
   FemmeRoute: FemmeRoute,
