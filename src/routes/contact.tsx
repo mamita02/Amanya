@@ -94,7 +94,7 @@ function ContactPage() {
                   { label: "Email", type: "email", required: true, placeholder: "Adresse email" },
                 ].map((f) => (
                   <div key={f.label}>
-                    <label className="text-[10px] font-bold uppercase tracking-[0.25em]  text-[#333333]">
+                    <label className="text-[10px] font-bold uppercase tracking-[0.25em]  text-[#E4C987]">
                       {f.label}
                     </label>
                     <input
@@ -133,17 +133,11 @@ function ContactPage() {
                   <option className="bg-white text-black" value="commande">
                     Commande
                   </option>
-                  <option className="bg-white text-black" value="devenir vendeur">
-                    Devenir vendeur
-                  </option>
                   <option className="bg-white text-black" value="devenir grossiste">
                     Devenir grossiste
                   </option>
                   <option className="bg-white text-black" value="partenariat">
                     Partenariat
-                  </option>
-                  <option className="bg-white text-black" value="support technique">
-                    Support technique
                   </option>
                 </select>
               </div> */}
