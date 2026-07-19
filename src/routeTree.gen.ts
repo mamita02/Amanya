@@ -16,6 +16,7 @@ import { Route as PrestigeHommeRouteImport } from './routes/prestige-homme'
 import { Route as PrestigeFemmeRouteImport } from './routes/prestige-femme'
 import { Route as PanierRouteImport } from './routes/panier'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as HommeRouteImport } from './routes/homme'
 import { Route as FemmeRouteImport } from './routes/femme'
 import { Route as DiffuseurRouteImport } from './routes/diffuseur'
@@ -60,6 +61,11 @@ const PanierRoute = PanierRouteImport.update({
 const MarketplaceRoute = MarketplaceRouteImport.update({
   id: '/marketplace',
   path: '/marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HommeRoute = HommeRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
+  '/login': typeof LoginRoute
   '/marketplace': typeof MarketplaceRouteWithChildren
   '/panier': typeof PanierRoute
   '/prestige-femme': typeof PrestigeFemmeRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
+  '/login': typeof LoginRoute
   '/marketplace': typeof MarketplaceRouteWithChildren
   '/panier': typeof PanierRoute
   '/prestige-femme': typeof PrestigeFemmeRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/diffuseur': typeof DiffuseurRoute
   '/femme': typeof FemmeRoute
   '/homme': typeof HommeRoute
+  '/login': typeof LoginRoute
   '/marketplace': typeof MarketplaceRouteWithChildren
   '/panier': typeof PanierRoute
   '/prestige-femme': typeof PrestigeFemmeRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/diffuseur'
     | '/femme'
     | '/homme'
+    | '/login'
     | '/marketplace'
     | '/panier'
     | '/prestige-femme'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/diffuseur'
     | '/femme'
     | '/homme'
+    | '/login'
     | '/marketplace'
     | '/panier'
     | '/prestige-femme'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/diffuseur'
     | '/femme'
     | '/homme'
+    | '/login'
     | '/marketplace'
     | '/panier'
     | '/prestige-femme'
@@ -240,6 +252,7 @@ export interface RootRouteChildren {
   DiffuseurRoute: typeof DiffuseurRoute
   FemmeRoute: typeof FemmeRoute
   HommeRoute: typeof HommeRoute
+  LoginRoute: typeof LoginRoute
   MarketplaceRoute: typeof MarketplaceRouteWithChildren
   PanierRoute: typeof PanierRoute
   PrestigeFemmeRoute: typeof PrestigeFemmeRoute
@@ -299,6 +312,13 @@ declare module '@tanstack/react-router' {
       path: '/marketplace'
       fullPath: '/marketplace'
       preLoaderRoute: typeof MarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/homme': {
@@ -395,6 +415,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiffuseurRoute: DiffuseurRoute,
   FemmeRoute: FemmeRoute,
   HommeRoute: HommeRoute,
+  LoginRoute: LoginRoute,
   MarketplaceRoute: MarketplaceRouteWithChildren,
   PanierRoute: PanierRoute,
   PrestigeFemmeRoute: PrestigeFemmeRoute,

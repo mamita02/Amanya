@@ -4,7 +4,7 @@ import logo from "../assets/Logo.png";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/60 bg-[var(--onyx)] text-white/80">
+    <footer className="border-t border-border/60 bg-[#FAF8F4] text-white/80">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           {/* Brand */}
@@ -15,7 +15,7 @@ export function Footer() {
               alt="AMANYA"
               className="h-14 w-auto md:h-16"
             />
-            <p className="mt-4 text-sm text-white/60">
+            <p className="mt-4 text-sm text-[#1B1B1B]">
               Parfums, vêtements et diffuseurs authentiques pour grossistes, revendeurs et
               particuliers au Sénégal.
             </p>
@@ -36,7 +36,7 @@ export function Footer() {
                   { label: "Contact", href: "/contact" },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-white/60 transition hover:text-[var(--gold)]">
+                    <a href={l.href} className="text-[#1B1B1B] transition hover:text-[var(--gold)]">
                       {l.label}
                     </a>
                   </li>
@@ -57,7 +57,7 @@ export function Footer() {
                   { label: "Diffuseur", href: "/diffuseur" },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-white/60 transition hover:text-[var(--gold)]">
+                    <a href={l.href} className="text-[#1B1B1B] transition hover:text-[var(--gold)]">
                       {l.label}
                     </a>
                   </li>
@@ -70,7 +70,7 @@ export function Footer() {
               <h4 className="font-display text-sm font-semibold uppercase tracking-[0.25em] text-[var(--gold)]">
                 Contact
               </h4>
-              <ul className="mt-4 space-y-3 text-sm text-white/70">
+              <ul className="mt-4 space-y-3 text-sm text-[#1B1B1B]">
                 <li className="flex items-center gap-3">
                   <Mail className="h-4 w-4 text-[var(--gold)]" />
                   <a href="mailto:contact@amanya-distribution.com" className="hover:text-[var(--gold)]">
@@ -99,7 +99,7 @@ export function Footer() {
         </div>
 
 
-        <div className="mt-10 border-t border-white/10 pt-6 text-center text-xs text-white/40">
+        <div className="mt-10 border-t border-[#D4AF37]/30 pt-6 text-center text-sm text-[#1B1B1B]">
           © {new Date().getFullYear()} AMANYA. Tous droits réservés.
         </div>
       </div>

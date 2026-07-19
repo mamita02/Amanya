@@ -23,223 +23,194 @@ const contactLink = { label: "Contact", to: "/contact" as const };
 export function Header() {
   const { totalItems, isHydrated } = useCart();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [storeDropdownOpen, setStoreDropdownOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--onyx)] text-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        {/* Recherche desktop */}
-        <div className="hidden md:block">
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-            <input
-              placeholder="Rechercher un produit..."
-              className="h-10 w-full max-w-xs rounded-full bg-white/5 pl-11 pr-4 text-sm text-white outline-none ring-1 ring-white/10 transition placeholder:text-white/40 focus:ring-[var(--gold)]"
-            />
-          </div>
-        </div>
+    <header className="sticky top-0 z-50 bg-white border-b border-[#ECECEC]">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        {/* Barre supérieure : recherche | logo | actions */}
+        <div className="relative flex items-center justify-between gap-3 py-4 lg:py-5">
 
-        {/* Spacer mobile pour centrer le logo */}
-        <div className="md:hidden" />
-
-        {/* LOGO */}
-        <Link to="/" className="flex items-center justify-center">
-          <img src={logo} alt="AMANYA" className="h-10 w-auto sm:h-12 md:h-14" />
-        </Link>
-
-        {/* Actions droite */}
-        <div className="flex items-center justify-end gap-2">
-          <button className="hidden h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Compte">
-            <User className="h-4 w-4" />
-          </button>
-          <Link to="/wishlist" className="hidden h-10 w-10 cursor-pointer place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] sm:grid" aria-label="Wishlist">
-            <Heart className="h-4 w-4" />
-          </Link>
-
-          {/* Panier */}
-          <Link
-            to="/panier"
-            className="relative grid h-10 w-10 place-items-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-[var(--gold)]"
-            aria-label="Panier"
-          >
-            <ShoppingBag className="h-4 w-4" />
-            {isHydrated && totalItems > 0 && (
-              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[var(--ruby)] px-1 text-[10px] font-bold text-white shadow-md">
-                {totalItems > 99 ? "99+" : totalItems}
-              </span>
-            )}
-          </Link>
-
-          {/* Burger mobile */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="grid h-10 w-10 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-[var(--gold)] md:hidden"
-            aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Nav desktop */}
-      <nav className="border-t border-white/5">
-        <ul className="mx-auto hidden max-w-7xl items-center justify-center gap-10 px-4 py-3 text-sm font-medium tracking-wide text-[var(--gold-soft)] sm:px-6 lg:px-8 md:flex">
-          <li>
-            <Link to="/" className="transition hover:text-[var(--gold)]">Accueil</Link>
-          </li>
-          <li className="group relative">
-            <Link to="/store" className="inline-flex items-center gap-1 transition hover:text-[var(--gold)]">
-              Amanya Store
-              <ChevronDown className="h-3.5 w-3.5 transition group-hover:rotate-180" />
-            </Link>
-            <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-              <div className="overflow-hidden rounded-xl border border-[var(--gold)]/20 bg-[var(--onyx)] shadow-2xl shadow-black/50 ring-1 ring-white/5">
-                <ul className="py-2">
-                  {storeItems.map((item) => (
-                    <li key={item.label}>
-                      <Link to={item.to} className="block px-5 py-2.5 text-sm text-[var(--gold-soft)] transition hover:bg-white/5 hover:text-[var(--gold)]">
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </li>
-          {navLinks.map((l) => (
-            <li key={l.label}>
-              <a href={`/#${l.hash}`} className="transition hover:text-[var(--gold)]">{l.label}</a>
-            </li>
-          ))}
-          <li>
-            <Link to="/marketplace" className="transition hover:text-[var(--gold)]">Market Place</Link>
-          </li>
-          <li>
-            <Link to={contactLink.to} className="transition hover:text-[var(--gold)]">
-              {contactLink.label}
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
-      {/* ═══ MENU MOBILE ═══ */}
-      {mobileOpen && (
-        <div className="border-t border-white/10 md:hidden">
-          {/* Recherche mobile */}
-          <div className="px-4 pt-4">
+          {/* Recherche desktop (gauche) */}
+          <div className="flex-1 max-w-md hidden sm:block">
             <div className="relative">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#6B7280]" />
               <input
-                placeholder="Rechercher un produit..."
-                className="h-10 w-full rounded-full bg-white/5 pl-11 pr-4 text-sm text-white outline-none ring-1 ring-white/10 placeholder:text-white/40 focus:ring-[var(--gold)]"
+                type="search"
+                placeholder="Rechercher un produit, une catégorie, un vendeur..."
+                className="h-10 w-full pl-12 pr-4 rounded-full bg-[#FAF8F4] border border-[#ECECEC] text-sm text-[#1B1B1B] placeholder:text-[#6B7280] outline-none focus:ring-2 focus:ring-[#B8873A]/30 focus:border-[#B8873A] transition-all duration-300"
               />
             </div>
           </div>
 
-          <nav className="px-4 py-4">
-            <ul className="space-y-1">
-              {/* Accueil */}
-              <li>
-                <Link
-                  to="/"
-                  onClick={() => setMobileOpen(false)}
-                  className="block rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
-                >
-                  Accueil
-                </Link>
-              </li>
+          {/* Hamburger mobile */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden p-2 -ml-2 text-[#1B1B1B]"
+            aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          >
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
 
-              {/* Amanya Store — sous-menu */}
-              <li>
-                <Link to="/store" onClick={() => setMobileOpen(false)} className="block rounded-lg px-4 pt-3 pb-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--gold)] hover:bg-white/5">
+          {/* Logo (centre) */}
+          <Link to="/" className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 flex-shrink-0">
+            <img src={logo} alt="AMANYA" className="w-44 h-10 object-contain" />
+          </Link>
+
+          {/* Actions utilisateur (droite) */}
+          <div className="flex-1 flex items-center justify-end gap-4 sm:gap-6">
+            <Link to="/login" className="hidden md:flex items-center gap-2 text-sm font-bold text-[#B8873A] hover:text-[#1B1B1B] transition-colors duration-300">
+              <User className="h-5 w-5" />
+              Se connecter
+            </Link>
+
+            <Link to="/wishlist" className="hidden sm:flex items-center gap-2 text-sm font-bold text-[#B8873A] hover:text-[#1B1B1B] transition-colors duration-300">
+              <Heart className="h-5 w-5" />
+              Favoris
+            </Link>
+
+            <Link
+              to="/panier"
+              className="relative flex items-center gap-2 text-sm font-bold text-[#B8873A] hover:text-[#1B1B1B] transition-colors duration-300"
+              aria-label="Panier"
+            >
+              <ShoppingBag className="h-5 w-5" />
+              <span className="hidden sm:inline">Panier</span>
+              {isHydrated && totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 sm:static sm:ml-0 flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-[#B8873A] rounded-full">
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
+
+        {/* Recherche mobile */}
+        {/* <div className="hidden pb-4">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#6B7280]" />
+            <input
+              type="search"
+              placeholder="Rechercher un produit..."
+              className="h-10 w-full pl-12 pr-4 rounded-full bg-[#FAF8F4] border border-[#ECECEC] text-sm placeholder:text-[#6B7280] focus:outline-none focus:ring-2 focus:ring-[#B8873A]/30"
+            />
+          </div>
+        </div> */}
+      </div>
+      {/* Navigation desktop */}
+      <nav className="bg-black hidden lg:flex items-center justify-center gap-6 xl:gap-8 p-3" aria-label="Navigation principale">
+        <Link to="/" className="relative text-sm font-medium text-white py-1 after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:h-[2px] after:bg-[#B8873A] after:rounded-full">
+          Accueil
+        </Link>
+        <div className="group relative">
+          <Link to="/store" className="flex items-center gap-1 text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
+            Amanya Store
+            <ChevronDown className="h-3.5 w-3.5 transition group-hover:rotate-180" />
+          </Link>
+          <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+            <div className="overflow-hidden rounded-xl border border-[#B8873A]/20 bg-black shadow-2xl ring-1 ring-white/5">
+              <ul className="py-2">
+                {storeItems.map((item) => (
+                  <li key={item.label}>
+                    <Link to={item.to} className="block px-5 py-2.5 text-sm text-[#E8C98A] transition hover:bg-white/5 hover:text-[#B8873A]">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <Link to="/marketplace" className="flex items-center gap-1 text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
+          Marketplace
+        </Link>
+        {navLinks.map((l) => (
+          <a key={l.label} href={`/#${l.hash}`} className="text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
+            {l.label}
+          </a>
+        ))}
+        <Link to={contactLink.to} className="text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
+          {contactLink.label}
+        </Link>
+      </nav>
+
+      {/* Menu mobile déroulant */}
+      {mobileOpen && (
+        <nav className="lg:hidden border-t border-[#ECECEC] bg-white" aria-label="Navigation mobile">
+          <ul className="max-w-[1280px] mx-auto px-4 py-4 space-y-1">
+            <li>
+              <Link
+                to="/"
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-3 rounded-xl bg-[#B8873A]/5 text-[#B8873A] font-medium"
+              >
+                Accueil
+              </Link>
+            </li>
+            <li>
+              <div className="flex items-center justify-between px-4 py-3 rounded-xl text-[#6B7280] hover:bg-[#FAF8F4] transition-colors duration-300">
+                <Link
+                  to="/store"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 text-left"
+                >
                   Amanya Store
                 </Link>
-                <ul className="space-y-1 pl-2">
+                <button
+                  onClick={() => setStoreDropdownOpen(!storeDropdownOpen)}
+                  className="ml-2 p-1"
+                >
+                  <ChevronDown className={`w-4 h-4 transition-transform ${storeDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
+              {storeDropdownOpen && (
+                <ul className="mt-2 ml-4 space-y-1">
                   {storeItems.map((item) => (
                     <li key={item.label}>
                       <Link
                         to={item.to}
-                        onClick={() => setMobileOpen(false)}
-                        className="block rounded-lg px-4 py-2.5 text-sm text-white/70 transition hover:bg-white/5 hover:text-[var(--gold)]"
+                        onClick={() => {
+                          setMobileOpen(false);
+                          setStoreDropdownOpen(false);
+                        }}
+                        className="block px-4 py-2.5 text-sm text-[#6B7280] hover:bg-[#FAF8F4] rounded-lg transition-colors duration-300"
                       >
                         {item.label}
                       </Link>
                     </li>
                   ))}
                 </ul>
-              </li>
-
-              {/* Divider */}
-              <li className="py-2">
-                <div className="h-px bg-white/10" />
-              </li>
-
-              {/* Liens ancre */}
-              {navLinks.map((l) => (
-                <li key={l.label}>
-                  <a
-                    href={`/#${l.hash}`}
-                    onClick={() => setMobileOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-              <li>
-                <Link
-                  to="/marketplace"
+              )}
+            </li>
+            <li>
+              <Link to="/marketplace" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-xl text-[#6B7280] hover:bg-[#FAF8F4] transition-colors duration-300">
+                Marketplace
+              </Link>
+            </li>
+            {navLinks.map((l) => (
+              <li key={l.label}>
+                <a
+                  href={`/#${l.hash}`}
                   onClick={() => setMobileOpen(false)}
-                  className="block rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
+                  className="block px-4 py-3 rounded-xl text-[#6B7280] hover:bg-[#FAF8F4] transition-colors duration-300"
                 >
-                  Market Place
-                </Link>
+                  {l.label}
+                </a>
               </li>
-              <li>
-                <Link
-                  to={contactLink.to}
-                  onClick={() => setMobileOpen(false)}
-                  className="block rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
-                >
-                  {contactLink.label}
-                </Link>
-              </li>
-
-              {/* Divider */}
-              <li className="py-2">
-                <div className="h-px bg-white/10" />
-              </li>
-
-              {/* Panier mobile */}
-              <li>
-                <Link
-                  to="/wishlist"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
-                >
-                  <Heart className="h-4 w-4" />
-                  Ma wishlist
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/panier"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/5 hover:text-[var(--gold)]"
-                >
-                  <span className="flex items-center gap-2">
-                    <ShoppingBag className="h-4 w-4" />
-                    Mon panier
-                  </span>
-                  {isHydrated && totalItems > 0 && (
-                    <span className="grid h-6 min-w-6 place-items-center rounded-full bg-[var(--ruby)] px-1.5 text-[11px] font-bold text-white">
-                      {totalItems}
-                    </span>
-                  )}
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
+            ))}
+            <li>
+              <Link to={contactLink.to} onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-xl text-[#6B7280] hover:bg-[#FAF8F4] transition-colors duration-300">
+                {contactLink.label}
+              </Link>
+            </li>
+            <li className="pt-2 border-t border-[#ECECEC] mt-2">
+              <Link to="/login" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-[#6B7280]">
+                <User className="h-5 w-5" />
+                Se connecter
+              </Link>
+            </li>
+          </ul>
+        </nav>
       )}
     </header>
   );

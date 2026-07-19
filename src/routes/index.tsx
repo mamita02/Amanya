@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck, ShoppingBag, Box, CircleArrowRight, Headset } from "lucide-react";
 import { useEffect } from "react";
 import contactBg from "../assets/contact-bg.jpg";
 import mounia from "../assets/Mounia.jpeg";
+import heroAmanya from "../assets/hero_amanya.png";
 import { scrollToSection } from "../lib/scrollToSection";
 import { marketplace } from "../lib/marketplace";
 
@@ -74,28 +75,131 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-float-delay { animation: float 6s ease-in-out 1.5s infinite; }
+      `}</style>
+      <div className="min-h-screen bg-background">
       <Header />
 
-      {/* TRUST STRIP */}
-      <section className="border-y border-border/60 bg-[var(--jet)] text-white/80">
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-          {[
-            { Icon: ShieldCheck, title: "100% authentique", text: "Produits certifiés origine" },
-            { Icon: Truck, title: "Livraison Sénégal", text: "Partout, rapide & sûr" },
-            { Icon: Gem, title: "Marques de prestige", text: "Sélection premium" },
-            { Icon: Sparkles, title: "Grossistes & revendeurs", text: "Tarifs préférentiels" },
-          ].map(({ Icon, title, text }) => (
-            <div key={title} className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-full bg-[var(--gold)]/10 text-[var(--gold)]">
-                <Icon className="h-5 w-5" />
+      {/* HERO SECTION */}
+      <section className="bg-[#FAF8F4]" aria-labelledby="hero-title">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-center">
+
+            {/* Colonne gauche : contenu */}
+            <div className="order-1 lg:order-1 space-y-6 md:space-y-8">
+
+              {/* Switch Retail / Wholesale */}
+              <div className="inline-flex items-center p-1 bg-black rounded-full shadow-sm" role="group" aria-label="Mode d'achat">
+                <button type="button" className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-white text-[#B8873A] text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300" aria-pressed="true">
+                  <ShoppingBag className="w-4 h-4 text-[#B8873A]" />
+                  Marketplace
+                </button>
+                <button type="button" className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-white/80 text-xs sm:text-sm font-semibold tracking-wide hover:text-white transition-all duration-300" aria-pressed="false">
+                  <Box className="w-4 h-4 text-[#B8873A]" />
+                  Achat en gros
+                </button>
               </div>
-              <div>
-                <div className="font-display text-sm font-semibold text-white">{title}</div>
-                <div className="text-xs text-white/60">{text}</div>
+
+              {/* Titre principal */}
+              <h1 id="hero-title" className="font-serif text-4xl sm:text-5xl xl:text-[3.5rem] xl:leading-[1.15] font-medium text-[#1B1B1B]">
+                Votre univers, des <span className="text-[#B8873A] italic">meilleurs</span> de <span className="text-[#B8873A] italic">choix</span>
+              </h1>
+
+              {/* Description */}
+              <p className="text-[#6B7280] text-base sm:text-lg leading-relaxed max-w-xl">
+                Achetez au détail ou en gros, vendez vos produits ou développez votre activité sur une plateforme unique pensée pour particuliers, artisans et professionnels.
+              </p>
+
+              {/* Boutons CTA */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/marketplace" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#B8873A] hover:bg-[#A5782F] text-white font-medium rounded-lg shadow-sm hover:shadow-lg transition-all duration-300">
+                  Explorer la marketplace
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link to="/vendre" className="inline-flex items-center justify-center px-6 py-3.5 bg-white border border-[#B8873A] text-[#1B1B1B] font-medium rounded-lg shadow-sm hover:shadow-lg transition-all duration-300">
+                  Devenir vendeur
+                </Link>
+              </div>
+
+              {/* Badges de confiance */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
+                <div className="flex items-center gap-3 bg-white rounded-full px-4 py-3 shadow-sm border border-[#ECECEC]/60 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-center flex-shrink-0 -space-x-2.5">
+                    <div className="w-10 h-10 rounded-full bg-[#E8C98A] border-2 border-white flex items-center justify-center text-xs font-semibold text-[#B8873A]">M</div>
+                    <div className="w-10 h-10 rounded-full bg-[#D6A85B] border-2 border-white flex items-center justify-center text-xs font-semibold text-white">A</div>
+                    <div className="w-10 h-10 rounded-full bg-[#1B1B1B] border-2 border-white flex items-center justify-center text-xs font-semibold text-white">M</div>
+                    <div className="w-10 h-10 rounded-full bg-[#B8873A] border-2 border-white flex items-center justify-center text-xs font-semibold text-white">Y</div>
+                  </div>
+                  <p className="text-sm sm:text-sm text-[#6B7280] leading-snug">
+                    Rejoignez des milliers d'acheteurs, vendeurs et entrepreneurs.
+                  </p>
+                </div>
               </div>
             </div>
-          ))}
+
+            {/* Colonne droite : composition produits (flat-lay) */}
+            <div className="order-2 lg:order-2 relative">
+              <img src={heroAmanya} alt="Composition produits" className="w-full h-full mt:0 md:-mt-16 object-contain" />
+
+              {/* Éléments flottants décoratifs */}
+              <div className="absolute -top-3 -right-4 w-12 h-12 bg-[#E8C98A]/40 rounded-full animate-float-delay hidden sm:block" aria-hidden="true"></div>
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-[#E8C98A]/40 rounded-full animate-float-delay hidden sm:block" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          {/* OPTIONS CARDS */}
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {/* Card 1 */}
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+              <div className="flex items-center justify-start gap-3">
+                <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
+                  <Truck className="w-6 h-6 text-[#B8873A]" />
+                </div>
+                <h3 className="font-semibold text-[#B8873A] text-lg mb-2">Livraison express</h3>
+              </div>
+              <p className="text-sm text-white/80">Livraison rapide et fiable partout au Sénégal.</p>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+              <div className="flex items-center justify-start gap-3">
+                <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
+                  <ShieldCheck className="w-6 h-6 text-[#B8873A]" />
+                </div>
+                <h3 className="font-semibold text-[#B8873A] text-lg mb-2">Paiement sécurisé</h3>
+              </div>
+              <p className="text-sm text-white/80">Transactions protégées et sécurisées à 100%.</p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+              <div className="flex items-center justify-start gap-3">
+                <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
+                  <CircleArrowRight className="w-6 h-6 text-[#B8873A]" />
+                </div>
+                <h3 className="font-semibold text-[#B8873A] text-lg mb-2">Retour facile</h3>
+              </div>
+              <p className="text-sm text-white/80">Retours simples et sans stress sous 30 jours.</p>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+              <div className="flex items-center justify-start gap-3">
+                <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
+                  <Headset className="w-6 h-6 text-[#B8873A]" />
+                </div>
+                <h3 className="font-semibold text-[#B8873A] text-lg mb-2">Support client</h3>
+              </div>
+              <p className="text-sm text-white/80">Toujours à votre écoute pour vous accompagner.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -226,6 +330,7 @@ function HomePage() {
       </section>
 
       <Footer />
-    </div>
+      </div>
+    </>
   );
 }
