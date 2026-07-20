@@ -40,7 +40,7 @@ function FemmeRoute() {
       title="Parfums authentiques Femme"
       tagline="Sillage féminin"
       description="Une sélection de parfums authentiques et standards, pensée pour la femme moderne. Marques de prestige, fragrances longue tenue."
-      heroImage="https://images.unsplash.com/photo-1541643600914-78b084683601?w=1600&h=900&fit=crop&auto=format&q=80"
+      heroImage="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=1600&h=900&fit=crop&auto=format&q=80"
       perfumes={perfumes}
     />
   );

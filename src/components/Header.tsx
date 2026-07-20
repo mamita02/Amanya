@@ -14,10 +14,10 @@ const storeItems: { label: string; to: string }[] = [
 ];
 
 const navLinks = [
-  { label: "À propos", hash: "apropos" },
   { label: "Partenaires", hash: "partenaires" },
 ];
 
+const aproposLink = { label: "À propos", to: "/apropos" as const };
 const contactLink = { label: "Contact", to: "/contact" as const };
 
 export function Header() {
@@ -124,10 +124,13 @@ export function Header() {
         <Link to="/marketplace" className="flex items-center gap-1 text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
           Marketplace
         </Link>
+        <Link to={aproposLink.to} className="text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
+          {aproposLink.label}
+        </Link>
         {navLinks.map((l) => (
           <a key={l.label} href={`/#${l.hash}`} className="text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
             {l.label}
-          </a>
+          </a> 
         ))}
         <Link to={contactLink.to} className="text-sm font-medium text-[#B8873A] hover:text-white/80 transition-colors duration-300 py-1">
           {contactLink.label}
@@ -187,6 +190,11 @@ export function Header() {
                 Marketplace
               </Link>
             </li>
+            <li>
+              <Link to="/apropos" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-xl text-[#6B7280] hover:bg-[#FAF8F4] transition-colors duration-300">
+                À propos
+              </Link>
+            </li>
             {navLinks.map((l) => (
               <li key={l.label}>
                 <a
@@ -215,3 +223,4 @@ export function Header() {
     </header>
   );
 }
+ 

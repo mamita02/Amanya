@@ -97,14 +97,14 @@ function HomePage() {
 
               {/* Switch Retail / Wholesale */}
               <div className="inline-flex items-center p-1 bg-black rounded-full shadow-sm" role="group" aria-label="Mode d'achat">
-                <button type="button" className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-white text-[#B8873A] text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300" aria-pressed="true">
+                <a href="/marketplace" className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-white text-[#B8873A] text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300" aria-pressed="true">
                   <ShoppingBag className="w-4 h-4 text-[#B8873A]" />
                   Marketplace
-                </button>
-                <button type="button" className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-white/80 text-xs sm:text-sm font-semibold tracking-wide hover:text-white transition-all duration-300" aria-pressed="false">
+                </a>
+                <a href="/store" className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-white/80 text-xs sm:text-sm font-semibold tracking-wide hover:text-white transition-all duration-300" aria-pressed="false">
                   <Box className="w-4 h-4 text-[#B8873A]" />
                   Achat en gros
-                </button>
+                </a>
               </div>
 
               {/* Titre principal */}
@@ -123,7 +123,7 @@ function HomePage() {
                   Explorer la marketplace
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-                <Link to="/vendre" className="inline-flex items-center justify-center px-6 py-3.5 bg-white border border-[#B8873A] text-[#1B1B1B] font-medium rounded-lg shadow-sm hover:shadow-lg transition-all duration-300">
+                <Link to="/login" className="inline-flex items-center justify-center px-6 py-3.5 bg-white border border-[#B8873A] text-[#1B1B1B] font-medium rounded-lg shadow-sm hover:shadow-lg transition-all duration-300">
                   Devenir vendeur
                 </Link>
               </div>
@@ -146,7 +146,7 @@ function HomePage() {
 
             {/* Colonne droite : composition produits (flat-lay) */}
             <div className="order-2 lg:order-2 relative">
-              <img src={heroAmanya} alt="Composition produits" className="w-full h-full mt:0 md:-mt-16 object-contain" />
+              <img src={heroAmanya} alt="Composition produits" className="w-full lg:w-[120%] max-w-none h-auto lg:-translate-x-16 mt:0 md:-mt-24 object-contain" />
 
               {/* Éléments flottants décoratifs */}
               <div className="absolute -top-3 -right-4 w-12 h-12 bg-[#E8C98A]/40 rounded-full animate-float-delay hidden sm:block" aria-hidden="true"></div>
@@ -157,7 +157,7 @@ function HomePage() {
           {/* OPTIONS CARDS */}
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {/* Card 1 */}
-            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-[#ECECEC]">
               <div className="flex items-center justify-start gap-3">
                 <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
                   <Truck className="w-6 h-6 text-[#B8873A]" />
@@ -168,7 +168,7 @@ function HomePage() {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-[#ECECEC]">
               <div className="flex items-center justify-start gap-3">
                 <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
                   <ShieldCheck className="w-6 h-6 text-[#B8873A]" />
@@ -179,7 +179,7 @@ function HomePage() {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-[#ECECEC]">
               <div className="flex items-center justify-start gap-3">
                 <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
                   <CircleArrowRight className="w-6 h-6 text-[#B8873A]" />
@@ -190,7 +190,7 @@ function HomePage() {
             </div>
 
             {/* Card 4 */}
-            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border border-[#ECECEC]">
+            <div className="bg-black rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-[#ECECEC]">
               <div className="flex items-center justify-start gap-3">
                 <div className="w-12 h-12 rounded-full bg-[#E8C98A]/20 flex items-center justify-center mb-4">
                   <Headset className="w-6 h-6 text-[#B8873A]" />
