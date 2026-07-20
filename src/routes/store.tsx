@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, Eye, Grid3X3, Heart, List, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import heroVideo from "../assets/slide-amanya.mp4";
+import heroVideoMobile from "../assets/slid_mobile.mp4";
 import { AddToCartModal } from "../components/AddToCartModal";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
@@ -95,7 +96,8 @@ export function StoreExperience({ products, wishlistOnly = false }: { products: 
       <Header />
       {!wishlistOnly && <section className="relative isolate overflow-hidden bg-[var(--onyx)]">
         <div className="relative h-[calc(100vh-120px)] min-h-[540px] w-full">
-          <video src={heroVideo} autoPlay muted loop playsInline aria-label="Présentation d'AMANYA" className="absolute inset-0 h-full w-full object-cover" />
+          <video src={heroVideo} autoPlay muted loop playsInline aria-label="Présentation d'AMANYA" className="absolute inset-0 h-full w-full object-cover hidden md:block" />
+          <video src={heroVideoMobile} autoPlay muted loop playsInline className="absolute inset-0 block h-full w-full object-cover md:hidden" />
         </div>
       </section>}
 
