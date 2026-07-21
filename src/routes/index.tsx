@@ -160,7 +160,7 @@ function HomePage() {
             <div className="order-2 lg:order-2 relative w-full lg:w-[120%] max-w-none h-auto lg:-translate-x-16 mt-0 md:-mt-24">
       
               {/* Conteneur d'images superposées */}
-              <div className="relative w-full h-auto selec pt-10">
+              <div className="relative w-full h-auto select-none pt-10">
                 
                 <img src={itemBase} alt="Socle AMANYA" className="w-full h-auto object-contain -mt-10 pointer-events-none relative z-10 animate-hero-base"/>
 
