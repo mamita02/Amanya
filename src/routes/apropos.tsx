@@ -331,7 +331,7 @@ function RouteComponent() {
                   <div className="mt-8 pt-6 border-t border-gray-200 flex items-center gap-4">
                     <div>
                       <p className="font-serif text-2xl font-medium text-[#161616]">
-                        Mounia
+                        Mounia Amane
                       </p>
                       <p className="text-xs tracking-[0.25em] uppercase text-[#B8873A] font-semibold mt-1">
                         Fondatrice & Directrice Générale

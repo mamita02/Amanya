@@ -11,6 +11,12 @@ import { Header } from "../components/Header";
 import { PartnerLogoMarquee } from "../components/PartnerLogoMarquee";
 import { MarketplaceCard } from "../components/MarketplaceCard";
 
+import itemBase from "../assets/collection/item_base.png";
+import itemBag from "../assets/collection/item_bag.png";
+import itemShoppingBags from "../assets/collection/item_shopping_bags.png";
+import itemPhone from "../assets/collection/item_phone.png";
+import itemAccessories from "../assets/collection/item_accessories.png";
+
 export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
@@ -144,12 +150,39 @@ function HomePage() {
             </div>
 
             {/* Colonne droite : composition produits (flat-lay) */}
-            <div className="order-2 lg:order-2 relative">
+            {/* <div className="order-2 lg:order-2 relative">
               <img src={heroAmanya} alt="Composition produits" className="w-full lg:w-[120%] max-w-none h-auto lg:-translate-x-16 mt:0 md:-mt-24 object-contain" />
 
-              {/* Éléments flottants décoratifs */}
+           
               <div className="absolute -top-3 -right-4 w-12 h-12 bg-[#E8C98A]/40 rounded-full animate-float-delay hidden sm:block" aria-hidden="true"></div>
               <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-[#E8C98A]/40 rounded-full animate-float-delay hidden sm:block" aria-hidden="true"></div>
+            </div> */}
+            <div className="order-2 lg:order-2 relative w-full lg:w-[120%] max-w-none h-auto lg:-translate-x-16 mt-0 md:-mt-24">
+      
+              {/* Conteneur d'images superposées */}
+              <div className="relative w-full h-auto selec pt-10">
+                
+                <img src={itemBase} alt="Socle AMANYA" className="w-full h-auto object-contain -mt-10 pointer-events-none relative z-10 animate-hero-base"/>
+
+                <img src={itemBag} alt="Sac à main" className="absolute inset-0 w-full h-full object-contain pointer-events-none z-20 animate-hero-bag"/>
+
+                <img src={itemShoppingBags} alt="Sacs shopping AMANYA" className="absolute inset-0 w-full h-full object-contain pointer-events-none z-20 animate-hero-shopping"/>
+
+                <img src={itemPhone} alt="Application AMANYA" className="absolute inset-0 w-full h-full object-contain pointer-events-none z-30 animate-hero-phone"/>
+
+                <img src={itemAccessories} alt="Accessoires premium" className="absolute inset-0 w-full h-full object-contain pointer-events-none z-40 animate-hero-acc"/>
+
+              </div>
+
+              {/* Éléments décoratifs originaux */}
+              <div 
+                className="absolute -top-3 -right-4 w-12 h-12 bg-[#E8C98A]/40 rounded-full animate-pulse hidden sm:block pointer-events-none z-0" 
+                aria-hidden="true" 
+              />
+              <div 
+                className="absolute -bottom-4 -left-4 w-12 h-12 bg-[#E8C98A]/40 rounded-full animate-pulse hidden sm:block pointer-events-none z-0" 
+                aria-hidden="true" 
+              />
             </div>
           </div>
 

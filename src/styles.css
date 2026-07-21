@@ -132,3 +132,102 @@
 button {
   cursor: pointer;
 }
+
+body {
+  overflow-x: hidden;
+}
+
+/* Animation img collection img */
+@keyframes heroBase {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 2. Sac principal */
+@keyframes heroBag {
+  0% {
+    opacity: 0;
+    transform: translateY(-70px) rotate(-3deg) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+/* 3. Sacs Shopping */
+@keyframes heroShopping {
+  0% {
+    opacity: 0;
+    transform: translateX(80px) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+/* 4. Téléphone*/
+@keyframes heroPhone {
+  0% {
+    opacity: 0;
+    transform: translateX(-80px) rotate(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+/* 5. Accessoires */
+@keyframes heroAcc {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --- LE FLOTTEMENT CONTINU (FLOATING) --- */
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+/* --- UTILITIES CSS --- */
+.animate-hero-base {
+  animation: heroBase 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-hero-bag {
+  animation: 
+    heroBag 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both,
+    heroFloat 5s ease-in-out infinite 1.4s;
+}
+
+.animate-hero-shopping {
+  animation: 
+    heroShopping 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both,
+    heroFloat 6s ease-in-out infinite 1.6s;
+}
+
+.animate-hero-phone {
+  animation: 
+    heroPhone 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both,
+    heroFloat 4.5s ease-in-out infinite 1.8s;
+}
+
+.animate-hero-acc {
+  animation: 
+    heroAcc 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both,
+    heroFloat 5.5s ease-in-out infinite 2s;
+}
