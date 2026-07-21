@@ -4,6 +4,7 @@ import { Footer } from '../components/Footer'
 import { Link } from "@tanstack/react-router";
 import {ArrowRight, Target, Eye, Handshake, Star, Rocket, Globe } from "lucide-react";
 import StoreImg from '../assets/store_ecom.jpg';
+import mounia from "../assets/Mounia.jpeg";
 import HeroImg from '../assets/Logo.png'
 
 export const Route = createFileRoute('/apropos')({
@@ -285,6 +286,65 @@ function RouteComponent() {
             </div>
           </div>
 
+        </section>
+
+        {/* ================= LE MOT DE LA FONDATRICE ================= */}
+
+        <section className="bg-white">
+          <div className="mx-auto">
+            
+            <div className="p-8 sm:p-12 lg:px-16 lg:py-24 border-t-4 border-[#B8873A]">
+              <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+                
+                <div className="lg:col-span-5 flex justify-center">
+                  <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+                    <img src={mounia} alt="Mounia — AMANYA" loading="lazy" className="h-auto w-full object-cover shadow-2xl" style={{
+                        borderRadius: "62% 38% 56% 44% / 54% 49% 51% 46%",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Contenu texte */}
+                <div className="lg:col-span-7">
+                  <span className="inline-flex rounded-full bg-[#B8873A]/10 px-5 py-2 text-xs tracking-[0.30em] uppercase font-semibold text-[#B8873A]">
+                    Vision & Leadership
+                  </span>
+
+                  <h2 className="font-serif mt-6 text-3xl sm:text-4xl lg:text-5xl font-medium text-[#161616]">
+                    Le mot de la fondatrice
+                  </h2>
+
+                  <blockquote className="font-serif mt-6 italic text-gray-700 border-l-2 border-[#B8873A] pl-5 text-base sm:text-lg leading-relaxed">
+                    « Notre ambition n'est pas seulement de faciliter des transactions, mais de bâtir des ponts solides pour que chaque commerçant, fournisseur et entrepreneur d'Afrique de l'Ouest puisse réaliser son plein potentiel. »
+                  </blockquote>
+
+                  <p className="font-serif mt-6 text-gray-600 text-sm sm:text-base leading-relaxed">
+                    En créant <strong className="text-[#161616] font-medium">AMANYA</strong> dans la continuité de notre agence MCE (Management Communication Event), nous avons voulu répondre à un besoin fondamental : structurer un maillon de distribution fiable, transparent et directement accessible à tous.
+                  </p>
+
+                  <p className="font-serif mt-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+                    Que vous soyez grossiste, revendeur ou partenaire, nous mettons notre écosystème à votre service pour simplifier vos opérations et propulser votre croissance.
+                  </p>
+
+                  {/* Signature */}
+                  <div className="mt-8 pt-6 border-t border-gray-200 flex items-center gap-4">
+                    <div>
+                      <p className="font-serif text-2xl font-medium text-[#161616]">
+                        Mounia
+                      </p>
+                      <p className="text-xs tracking-[0.25em] uppercase text-[#B8873A] font-semibold mt-1">
+                        Fondatrice & Directrice Générale
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
         </section>
 
         {/* ================= CTA ================= */}

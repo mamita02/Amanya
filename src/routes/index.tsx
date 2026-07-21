@@ -1,12 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Gem, ShieldCheck, Sparkles, Truck, ShoppingBag, Box, CircleArrowRight, Headset } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, ShoppingBag, Box, CircleArrowRight, Headset } from "lucide-react";
 import { useEffect } from "react";
-import contactBg from "../assets/contact-bg.jpg";
 import mounia from "../assets/Mounia.jpeg";
 import heroAmanya from "../assets/hero_amanya.png";
-import { scrollToSection } from "../lib/scrollToSection";
+import { scrollToSection } from "../lib/scrollToSection"; 
 import { marketplace } from "../lib/marketplace";
-
+import StoreImg from '../assets/store_ecom.jpg';
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { PartnerLogoMarquee } from "../components/PartnerLogoMarquee";
@@ -246,50 +245,63 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="apropos" className="bg-[#F5EDE5]">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:py-32">
-          {/* Photo avec forme blob organique */}
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <img
-              src={mounia}
-              alt="Mounia — AMANYA"
-              loading="lazy"
-              className="h-auto w-full object-cover shadow-2xl"
-              style={{
-                borderRadius: "62% 38% 56% 44% / 54% 49% 51% 46%",
-              }}
-            />
-          </div>
+      
+      <section className="py-20">
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-14 items-center">
 
-          {/* Texte */}
-          <div>
-            <span className="text-xs font-bold uppercase tracking-[0.3em] text-[var(--ruby)]">
-              À propos de nous
-            </span>
-            <h2 className="mt-5 font-display text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
-              Plus qu'un fournisseur,
-              <br />
-              <span className="text-[var(--ruby)]">une maison.</span>
-            </h2>
-            <p className="mt-8 text-base leading-relaxed text-foreground/80">
-              AMANYA est bien plus qu'un simple fournisseur : c'est une solution complète et
-              accessible pour les grossistes, revendeurs, commerces de proximité et entrepreneurs au
-              Sénégal.
-            </p>
-            <p className="mt-5 text-base leading-relaxed text-foreground/80">
-              Née dans la continuité de l'agence MCE — Management Communication Event, AMANYA
-              apporte un maillon essentiel : l'approvisionnement direct en produits authentiques,
-              certifiés et accessibles.
-            </p>
-            <a
-              href="#"
-              className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]">
-              Voir plus
-            </a>
+              {/* Image */}
+
+              <div className="relative order-2 lg:order-1">
+                <img src={StoreImg} alt="Equipe AMANYA" className="rounded-[32px] object-cover shadow-lg w-full h-[500px]"/>
+              </div>
+
+              {/* Texte */}
+
+              <div className="order-1 lg:order-2">
+
+                <h1 className="font-serif mt-6 text-4xl xl:text-5xl leading-tight font-medium text-[#161616]">
+                  Plus qu'une <span className="text-[#B8873A]">
+                    {" "}marketplace
+                  </span>,
+                  <br />
+                  un partenaire de croissance.
+                </h1>
+
+                <p className="font-serif mt-8 text-base sm:text-lg text-gray-500">
+                  AMANYA est une plateforme de distribution et de marketplace
+                  conçue pour connecter fournisseurs, grossistes,
+                  commerçants et consommateurs autour d'un même
+                  écosystème.
+                </p>
+
+                <p className="font-serif mt-5 text-base sm:text-lg text-gray-500">
+                  Notre ambition est de rendre les produits de qualité
+                  accessibles au plus grand nombre tout en offrant
+                  aux entreprises une solution moderne pour vendre,
+                  développer leur visibilité et faire grandir leur activité.
+                </p>
+
+                <p className="font-serif mt-5 text-base sm:text-lg text-gray-500">
+                  Nous croyons qu'un commerce performant repose
+                  avant tout sur la confiance, la transparence
+                  et des relations durables entre tous les acteurs.
+                </p>
+
+                <div className="flex flex-wrap gap-5 mt-10">
+
+                  <Link to="/apropos"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#B8873A] px-7 py-4 text-white font-medium hover:bg-[#A5782F] transition" >
+                    En savoir plus
+                    <ArrowRight size={18} />
+                  </Link>
+
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
 
       {/* MARKET PLACE */}
       <section id="marketplace" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">

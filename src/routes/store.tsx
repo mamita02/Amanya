@@ -424,7 +424,7 @@ function QuickView({ product, onClose, onOrder }: { product: Perfume; onClose: (
 
           <p className="mt-6 font-serif text-3xl font-medium text-[#161616]">{formatFCFA(product.price)}</p>
 
-          <div className="mt-7 grid gap-6 md:grid-cols-2">
+          <div className="mt-7 grid grid-cols-2 gap-6">
             <div>
               <p className="text-xs uppercase tracking-[0.30em] text-gray-500">Volume</p>
 
