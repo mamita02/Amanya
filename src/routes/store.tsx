@@ -101,45 +101,96 @@ export function StoreExperience({ products, wishlistOnly = false }: { products: 
         </div>
       </section>}
 
-      <main className="mx-auto max-w-[1600px] px-4 py-14 sm:px-7 lg:px-10">
+        <main className="mx-auto w-full max-w-[1600px] min-w-0 px-3 sm:px-6 lg:px-10 py-8">
         {wishlistOnly && <div className="mb-12 border-b border-black pb-6"><h1 className="font-display text-4xl font-bold">Ma wishlist</h1><p className="mt-2 text-sm text-neutral-500">{wishlist.length} produit{wishlist.length > 1 ? "s" : ""} enregistré{wishlist.length > 1 ? "s" : ""}</p></div>}
-        {!wishlistOnly && <div className="mb-10 text-center"><h1 className="font-display text-4xl font-bold tracking-wide text-[#701718] sm:text-5xl">NOS PRODUITS</h1><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-neutral-500 sm:text-base">Des fragrances choisies avec exigence, pour révéler chaque personnalité et laisser une empreinte inoubliable.</p></div>}
-        <div className="mb-12 flex justify-center gap-4 overflow-x-auto pb-2">
-          {CATEGORIES.map(([value, label]) => (
-            <button key={value} onClick={() => setCategories(toggleItem(categories, value))} className={`shrink-0 cursor-pointer border px-7 py-4 text-base font-semibold transition ${categories.includes(value) ? "border-black bg-black text-white" : "border-black bg-white hover:bg-black hover:text-white"}`}>
-              {label}
-            </button>
-          ))}
+        {!wishlistOnly && <section id="collection" className="py-6">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mt-7 font-serif text-4xl font-medium text-[#161616] sm:text-5xl">
+            Nos Produits
+          </h2>
+          <p className="font-serif mx-auto mt-7 max-w-3xl text-gray-600">
+            Chaque produit disponible sur AMANYA Store est sélectionné
+            avec exigence afin de proposer des fragrances durables,
+            élégantes et adaptées aussi bien aux particuliers qu'aux
+            professionnels.
+          </p>
+        </div>
+      </section>}
+        <div className="mb-8 flex justify-center w-full min-w-0 gap-2 overflow-x-auto pb-2">
+          {CATEGORIES.map(([value, label]) => {
+            const active = categories.includes(value);
+            return (
+              <button 
+                key={value} 
+                onClick={() => setCategories(toggleItem(categories, value))} 
+                className={`shrink-0 cursor-pointer rounded-full border px-4 py-2 text-xs font-medium transition-all ${
+                  active 
+                    ? "border-[#B8873A] bg-[#B8873A] text-white shadow-sm" 
+                    : "border-[#D9D2C8] bg-white text-[#161616] hover:border-[#B8873A]"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
 
-        <div className="grid gap-10 lg:grid-cols-[270px_1fr]">
-          <aside className="space-y-0 self-start">
-            <FilterSection title="Type">
-              {["Authentique", "Standard"].map((type) => <CheckFilter key={type} label={type} count={typeCount(type)} checked={types.includes(type)} onChange={() => setTypes(toggleItem(types, type))} />)}
-            </FilterSection>
-            <FilterSection title="Marque">
-              <div className="max-h-52 space-y-2 overflow-y-auto pr-2">{brandOptions.map((brand) => <CheckFilter key={brand} label={brand} count={products.filter((p) => p.brand === brand).length} checked={brands.includes(brand)} onChange={() => setBrands(toggleItem(brands, brand))} />)}</div>
-            </FilterSection>
-            <FilterSection title="Famille">
-              <div className="space-y-1">{FAMILIES.map((family) => <button key={family} onClick={() => setFamilies(toggleItem(families, family))} className={`block w-full px-1 py-1.5 text-left text-sm ${families.includes(family) ? "bg-black text-white" : "hover:bg-neutral-100"}`}>{family}</button>)}</div>
-            </FilterSection>
-            <FilterSection title="Quantité Min.">
-              <div className="flex flex-wrap gap-2">{quantityOptions.map((qty) => <SquareChoice key={qty} active={quantities.includes(qty)} onClick={() => setQuantities(toggleItem(quantities, qty))}>{qty}</SquareChoice>)}</div>
-            </FilterSection>
-            <FilterSection title="Volume">
-              <div className="flex gap-2">{([50, 100] as Volume[]).map((volume) => <SquareChoice key={volume} active={volumes.includes(volume)} onClick={() => setVolumes(toggleItem(volumes, volume))}>{volume} ml</SquareChoice>)}</div>
-            </FilterSection>
+        {/* <div className="grid gap-8 xl:grid-cols-[270px_1fr]"> */}
+          <div className="grid w-full min-w-0 grid-cols-1 gap-6 lg:grid-cols-[270px_1fr]">
+          <aside className="min-w-0 self-start">
+
+            <div className="rounded-[28px] w-full border border-[#E8E1D8] bg-white p-5 shadow-sm lg:sticky lg:top-28 lg:p-8">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.35em] text-[#B8873A]">FILTRES</p>
+                  <h2 className="mt-3 font-serif text-3xl font-medium text-[#161616]">
+                    Affiner votre recherche
+                  </h2>
+                </div>
+                {(types.length || brands.length || families.length || quantities.length || volumes.length || categories.length) > 0 && (
+                  <button onClick={() => {setTypes([]);setBrands([]);setFamilies([]);setQuantities([]);setVolumes([]);setCategories([]);}} className="text-sm cursor-pointer font-medium text-[#B8873A] hover:underline">
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
+              <div className="mt-10 space-y-10">
+                <FilterSection title="Type">{["Authentique", "Standard"].map((type) => (
+                    <CheckFilter key={type} label={type} count={typeCount(type)} checked={types.includes(type)} onChange={() => setTypes(toggleItem(types, type)) }/> ))}
+                </FilterSection>
+                <FilterSection title="Marques"> <div className="max-h-56 space-y-3 overflow-y-auto pr-2"> {brandOptions.map((brand) => (
+                      <CheckFilter key={brand} label={brand} count={products.filter((p) => p.brand === brand).length} checked={brands.includes(brand)} onChange={() => setBrands(toggleItem(brands, brand))} /> ))} </div>
+                </FilterSection>
+                <FilterSection title="Familles"> <div className="flex flex-wrap gap-2">{FAMILIES.map((family) => (
+                      <SquareChoice key={family} active={families.includes(family)} onClick={() => setFamilies(toggleItem(families, family))}> {family} </SquareChoice>))} </div>
+                </FilterSection>
+                <FilterSection title="Volume"> <div className="flex gap-3"> {([50, 100] as Volume[]).map((volume) => (
+                      <SquareChoice key={volume} active={volumes.includes(volume)} onClick={() => setVolumes(toggleItem(volumes, volume))}> {volume} ml </SquareChoice> ))} </div>
+                </FilterSection>
+                <FilterSection title="Commande minimum"> <div className="flex flex-wrap gap-2"> {quantityOptions.map((qty) => (
+                      <SquareChoice key={qty} active={quantities.includes(qty)} onClick={() => setQuantities(toggleItem(quantities, qty))}> {qty} </SquareChoice> ))} </div>
+                </FilterSection>
+              </div>
+            </div>
           </aside>
 
           <section>
-            <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200 pb-6">
-              <div className="flex items-center gap-3 text-sm">Voir comme
-                <button aria-label="Affichage grille" onClick={() => setView("grid")} className={view === "grid" ? "text-black" : "text-neutral-300"}><Grid3X3 className="h-6 w-6" /></button>
-                <button aria-label="Affichage liste" onClick={() => setView("list")} className={view === "list" ? "text-black" : "text-neutral-300"}><List className="h-7 w-7" /></button>
+            <div className="mb-12 flex flex-wrap items-center justify-between gap-6 border-b border-[#E8E1D8] pb-8">
+              <div> <p className="text-xs uppercase tracking-[0.35em] text-[#B8873A]">Collection</p>
+                <h3 className="mt-3 font-serif text-3xl font-medium text-[#161616]">Nos parfums</h3>
+                <p className="mt-2 text-gray-500">{filtered.length} produit{filtered.length > 1 && "s"} disponible{filtered.length > 1 && "s"}</p>
               </div>
-              <p className="text-sm"><strong>{filtered.length}</strong> produit{filtered.length > 1 ? "s" : ""}</p>
+              <div className="flex items-center gap-3 rounded-full border border-[#E8E1D8] bg-white p-2">
+                <button onClick={() => setView("grid")} className={`rounded-full p-3 transition ${view === "grid" ? "bg-[#161616] text-white" : "text-gray-500 hover:bg-[#F3F0EB]"}`}>
+                  <Grid3X3 size={18} />
+                </button>
+                
+                <button onClick={() => setView("list")} className={`rounded-full p-3 transition ${view === "list" ? "bg-[#161616] text-white" : "text-gray-500 hover:bg-[#F3F0EB]"}`}>
+                  <List size={18} />
+                </button>
+              </div>
             </div>
-            <div className={view === "grid" ? "grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 xl:grid-cols-4" : "space-y-8"}>
+
+              <div className={view === "grid" ? "grid min-w-0 items-stretch grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4" : "space-y-8"}>
               {visibleProducts.map((product) => <ProductCard key={product.id} product={product} list={view === "list"} wished={wishlist.includes(product.id)} onWishlist={() => toggleWishlist(product.id)} onView={() => setQuickView(product)} onOrder={() => product.isActive && setOrderSelection({ product, volume: product.volumes[0] })} />)}
             </div>
             {!filtered.length && <div className="border border-neutral-200 py-20 text-center text-neutral-500">Aucun produit ne correspond à ces filtres.</div>}
@@ -156,66 +207,273 @@ export function StoreExperience({ products, wishlistOnly = false }: { products: 
 
 function Pagination({ page, pageCount, onChange }: { page: number; pageCount: number; onChange: (page: number) => void }) {
   const pages = Array.from({ length: pageCount }, (_, index) => index + 1);
-  return <nav aria-label="Pagination des produits" className="mt-16 flex items-center justify-center gap-3">
-    <button aria-label="Page précédente" disabled={page === 1} onClick={() => onChange(page - 1)} className="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-[#701718] text-[#701718] transition hover:bg-[#701718] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"><ChevronLeft className="h-5 w-5" /></button>
-    {pages.map((number) => <button key={number} aria-current={number === page ? "page" : undefined} onClick={() => onChange(number)} className={`grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-[#701718] text-sm font-bold transition ${number === page ? "bg-[#701718] text-white" : "bg-white text-[#701718] hover:bg-[#701718] hover:text-white"}`}>{number}</button>)}
-    <button aria-label="Page suivante" disabled={page === pageCount} onClick={() => onChange(page + 1)} className="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-[#701718] text-[#701718] transition hover:bg-[#701718] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"><ChevronRight className="h-5 w-5" /></button>
-  </nav>;
+
+  return (
+    <nav aria-label="Pagination des produits" className="mt-14 flex items-center justify-center gap-2">
+      <button
+        aria-label="Page précédente"
+        disabled={page === 1}
+        onClick={() => onChange(page - 1)}
+        className="flex h-11 w-11 items-center cursor-pointer justify-center rounded-full border border-[#DDD5CB] bg-white text-[#161616] transition hover:border-[#B8873A] hover:text-[#B8873A] disabled:cursor-not-allowed disabled:opacity-30"
+      >
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+
+      {pages.map((number) => (
+        <button
+          key={number}
+          aria-current={number === page ? "page" : undefined}
+          onClick={() => onChange(number)}
+          className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border text-sm font-medium transition ${
+            number === page
+              ? "border-[#B8873A] bg-[#B8873A] text-white shadow-lg shadow-[#B8873A]/20"
+              : "border-[#DDD5CB] bg-white text-[#161616] hover:border-[#B8873A] hover:text-[#B8873A]"
+          }`}
+        >
+          {number}
+        </button>
+      ))}
+
+      <button
+        aria-label="Page suivante"
+        disabled={page === pageCount}
+        onClick={() => onChange(page + 1)}
+        className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-[#DDD5CB] bg-white text-[#161616] transition hover:border-[#B8873A] hover:text-[#B8873A] disabled:cursor-not-allowed disabled:opacity-30"
+      >
+        <ChevronRight className="h-5 w-5" />
+      </button>
+    </nav>
+  );
 }
 
 function FilterSection({ title, children }: { title: string; children: React.ReactNode }) {
-  return <div className="border-b border-neutral-200 py-5"><h2 className="mb-4 text-sm font-bold">{title}</h2>{children}</div>;
+  return (<section><h3 className="mb-5 font-serif text-xl font-medium text-[#161616]">{title}</h3>{children}</section>);
 }
 
-function CheckFilter({ label, count, checked, onChange }: { label: string; count?: number; checked: boolean; onChange: () => void }) {
-  return <label className="flex cursor-pointer items-center gap-2 text-sm"><input type="checkbox" checked={checked} onChange={onChange} className="h-4 w-4 rounded-none accent-black" /><span className="flex-1">{label}</span>{count !== undefined && <span className="text-neutral-500">({count})</span>}</label>;
+
+function CheckFilter({label,count,checked,onChange,}: {label: string;count?: number;checked: boolean;onChange: () => void;}) {
+  return (<label className="flex cursor-pointer items-center gap-3 py-1"><input type="checkbox" checked={checked} onChange={onChange} className="h-4 w-4 accent-[#B8873A]" /><span className="flex-1 text-[15px] text-[#161616]">{label}</span> {count !== undefined && (<span className="text-sm text-gray-400">{count}</span>)}</label>);
 }
 
-function SquareChoice({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return <button onClick={onClick} className={`border px-3 py-2 text-xs ${active ? "border-black bg-black text-white" : "border-neutral-300 bg-white"}`}>{children}</button>;
+function SquareChoice({active,onClick,children,}: {active: boolean;onClick: () => void;children: React.ReactNode;}) {
+  return (<button onClick={onClick} className={`rounded-full border px-4 py-2 text-sm font-medium transition ${active ? "border-[#B8873A] bg-[#B8873A] text-white" : "border-[#DDD5CB] bg-white hover:border-[#B8873A] hover:text-[#B8873A]"}`}>{children}</button>);
 }
 
-function ProductCard({ product, list, wished, onWishlist, onView, onOrder }: { product: Perfume; list: boolean; wished: boolean; onWishlist: () => void; onView: () => void; onOrder: () => void }) {
+
+function ProductCard({product, list, wished, onWishlist, onView, onOrder, }: {product: Perfume; list: boolean; wished: boolean; onWishlist: () => void; onView: () => void; onOrder: () => void;}) {
   const [showSecond, setShowSecond] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const enter = () => { if (!product.hoverImage) return; setShowSecond(true); if (timer.current) clearTimeout(timer.current); timer.current = setTimeout(() => setShowSecond(false), 2500); };
-  const leave = () => { if (timer.current) clearTimeout(timer.current); setShowSecond(false); };
-  return <article className={list ? "grid gap-6 border-b border-neutral-200 pb-8 sm:grid-cols-[280px_1fr]" : ""}>
-    <div onClick={onOrder} onMouseEnter={enter} onMouseLeave={leave} role="button" tabIndex={product.isActive ? 0 : -1} aria-label={`Commander ${product.name}`} className={`relative aspect-[4/5] overflow-hidden bg-neutral-100 ${product.isActive ? "cursor-pointer" : "cursor-not-allowed"}`}>
-      <img src={product.image} alt={product.name} className="h-full w-full object-cover" loading="lazy" />
-      {product.hoverImage && <img src={product.hoverImage} alt={`${product.name}, seconde vue`} className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${showSecond ? "opacity-100" : "opacity-0"}`} />}
-      <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1">{product.badge && <span className="bg-[var(--ruby)] px-2.5 py-1 text-[10px] font-bold uppercase text-white">{product.badge}</span>}{!product.isActive && <span className="bg-black px-2.5 py-1 text-[10px] font-bold uppercase text-white">Épuisé</span>}</div>
-      <button aria-label={wished ? "Retirer de la wishlist" : "Ajouter à la wishlist"} onClick={(event) => { event.stopPropagation(); onWishlist(); }} className={`absolute right-3 top-3 z-10 grid h-10 w-10 cursor-pointer place-items-center bg-white shadow ${wished ? "text-[var(--ruby)]" : "text-black"}`}><Heart className={`h-5 w-5 ${wished ? "fill-current" : ""}`} /></button>
-    </div>
-    <div className={list ? "flex flex-col justify-center" : "pt-4"}>
-      <div className="mb-3 flex flex-wrap gap-1.5">{product.families.map((family) => <span key={family} className="border border-neutral-300 px-2 py-1 text-[10px] uppercase">{family}</span>)}</div>
-      <h3 className="font-display text-lg font-bold uppercase">{product.name} <span className="whitespace-nowrap text-sm font-medium text-neutral-500">— {product.volumes.join(" / ")} ml</span></h3>
-      {list && product.description && <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-600">{product.description}</p>}
-      <div className="mt-3 flex items-center justify-between gap-3 text-sm"><span className="uppercase text-neutral-500">{product.brand}</span><strong>{formatFCFA(product.price)}</strong></div>
-      <div className="mt-4 grid grid-cols-[1fr_52px] gap-2"><button disabled={!product.isActive} onClick={onOrder} className="cursor-pointer border border-black bg-[#CE9A65] px-4 py-3 text-xs font-bold uppercase text-black transition-colors duration-300 hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-neutral-400 disabled:text-white">{product.isActive ? "Commander" : "Épuisé"}</button><button aria-label="Voir les informations" onClick={onView} className="grid cursor-pointer place-items-center border border-black bg-white transition-colors hover:bg-black hover:text-white"><Eye className="h-5 w-5" /></button></div>
-    </div>
-  </article>;
-}
+
+  const enter = () => {
+    if (!product.hoverImage) return;
+    setShowSecond(true);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setShowSecond(false), 2500);
+  };
+
+  const leave = () => {
+    if (timer.current) clearTimeout(timer.current);
+    setShowSecond(false);
+  };
+
+  return (
+    <article
+      className={
+        list
+          ? "grid min-w-0 gap-8 rounded-[28px] border border-[#E8E1D8] bg-white p-6 shadow-sm lg:grid-cols-[300px_1fr]"
+          : "group flex h-auto flex-col overflow-hidden rounded-[28px] border border-[#ECE5DC] bg-white shadow-sm transition-transform duration-700 ease-out group-hover:scale-110 hover:shadow-lg"
+      }
+    >
+      {/* Conteneur d'image fixe (Ratio 4/5 luxe) */}
+      <div onClick={onOrder} onMouseEnter={enter} onMouseLeave={leave} role="button" tabIndex={product.isActive ? 0 : -1} className={`relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-[#F7F4EF] ${list ? "rounded-2xl" : ""} ${product.isActive ? "cursor-pointer" : "cursor-not-allowed"}`}>
+        {/* Image principale */}
+        <img src={product.image} alt={product.name} loading="lazy" className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105" />
+
+        {/* Image au survol */}
+        {product.hoverImage && (
+          <img src={product.hoverImage} alt={`${product.name}, seconde vue`} className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ${showSecond ? "opacity-100" : "opacity-0"}`} />
+        )}
+
+        {/* Badges */}
+        <div className="absolute left-4 top-4 z-10 flex flex-col gap-2">
+          {product.badge && (
+            <span className="rounded-full bg-[#B8873A] px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-white">
+              {product.badge}
+            </span>
+          )}
+          {!product.isActive && (
+            <span className="rounded-full bg-black px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-white">
+              Épuisé
+            </span>
+          )}
+        </div>
+
+        {/* Wishlist */}
+        <button
+          aria-label={wished ? "Retirer de la wishlist" : "Ajouter à la wishlist"}
+          onClick={(e) => {
+            e.stopPropagation();
+            onWishlist();
+          }}
+          className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-lg transition hover:bg-[#161616] hover:text-white"
+        >
+          <Heart
+            className={`h-5 w-5 transition ${
+              wished ? "fill-current text-[#B8873A]" : ""
+            }`}
+          />
+        </button>
+      </div>
+
+      {/* Contenu textuel */}
+      <div className={list ? "flex flex-col justify-center" : "flex flex-1 flex-col justify-between p-5"}>
+        <div>
+          <div className="flex flex-wrap gap-2">
+            {product.families.map((family) => (
+              <span
+                key={family}
+                className="rounded-full border border-[#E6DED4] px-3 py-0.5 text-[11px] uppercase tracking-wide text-gray-600"
+              >
+                {family}
+              </span>
+            ))}
+          </div>
+
+          <h3 className="mt-3 font-serif text-xl font-medium text-[#161616] line-clamp-1">
+            {product.name}
+          </h3>
+          <p className="mt-1 text-sm uppercase tracking-wider text-[#B8873A]">
+            {product.brand}
+          </p>
+
+          {list && product.description && (
+            <p className="mt-3 text-gray-600">{product.description}</p>
+          )}
+        </div>
+
+        {/* Pied de carte */}
+        <div className="mt-4 pt-2">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-[#161616] font-medium">
+              {product.volumes.join(" • ")} ml
+            </p>
+            <p className="font-serif text-lg font-medium text-[#161616]">
+              {formatFCFA(product.price)}
+            </p>
+          </div>
+
+          <div className="mt-4 flex gap-3">
+            <button
+              onClick={onOrder}
+              disabled={!product.isActive}
+              className="flex-1 cursor-pointer rounded-xl bg-[#B8873A] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#A5782F] disabled:cursor-not-allowed disabled:bg-neutral-300"
+            >
+              {product.isActive ? "Commander" : "Épuisé"}
+            </button>
+
+            <button
+              onClick={onView}
+              className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-[#DDD5CB] transition hover:border-[#B8873A] hover:bg-[#B8873A] hover:text-white"
+            >
+              <Eye className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+} 
+
+
 
 function QuickView({ product, onClose, onOrder }: { product: Perfume; onClose: () => void; onOrder: (volume: Volume) => void }) {
   const images = [product.image, product.hoverImage].filter(Boolean) as string[];
   const [imageIndex, setImageIndex] = useState(0);
   const [volume, setVolume] = useState(product.volumes[0]);
-  return <div className="fixed inset-0 z-[70] grid place-items-center bg-black/75 p-3" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-    <div className="relative grid max-h-[94vh] w-full max-w-6xl overflow-y-auto bg-white lg:grid-cols-2">
-      <button aria-label="Fermer" onClick={onClose} className="absolute right-4 top-4 z-20 cursor-pointer text-black"><X className="h-8 w-8" /></button>
-      <div className="bg-neutral-100 p-5 pb-3"><div className="flex h-[58vh] min-h-[420px] items-center justify-center"><img src={images[imageIndex]} alt={product.name} className="h-full w-full object-contain" /></div>{images.length > 1 && <div className="mt-3 flex justify-center gap-3">{images.map((image, index) => <button key={image} onClick={() => setImageIndex(index)} className={`h-16 w-14 border ${index === imageIndex ? "border-black" : "border-neutral-300"}`}><img src={image} alt="" className="h-full w-full object-cover" /></button>)}</div>}</div>
-      <div className="flex flex-col justify-center p-8 sm:p-12">
-        <h2 className="font-display text-3xl font-bold sm:text-4xl">{product.name}</h2>
-        <p className="mt-2 text-sm uppercase tracking-widest text-neutral-500">{product.brand}</p>
-        {product.description && <p className="mt-5 leading-6 text-neutral-700">{product.description}</p>}
-        <p className="mt-6 text-2xl">{formatFCFA(product.price)}</p>
-        <p className="mt-10 text-sm">Volume</p>
-        <div className="mt-3 flex flex-wrap gap-2">{product.volumes.map((item) => <button key={item} onClick={() => setVolume(item)} className={`border px-5 py-3 text-sm tracking-[0.2em] ${volume === item ? "border-black bg-black text-white" : "border-neutral-300"}`}>{item}ML</button>)}</div>
-        <div className="mt-8 flex flex-wrap gap-2">{product.families.map((family) => <span key={family} className="border border-neutral-300 px-3 py-2 text-xs uppercase">{family}</span>)}</div>
-        <p className="mt-6 text-sm text-neutral-600">Quantité minimum : {product.minQuantity}</p>
-        <button disabled={!product.isActive} onClick={() => onOrder(volume)} className="mt-10 max-w-sm cursor-pointer border border-black bg-[#CE9A65] px-6 py-4 font-semibold text-black transition-colors duration-300 hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-neutral-400 disabled:text-white">{product.isActive ? "Commander" : "Épuisé"}</button>
+
+  return (
+    <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm p-4 flex items-center justify-center" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="relative max-h-[94vh] w-full max-w-6xl overflow-y-auto rounded-[28px] bg-[#FAF8F4] shadow-2xl lg:grid lg:grid-cols-[1.1fr_0.9fr]">
+
+        <button aria-label="Fermer" onClick={onClose} className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow transition hover:bg-[#161616] hover:text-white">
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="bg-[#F4EFE8] p-6">
+          <div className="overflow-hidden rounded-[24px] bg-white">
+            <img src={images[imageIndex]} alt={product.name} className="h-[320px] w-full object-contain sm:h-[420px]" />
+          </div>
+
+          {images.length > 1 && (
+            <div className="mt-5 flex gap-3 justify-center">
+              {images.map((image, index) => (
+                <button key={image} onClick={() => setImageIndex(index)} className={`overflow-hidden rounded-xl border-2 transition ${index === imageIndex ? "border-[#B8873A]" : "border-transparent hover:border-[#DDD5CB]"}`}>
+                  <img src={image} alt="" className="h-16 w-10 object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col justify-center p-6 lg:p-10">
+          <span className="text-xs uppercase tracking-[0.35em] text-[#B8873A]">{product.brand}</span>
+
+          <h2 className="mt-3 font-serif text-4xl font-medium text-[#161616]">{product.name}</h2>
+
+          {product.description && <p className="mt-5 text-gray-600">{product.description}</p>}
+
+          <p className="mt-6 font-serif text-3xl font-medium text-[#161616]">{formatFCFA(product.price)}</p>
+
+          <div className="mt-7 grid gap-6 md:grid-cols-2">
+            <div>
+              <p className="text-xs uppercase tracking-[0.30em] text-gray-500">Volume</p>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {product.volumes.map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => setVolume(item)}
+                    className={`rounded-full border px-5 py-2 text-sm font-medium transition ${
+                      volume === item
+                        ? "border-[#B8873A] bg-[#B8873A] text-white"
+                        : "border-[#DDD5CB] bg-white hover:border-[#B8873A] hover:text-[#B8873A]"
+                    }`}
+                  >
+                    {item} ml
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase tracking-[0.30em] text-gray-500">Familles</p>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {product.families.map((family) => (
+                  <span key={family} className="rounded-full border border-[#DDD5CB] px-4 py-2 text-xs uppercase tracking-wide text-gray-600">
+                    {family}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-7 rounded-2xl bg-white p-4">
+            <p className="text-sm text-gray-500">Commande minimum</p>
+            <p className="mt-1 font-medium text-[#161616]">
+              {product.minQuantity} unité{product.minQuantity > 1 ? "s" : ""}
+            </p>
+          </div>
+
+          <button
+            disabled={!product.isActive}
+            onClick={() => onOrder(volume)}
+            className="cursor-pointer mt-7 rounded-xl bg-[#B8873A] px-6 py-4 font-medium text-white transition hover:bg-[#A5782F] disabled:cursor-not-allowed disabled:bg-neutral-300">
+            {product.isActive ? "Commander maintenant" : "Produit indisponible"}
+          </button>
+        </div>
+
       </div>
     </div>
-  </div>;
+  );
 }
