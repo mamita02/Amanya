@@ -8,7 +8,7 @@ import { marketplace } from "../lib/marketplace";
 import StoreImg from '../assets/store_ecom.jpg';
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-import { PartnerLogoMarquee } from "../components/PartnerLogoMarquee";
+import { PartnersSection } from "../components/PartnerLogoMarquee";
 import { MarketplaceCard } from "../components/MarketplaceCard";
 
 import itemBase from "../assets/collection/item_base.png";
@@ -237,42 +237,43 @@ function HomePage() {
 
       {/* CATEGORIES */}
       <section id="categories" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+
         <div className="text-center">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">
-            Univers AMANYA
-          </h2>
-          <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-            Explorer nos collections
-          </span>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="mt-5 font-serif text-4xl xl:text-5xl font-medium text-[#161616]">
+              Univers AMANYA
+            </h2>
+            <p className="text-xs uppercase mt-3 tracking-[0.35em] font-medium text-[#B8873A]">
+              Explorer nos collections
+            </p>
+          </div>
+
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-center">
+        <div className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
 
           {categories.map((c) => (
-            <Link
-              key={c.name}
-              to={c.path}
-              className="group relative block aspect-[3/4] overflow-hidden rounded-3xl bg-[var(--onyx)]"
-            >
-              <img
-                src={c.image}
-                alt={c.name}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-700 group-hover:scale-110 group-hover:opacity-95"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-                <div className="text-xs font-medium uppercase tracking-[0.25em] text-[var(--gold)]">
+            <Link key={c.name} to={c.path} className="group relative aspect-[3/3] overflow-hidden rounded-[34px] shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+              <img src={c.image} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+              <div className="absolute inset-1 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute inset-x-5 bottom-5 rounded-[24px] border border-white/20 bg-white/10 p-6 backdrop-blur-xl transition-all duration-500 group-hover:bg-white/15">
+                <span className="text-[11px] uppercase tracking-[0.35em] font-medium text-[var(--gold)]">
                   {c.tagline}
-                </div>
-                <h3 className="mt-1 font-display text-2xl font-bold">{c.name}</h3>
-                <div className="mt-3 inline-flex items-center gap-2 text-sm text-white/80 transition group-hover:text-[var(--gold-soft)]">
-                  Voir plus
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                </span>
+                <h3 className="font-display text-3xl font-serif font-semibold text-white">
+                  {c.name}
+                </h3>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-sm text-white/80 transition duration-300 group-hover:text-white">
+                    Voir la collection
+                  </span>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/10 transition-all duration-300 group-hover:border-[#B8873A] group-hover:bg-[#B8873A]">
+                    <ArrowRight className="h-5 w-5 text-white transition-transform duration-300" />
+                  </div>
                 </div>
               </div>
-              <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 transition group-hover:ring-[var(--gold)]/40" />
+              <div className="pointer-events-none absolute inset-0 rounded-[34px] ring-1 ring-inset ring-white/10 transition duration-500 group-hover:ring-[#B8873A]/40" />
             </Link>
           ))}
         </div>
@@ -336,43 +337,28 @@ function HomePage() {
         </section>
 
 
-      {/* MARKET PLACE */}
-      <section id="marketplace" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">Market Place</h2>
-          <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-              LES ACTEURS DE NOTRE ÉCOSYSTÈME
-          </span>
-          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
-        </div>
+        <section id="marketplace" className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="mt-3 font-serif text-4xl xl:text-5xl font-medium text-[#161616]">Marketplace</h2>
+            <p className="text-xs mt-3 uppercase tracking-[0.35em] font-semibold text-[#B8873A]">Les Acteurs de Notre Écosystème</p>
+            <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[#B8873A] to-transparent" />
+          </div>
+          <div className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {marketplace.slice(0, 3).map((item) => (
+              <div key={item.name} className="transition-all duration-300 hover:-translate-y-1">
+                <MarketplaceCard marketplace={item} />
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <a href="/marketplace" className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#B8873A] hover:bg-[#A5782F] text-white font-medium rounded-lg shadow-sm hover:shadow-lg transition-all duration-300">
+              Voir Plus <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        </section>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {marketplace.slice(0, 3).map((marketplace) => (
-            <MarketplaceCard key={marketplace.name} marketplace={marketplace} />
-          ))}
-        </div>
-        <div className="text-center">
-          <a
-            href="/marketplace"
-            className="mt-10 inline-flex items-center justify-center rounded-md bg-[var(--gold)] px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[var(--onyx)] transition hover:bg-[var(--gold-soft)]"
-          >
-            Voir Plus
-          </a>
-        </div>
-      </section>
-
-      {/* PARTNERS */}
-      <section id="partenaires" className="bg-gradient-to-b from-[#fefbe8] to-[#ce9a65] w-full px-4 py-20 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">Nos partenaires</h2>
-          <span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ruby)]">
-            Ils nous font confiance
-          </span>
-          <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--onyx)] to-transparent" />
-        </div>
-
-        <PartnerLogoMarquee />
-      </section>
+        {/* PARTNERS */}
+        <PartnersSection />
 
       <Footer />
       </div>
