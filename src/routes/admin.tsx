@@ -1,6 +1,6 @@
 // src/routes/admin.tsx
 
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter, redirect } from "@tanstack/react-router";
 import { BarChart3, Edit2, LogOut, Package, Plus, Settings, Trash2, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -17,6 +17,12 @@ import {
 } from "../lib/supabase";
 
 export const Route = createFileRoute("/admin")({
+
+  /* redirect to home  */
+  beforeLoad: () => {
+    throw redirect({ to: "/" });
+  },
+  
   component: AdminLayout,
   head: () => ({
     meta: [{ title: "Dashboard Admin — AMANYA" }],

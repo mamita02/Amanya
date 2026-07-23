@@ -236,7 +236,7 @@ function RouteComponent() {
                 </h3>
                 </div>
 
-                <p className="mt-4 text-gray-600">
+                <p className="font-serif mt-4 text-gray-600">
                   Des produits sélectionnés auprès de fournisseurs fiables
                   répondant à des exigences élevées.
                 </p>
@@ -256,7 +256,7 @@ function RouteComponent() {
                 </h3>
                 </div>
 
-                <p className="mt-4 text-gray-600">
+                <p className="font-serif mt-4 text-gray-600">
                   Une plateforme moderne qui simplifie
                   l'achat, la vente et la distribution.
                 </p>
@@ -275,7 +275,7 @@ function RouteComponent() {
                 </h3>
                 </div>
 
-                <p className="mt-4 text-gray-600">
+                <p className="font-serif mt-4 text-gray-600">
                   Une plateforme ouverte aux particuliers,
                   commerçants, revendeurs, grossistes
                   et partenaires.
